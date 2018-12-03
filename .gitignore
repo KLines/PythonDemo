@@ -102,3 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+/python/.idea
+/python/venv/*.cfg
+/python/venv
