@@ -8,22 +8,30 @@ List = ['runoob', 786, 2.23, 'john', 70.2]
 Tuple = ('tuple', 123, 'test')
 Dictionary = {'name': 'john', 'code': 6734, 'dept': 'sales'}
 print('string :' + String)
-print('修改前 list : ', end="");print(List)
+print('修改前 list : ', end="")
+print(List)
 List[2] = 123
-print('修改后 list : ', end="");print(List[:])
-print('tuple : ', end="");print(Tuple)
-print('dict : ', end="");print(Dictionary)
+print('修改后 list : ', end="")
+print(List[:])
+print('tuple : ', end="")
+print(Tuple)
+print('dict : ', end="")
+print(Dictionary)
 # print(Dictionary.get('name')) # 获取对应键的值
 # print(Dictionary['code'])
 print(Dictionary.keys())  # 输出所有键
 print(Dictionary.values())  # 输出所有值
 
 print("=======type isinstance 用法========")
+
+
 class A:
     pass
 
+
 class B(A):
     pass
+
 
 # print(isinstance(Str,(str,int,list)) ) # 是元组中的一个返回 True
 print("isinstance(A(), A) :", isinstance(A(), A))  # returns True
@@ -32,7 +40,8 @@ print("isinstance(B(), A) :", isinstance(B(), A))  # returns True
 print("type(B()) == A :", type(B()) == A)  # returns False
 
 print("=======and or not 的用法========")
-a = 10;b = 20
+a = 10
+b = 20
 print("a=10,b=20")
 print("and ：如果 x 为 False，x and y 返回 False，否则它返回 y 的计算值")
 print("a and b :", a and b)
@@ -64,17 +73,9 @@ print(b is a)  # false
 print(id(b) == id(a))  # false
 print(b == a)  # true
 
-print("======= if elif 条件语句 ========")
-x = 0;y = 10
-if x and y:
-    print("test1")
-elif x or y:
-    print("test2")
-else:
-    print("test3")
-
 print("======= 拷贝和引用的用法 ========")
 import copy
+
 dict1 = {'a': [8, 2, 3, 4, 5], 'b': 4}
 dict2 = dict.copy(dict1)  # 浅拷贝
 dict3 = copy.copy(dict1)  # 浅拷贝
@@ -86,15 +87,78 @@ x += 4
 dict2['b'] = 5
 dict3['b'] = 6
 dict4['b'] = 7
-print("源字典：",end="");print(dict1)
-print("浅拷贝字典：",end="");print(dict2)
-print("浅拷贝字典：",end="");print(dict3)
-print("深拷贝字典：",end="");print(dict4)
+print("源字典：", end="")
+print(dict1)
+print("浅拷贝字典：", end="")
+print(dict2)
+print("浅拷贝字典：", end="")
+print(dict3)
+print("深拷贝字典：", end="")
+print(dict4)
 # 修改动态数据类型，浅拷贝对应的数据发生改变，深拷贝的数据不发生改变
 print('修改动态数据类型')
 for i in range(5):
     dict3['a'][i] = 0
-print("源字典：",end="");print(dict1)
-print("浅拷贝字典：",end="");print(dict2)
-print("浅拷贝字典：",end="");print(dict3)
-print("深拷贝字典：",end="");print(dict4)
+print("源字典：", end="")
+print(dict1)
+print("浅拷贝字典：", end="")
+print(dict2)
+print("浅拷贝字典：", end="")
+print(dict3)
+print("深拷贝字典：", end="")
+print(dict4)
+
+print("======= if elif 条件语句 ========")
+x = 0
+y = 10
+if (x > 0) and (y / x > 2):  # 采用短路规则
+    print("test1")
+elif x or y:
+    print("test2")
+else:
+    print("test3")
+
+a = [1, 2, 3]
+b = a if len(a) != 0 else ""
+print(b)
+
+print("使用 switcher 字典映射：")
+
+def zero():  # 方法
+    return "zero()"
+
+
+def one():
+    return "one()"
+
+
+def two():
+    return "two()"
+
+
+def num2Str(arg):
+    switcher = {
+        0: zero, # 对应函数名
+        1: one,
+        2: two,
+        3: lambda: "three()"
+    }
+    # func=switcher.get(arg,lambda:"nothing")
+    # return func()
+    return switcher.get(arg, lambda: "nothing")()  # 返回对应函数
+
+
+def num(arg):
+    switcher = {
+        0: 1,
+        1: "1",
+        2: "2"
+    }
+    return switcher.get(arg, "nothing")
+
+
+if __name__ == '__main__':  #
+    print("普通字典映射：", end="")
+    print((num(3)))
+    print("函数与lambda字典映射：", end="")
+    print(num2Str(2))
