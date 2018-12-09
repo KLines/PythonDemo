@@ -10,14 +10,14 @@ List = ['runoob', 786, "john", 'john', 70.2, ['test1', 'test2']]  # 元素可以
 Tuple = ('tuple', 123, 'test', ['test1', 'test2'])  # 元素可以是可变对象
 tuple = ('test1', 'test2')
 Set = {'Tom', 'Mary', 'Tom', 'Jack', 'Rose', tuple}  # 元素必须是不可变对象
-Dictionary = {'name': 'john', tuple: 6734, 'dept': 'sales'}  # key值必须是不可变对象
+Dictionary = {'name':'test','name': 'john', tuple: 6734, 'dept': 'sales'}  # key值必须是不可变对象
 print('str : ' + String)
 print('str : ' + str)
 print('修改前 list : ', end="")
 print(List)
 List[2] = 123
 print('修改后 list : ', end="")
-print(List[::2]) # step 为 2
+print(List[::2])  # step 为 2
 print('tuple : ', end="")
 print(Tuple)
 print('set : ', end="")
