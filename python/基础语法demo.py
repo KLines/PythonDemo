@@ -10,7 +10,7 @@ List = ['runoob', 786, "john", 'john', 70.2, ['test1', 'test2']]  # 元素可以
 Tuple = ('tuple', 123, 'test', ['test1', 'test2'])  # 元素可以是可变对象
 tuple = ('test1', 'test2')
 Set = {'Tom', 'Mary', 'Tom', 'Jack', 'Rose', tuple}  # 元素必须是不可变对象
-Dictionary = {'name':'test','name': 'john', tuple: 6734, 'dept': 'sales'}  # key值必须是不可变对象
+Dictionary = {'name': 'test', 'name': 'john', tuple: 6734, 'dept': 'sales'}  # key值必须是不可变对象
 print('str : ' + String)
 print('str : ' + str)
 print('修改前 list : ', end="")
@@ -35,15 +35,6 @@ print("数据类型：", type(1.0), type(String), type(List), type(Tuple), type(
 L = ['b', 'a', 'c']
 L = list(set(L))
 print(L)
-
-
-# 可变参数
-def test(*args):
-    print(args)
-    return args
-
-
-print(type(test(1, 2, 3, 4)))  # 可以看见其函数的返回值是一个元组
 
 print("======= 2、type isinstance 用法 ========")
 
@@ -165,7 +156,7 @@ def num2Str(arg):
         0: zero,  # 对应函数名
         1: one,
         2: two,
-        3: lambda: "three()"
+        3: lambda: "three()"  # lambda 来创建匿名函数
     }
     # func=switcher.get(arg,lambda:"nothing")
     # return func()
@@ -226,6 +217,79 @@ for index, item in enumerate(fruits):  # 打印索引以及对应值
 else:
     print("当前水果：无")
 
-print(range(1, 3))  # 返回的是一个对象，并没有将数据完全实例化，所以内存中只有一个对象的空间
-print(list(range(1, 3)))
-print(type(list()))
+print("======= 9、iterator迭代器，generator生成器 ========")
+import types
+from inspect import isgeneratorfunction
+from collections.abc import Iterable
+from collections.abc import Iterator
+
+list_iter = [1, 2, 3, 4]
+print("list_iter 是否是iterator对象 : ", isinstance(list_iter, Iterator))  # false
+print("list_iter 是否是iterable对象 : ", isinstance(list_iter, Iterable))  # true
+print("迭代器：", next(iter(list_iter)))  # 创建迭代器对象
+# for x in iter(list_iter):
+#     print(x)
+
+# 生成器表达式
+generator = (x for x in ("abcde"))
+print("生成器表达式：", generator)
+print(next(generator))
+
+
+# 生成器函数
+def createGenerator():
+    list_generator = range(3)
+    for i in list_generator:
+        yield i * i
+
+
+mygenerator = createGenerator()  # 调用函数时内部的代码并不立马执行，只是返回迭代器对象
+print("生成器函数：", mygenerator)
+print(next(mygenerator))  # 在迭代时，createGenerator方法中的代码才会执行，节省内存
+# for x in mygenerator:
+#     print(x)
+
+print("createGenerator 是否是generator函数 : ", isgeneratorfunction(createGenerator))  # true
+print("createGenerator() 是否是generator函数 : ", isgeneratorfunction(createGenerator()))  # false
+print("createGenerator 是否是generator对象 : ", isinstance(createGenerator, types.GeneratorType))  # false
+print("createGenerator() 是否是generator对象 : ", isinstance(createGenerator(), types.GeneratorType))  # true
+print("createGenerator 是否是iterator对象 : ", isinstance(createGenerator, Iterator))  # false
+print("createGenerator() 是否是iterator对象 : ", isinstance(createGenerator(), Iterator))  # true
+print("createGenerator 是否是iterable对象 : ", isinstance(createGenerator, Iterable))  # false
+print("createGenerator() 是否是iterable对象 : ", isinstance(createGenerator(), Iterable))  # true
+print("range() 是否是iterator对象 : ", isinstance((x for x in range(10)), Iterator))  # true
+
+print("======= 10、函数的使用 ========")
+
+
+def printinfo(name, age):
+    "打印任何传入的字符串"
+    print("名字: ", name)
+    print("年龄: ", age)
+    return
+
+
+# 调用printinfo函数
+printinfo(10, "test")
+printinfo(age=50, name="runoob")
+
+
+# 可变参数
+def printinfo(number, *args):  # 以元组(tuple)的形式导入
+    print(number)
+    print(args)
+printinfo(1, "test", 3, 4)
+
+
+def printinfo(number, **kwargs):  # 以字典(dict)的形式导入，key必须是字符串
+    print(number)
+    print(kwargs)
+printinfo(1, name="test", age=20)
+
+
+def printinfo(a, b, *, c):  # 如果单独出现星号 * 后的参数必须用关键字传入
+    return a + b + c
+print(printinfo(1, 2, c=3))
+
+count = lambda arg1, arg2: arg1 + arg2 # lambda 表达匿名函数
+print(count(1,2))
