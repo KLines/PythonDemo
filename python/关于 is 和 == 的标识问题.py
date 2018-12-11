@@ -52,3 +52,10 @@ print("original_list:", original_list)
 print("copy_list modify:", copy_list)
 print("original_dict:", original_dict)
 print("copy_dict modify:", copy_dict)
+
+
+# a =100000000
+# b =100000000
+# print(id(100000000))
+# print(id(a))
+# print(id(b))

@@ -1,23 +1,20 @@
 print("======= 1、str list tuple dict 数据类型 的用法 ========")
-# a =100000000
-# b =100000000
-# print(id(100000000))
-# print(id(a))
-# print(id(b))
 String, str = "hello world", "test"
-List = ['runoob', 786, "john", 'john', 70.2, ['test1', 'test2']]  # 元素可以是可变对象
+List = ['runoob', 786, "john", 'john', 70.2, ['test1', 'test2']]  # 有序，元素可以是可变对象
 # 元组不能二次赋值，相当于只读列表
-Tuple = ('tuple', 123, 'test', ['test1', 'test2'])  # 元素可以是可变对象
+Tuple = ('tuple', 123, 'test', ['test1', 'test2'])  # 有序，元素可以是可变对象
 tuple = ('test1', 'test2')
-Set = {'Tom', 'Mary', 'Tom', 'Jack', 'Rose', tuple}  # 元素必须是不可变对象
-Dictionary = {'name': 'test', 'name': 'john', tuple: 6734, 'dept': 'sales'}  # key值必须是不可变对象
+Set = {'Tom', 'Mary', 'Tom', 'Jack', 'Rose', tuple}  # 无序，元素必须是不可变对象
+Dictionary = {'name': 'test', 'name': 'john', tuple: 6734, 'dept': 'sales'}  # 无序，key 值必须是不可变对象，赋值时可以重复，运行时去重
 print('str : ' + String)
 print('str : ' + str)
 print('修改前 list : ', end="")
 print(List)
 List[2] = 123
 print('修改后 list : ', end="")
-print(List[::2])  # step 为 2
+print(List[::])  # 返回所有值
+print('反向取值 list : ', end="")
+print(List[::-1])  # 反向取值
 print('tuple : ', end="")
 print(Tuple)
 print('set : ', end="")
@@ -28,13 +25,8 @@ print(Dictionary)
 # print(Dictionary['tuple'])
 print(Dictionary.keys())  # 输出所有键
 print(Dictionary.values())  # 输出所有值
-print(Dictionary.items())
+print(Dictionary.items())  # 输出所有项
 print("数据类型：", type(1.0), type(String), type(List), type(Tuple), type(Set), type(Dictionary))
-
-# 产生随机数
-L = ['b', 'a', 'c']
-L = list(set(L))
-print(L)
 
 print("======= 2、type isinstance 用法 ========")
 
@@ -79,12 +71,12 @@ print("not (a and b) :", not (a and b))
 print("===== 4、is 与 == 的区别 ========")
 a = [1, 2, 3]
 b = a  # 引用同一个对象
-print(b is a)  # true
-print(id(b) == id(a))  # true
-print(b == a)  # true
+print("前提条件：b = a ")
+print("b is a:", b is a)  # true
+print("b == a:", b == a)  # true
 b = a[:]  # 给b重新赋值，重新开辟一块内存空间
+print("前提条件：b = a[:]")
 print(b is a)  # false
-print(id(b) == id(a))  # false
 print(b == a)  # true
 
 print("======= 5、拷贝和引用的用法 ========")
@@ -132,14 +124,20 @@ elif x or y:
 else:
     print("test3")
 
-a = [1, 2, 3]
-b = a if len(a) != 0 else ""
-print(b)
-
-print("使用 switcher 字典映射：")
+x = [1, 2, 3]
+print(x) if len(x) != 0 else ""
 
 
-def zero():  # 方法
+def num(arg):  # switcher使用
+    switcher = {
+        0: 1,
+        1: "1",
+        2: "2"
+    }
+    return switcher.get(arg, "nothing")  # 无匹配时，返回置默认值
+
+
+def zero():
     return "zero()"
 
 
@@ -158,24 +156,15 @@ def num2Str(arg):
         2: two,
         3: lambda: "three()"  # lambda 来创建匿名函数
     }
-    # func=switcher.get(arg,lambda:"nothing")
+    # func=switcher.get(arg,lambda:"nothing") # 返回函数名
     # return func()
     return switcher.get(arg, lambda: "nothing")()  # 返回对应函数
 
 
-def num(arg):
-    switcher = {
-        0: 1,
-        1: "1",
-        2: "2"
-    }
-    return switcher.get(arg, "nothing")
-
-
 if __name__ == '__main__':  #
-    print("普通字典映射：", end="")
+    print("switcher普通字典映射：", end="")
     print((num(3)))
-    print("函数与lambda字典映射：", end="")
+    print("switcher函数与lambda字典映射：", end="")
     print(num2Str(2))
 
 print("======= 7、while 循环语句 ========")
@@ -190,7 +179,7 @@ def trim(args):
 
 
 str = "  trim  "
-print(trim(str))
+print(trim(str))  # 去掉首尾重复空格
 
 print("======= 8、for 循环语句 ========")
 s = 'Python'
@@ -215,7 +204,7 @@ for index, item in enumerate(fruits):  # 打印索引以及对应值
     else:
         print(fruits[index] + ",", end="")
 else:
-    print("当前水果：无")
+    print("当前水果：无")  # 在循环条件为 false 时执行 else 语句块
 
 print("======= 9、iterator迭代器，generator生成器 ========")
 import types
@@ -261,8 +250,10 @@ print("range() 是否是iterator对象 : ", isinstance((x for x in range(10)), I
 
 print("======= 10、函数的使用 ========")
 
+print("======= 固定参数 ========")
 
-def printinfo(name, age):
+
+def printinfo(name, age=20):
     "打印任何传入的字符串"
     print("名字: ", name)
     print("年龄: ", age)
@@ -270,26 +261,34 @@ def printinfo(name, age):
 
 
 # 调用printinfo函数
-printinfo(10, "test")
-printinfo(age=50, name="runoob")
+printinfo("test", 10)
+printinfo(age=50, name="runoob")  # 可根据参数名匹配
+printinfo("func")  # 使用默认参数
+
+print("======= 可变参数 ========")
 
 
-# 可变参数
 def printinfo(number, *args):  # 以元组(tuple)的形式导入
     print(number)
     print(args)
+
+
 printinfo(1, "test", 3, 4)
 
 
-def printinfo(number, **kwargs):  # 以字典(dict)的形式导入，key必须是字符串
+def printinfo(number, **kwargs):  # 以字典(dict)的形式导入
     print(number)
     print(kwargs)
-printinfo(1, name="test", age=20)
 
 
-def printinfo(a, b, *, c):  # 如果单独出现星号 * 后的参数必须用关键字传入
+printinfo(1, name="test", age=20)  # key必须是字符串
+
+
+def printinfo(a, b, *, c):  # 如果单独出现星号 * 后的参数必须用参数名传入
     return a + b + c
+
+
 print(printinfo(1, 2, c=3))
 
-count = lambda arg1, arg2: arg1 + arg2 # lambda 表达匿名函数
-print(count(1,2))
+count = lambda arg1, arg2: arg1 + arg2  # lambda 表达匿名函数
+print(count(1, 2))
