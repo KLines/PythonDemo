@@ -29,15 +29,11 @@ print(Dictionary.items())  # 输出所有项
 print("数据类型：", type(1.0), type(String), type(List), type(Tuple), type(Set), type(Dictionary))
 
 print("======= 2、type isinstance 用法 ========")
-
-
 class A:  # 空类
     pass  # pass是空语句，是为了保持程序结构的完整性，不做任何事情，一般用做占位语句。
 
-
 class B(A):
     pass
-
 
 # print(isinstance(Str,(str,int,list)) ) # 是元组中的一个返回 True
 print("isinstance(A(), A) :", isinstance(A(), A))  # returns True
@@ -81,7 +77,6 @@ print(b == a)  # true
 
 print("======= 5、拷贝和引用的用法 ========")
 import copy
-
 dict1 = {'a': [8, 2, 3, 4, 5], 'b': 4}
 dict2 = dict.copy(dict1)  # 浅拷贝
 dict3 = copy.copy(dict1)  # 浅拷贝
@@ -127,7 +122,6 @@ else:
 x = [1, 2, 3]
 print(x) if len(x) != 0 else ""
 
-
 def num(arg):  # switcher使用
     switcher = {
         0: 1,
@@ -136,18 +130,14 @@ def num(arg):  # switcher使用
     }
     return switcher.get(arg, "nothing")  # 无匹配时，返回置默认值
 
-
 def zero():
     return "zero()"
-
 
 def one():
     return "one()"
 
-
 def two():
     return "two()"
-
 
 def num2Str(arg):
     switcher = {
@@ -160,7 +150,6 @@ def num2Str(arg):
     # return func()
     return switcher.get(arg, lambda: "nothing")()  # 返回对应函数
 
-
 if __name__ == '__main__':  #
     print("switcher普通字典映射：", end="")
     print((num(3)))
@@ -168,15 +157,12 @@ if __name__ == '__main__':  #
     print(num2Str(2))
 
 print("======= 7、while 循环语句 ========")
-
-
 def trim(args):
     while args[:1] == " ":
         args = args[1:]
     while args[-1:] == " ":
         args = args[:-1]
     return args
-
 
 str = "  trim  "
 print(trim(str))  # 去掉首尾重复空格
@@ -224,13 +210,11 @@ generator = (x for x in ("abcde"))
 print("生成器表达式：", generator)
 print(next(generator))
 
-
 # 生成器函数
 def createGenerator():
     list_generator = range(3)
     for i in list_generator:
         yield i * i
-
 
 mygenerator = createGenerator()  # 调用函数时内部的代码并不立马执行，只是返回迭代器对象
 print("生成器函数：", mygenerator)
@@ -249,16 +233,12 @@ print("createGenerator() 是否是iterable对象 : ", isinstance(createGenerator
 print("range() 是否是iterator对象 : ", isinstance((x for x in range(10)), Iterator))  # true
 
 print("======= 10、函数的使用 ========")
-
 print("======= 固定参数 ========")
-
-
 def printinfo(name, age=20):
     "打印任何传入的字符串"
     print("名字: ", name)
     print("年龄: ", age)
     return
-
 
 # 调用printinfo函数
 printinfo("test", 10)
@@ -266,29 +246,36 @@ printinfo(age=50, name="runoob")  # 可根据参数名匹配
 printinfo("func")  # 使用默认参数
 
 print("======= 可变参数 ========")
-
-
 def printinfo(number, *args):  # 以元组(tuple)的形式导入
-    print(number)
-    print(args)
-
-
+    print(number, args)
 printinfo(1, "test", 3, 4)
 
-
 def printinfo(number, **kwargs):  # 以字典(dict)的形式导入
-    print(number)
-    print(kwargs)
-
-
+    print(number, kwargs)
 printinfo(1, name="test", age=20)  # key必须是字符串
 
 
 def printinfo(a, b, *, c):  # 如果单独出现星号 * 后的参数必须用参数名传入
     return a + b + c
-
-
 print(printinfo(1, 2, c=3))
 
 count = lambda arg1, arg2: arg1 + arg2  # lambda 表达匿名函数
 print(count(1, 2))
+
+def func():
+    print("hello world")
+
+def excute(f):
+    '函数也可以以一个函数为其参数'
+    f()
+
+excute(func)
+print(excute.__doc__) # 通过 函数名.__doc__ 的方式来显示函数的说明文档
+
+temp = excute
+print("temp = excute")
+temp(func) # 将函数赋值给一个变量，并调用
+del excute # 删除函数，其实就是删除引用，函数内容仍然存在
+# excute(func)
+print("del excute")
+temp(func)
