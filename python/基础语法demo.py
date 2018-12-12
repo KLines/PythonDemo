@@ -167,7 +167,22 @@ def trim(args):
 str = "  trim  "
 print(trim(str))  # 去掉首尾重复空格
 
+
 print("======= 8、for 循环语句 ========")
+
+questions = ['name', 'quest', 'favorite color']
+answers = ['lancelot', 'the holy grail', 'blue']
+
+for q,a in zip(questions,answers):  # 遍历多个序列
+    print("what is your {0}? It is {1}".format(q,a))
+
+for i in reversed(range(1, 10, 2)): # 反向遍历
+     print(i)
+
+basket = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
+for i in sorted(set(basket)):     # 顺序遍历
+    print(i)
+
 s = 'Python'
 print("当前所有值：", end="")
 for letter in 'Python':
@@ -279,3 +294,7 @@ del excute # 删除函数，其实就是删除引用，函数内容仍然存在
 # excute(func)
 print("del excute")
 temp(func)
+
+from 变量作用域 import count
+f1, f2, f3 = count()
+print(f1(),f2(),f3())
