@@ -6,11 +6,16 @@ if __name__ == "__main__":
 
     def outer():
         outer_num = 1  # 闭包函数外的函数中
+        print("外部函数")
         def inner():
             inner_num = 1  # 局部变量
+            print("内部函数")
             print("内建作用域：",b)
-        inner()
-    outer()
+        # inner()
+        return inner #返回一个函数
+    # outer()
+    outer()() # 先执行外部函数，再执行内部函数
+
 
     '''
     只有模块（module），类（class）以及函数（def、lambda）才会引入新的作用域，
@@ -75,3 +80,39 @@ f1, f2, f3 = count()
 # print(f1,f2,f3)`
 if __name__ == "__main__":
     print(f1(),f2(),f3()) # 9,9,9 此时执行创建的函数，对应的循环变量已经变为最后一个值 i=3
+
+# 函数装饰器
+
+def funcA(f):
+    f(3)
+    print("function A")
+
+def funcB(f):
+    def temp(c):
+        print(f(c))
+        print("function B")
+    return temp
+
+
+
+# @funcA
+@funcB
+def func(c): # 等价于 funcA(funcB(func))
+    print("function C")
+    return c**2
+func(4)
+# funcB(func)(4)
+
+def a_new_decorator(a_func):
+    def wrapTheFunction():
+        print("I am doing some boring work before executing a_func()")
+        a_func()
+        print("I am doing some boring work after executing a_func()")
+    return wrapTheFunction
+
+@a_new_decorator
+def a_function_requiring_decoration(): # 等价于 a_new_decorator(a_function_requiring_decoration)
+    """Hey you! Decorate me!"""
+    print("I am the function which needs some decoration to "
+          "remove my foul smell")
+

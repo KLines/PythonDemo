@@ -274,27 +274,43 @@ def printinfo(a, b, *, c):  # 如果单独出现星号 * 后的参数必须用�
     return a + b + c
 print(printinfo(1, 2, c=3))
 
+print("======= lambda 表达匿名函数 ========")
 count = lambda arg1, arg2: arg1 + arg2  # lambda 表达匿名函数
-print(count(1, 2))
+print("lambad", count(1, 2))
 
-def func():
-    print("hello world")
-
+print("======= 函数参数可以是一个函数 ========")
+def func1():
+    print("func1()")
 def excute(f):
     '函数也可以以一个函数为其参数'
     f()
-
-excute(func)
+    print("excute()")
+excute(func1)
 print(excute.__doc__) # 通过 函数名.__doc__ 的方式来显示函数的说明文档
 
+print("======= 在函数中定义函数 ========")
+def func2():
+    print("func2()")
+    def temp():
+        print("temp2()")
+    temp()
+func2()
+
+print("======= 从函数中返回函数 ========")
+def func3():
+    print("func3()")
+    def temp():
+        print("temp3()")
+    return temp
+f = func3()
+f()
+
+print("======= 函数引用传递 ========")
 temp = excute
 print("temp = excute")
-temp(func) # 将函数赋值给一个变量，并调用
+temp(func1) # 将函数赋值给一个变量，并调用
 del excute # 删除函数，其实就是删除引用，函数内容仍然存在
 # excute(func)
 print("del excute")
-temp(func)
+temp(func1)
 
-from 变量作用域 import count
-f1, f2, f3 = count()
-print(f1(),f2(),f3())
