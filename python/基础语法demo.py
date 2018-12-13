@@ -314,3 +314,16 @@ del excute # 删除函数，其实就是删除引用，函数内容仍然存在
 print("del excute")
 temp(func1)
 
+print("======= 循环创建函数 ========")
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f():
+            return i * i
+        # fs.append(f())
+        fs.append(f)  # 创建函数，并添加到list中
+    return fs
+
+f1, f2, f3 = count()
+print(f1,f2,f3)
+print(f1(), f2(), f3())  # 9,9,9 此时执行创建的函数，对应的循环变量已经变为最后一个值 i=3

@@ -3,19 +3,16 @@
 if __name__ == "__main__":
     b =int(3.3) # 内建作用域
     g = 1  # 全局变量
-
     def outer():
         outer_num = 1  # 闭包函数外的函数中
         print("外部函数")
         def inner():
             inner_num = 1  # 局部变量
             print("内部函数")
-            print("内建作用域：",b)
+            print("内建作用域：", b)
         # inner()
         return inner #返回一个函数
-    # outer()
-    outer()() # 先执行外部函数，再执行内部函数
-
+    outer()()
 
     '''
     只有模块（module），类（class）以及函数（def、lambda）才会引入新的作用域，
@@ -23,19 +20,19 @@ if __name__ == "__main__":
     '''
     if True:
         msg = "if"
-    print("if 中的变量：",msg)
+    print("if 中的变量：", msg)
 
     num = 1
-    print("修改全局变量：",num)
+    print("修改全局变量：", num)
     def fun():
         global num  # 需要使用 global 关键字声明
         num = 2  # 修改 global 作用域变量
-        print("inner :",num)
+        print("inner :", num)
     fun()
-    print("global :",num)
+    print("global :", num)
 
     outer_num = 10
-    print("修改 enclosing 作用域变量：",outer_num)
+    print("修改 enclosing 作用域变量：", outer_num)
     def outer():
         # global  outer_num
         outer_num = 100  # 闭包函数外的函数中
@@ -50,69 +47,64 @@ if __name__ == "__main__":
     outer()
     print("global : ", outer_num)
 
-    def changeme(mylist):
-        mylist.append([1, 2, 3, 4])
-        print("函数内取值: ", mylist)
-    # 调用changeme函数
-    mylist = [10, 20, 30]
-    changeme(mylist)
-    print("函数外取值: ", mylist)
-
-    def changeme(mylist):
-        mylist = [1, 2, 3, 4] # 重新开辟一块内存空间
-        print("函数内取值: ", mylist)
-    # 调用changeme函数
-    mylist = [10, 20, 30]
-    changeme(mylist)
-    print("函数外取值: ", mylist)
 
 
-def count():
-    fs = []
-    for i in range(1, 4):
-        def f():
-             return i*i
-        # fs.append(f())
-        fs.append(f) # 创建函数，并添加到list中
-    return fs
-
-f1, f2, f3 = count()
-# print(f1,f2,f3)`
+#  函数装饰器
+from functools import wraps
 if __name__ == "__main__":
-    print(f1(),f2(),f3()) # 9,9,9 此时执行创建的函数，对应的循环变量已经变为最后一个值 i=3
 
-# 函数装饰器
+    print("@funcA @funcB ：")
 
-def funcA(f):
-    f(3)
-    print("function A")
+    def funcA(A):  # 入参是函数
+        print("funcA")
 
-def funcB(f):
-    def temp(c):
-        print(f(c))
-        print("function B")
-    return temp
+    def funcB(B):  # 入参是函数
+         print(B(3))
+         print("funcB")
+
+    @funcA  # 等价于 funcA(funcB(func))
+    @funcB
+    def func(c):  # 作为入参传递，无法单独调用
+        print("func")
+        return c ** 2
+    print("@funcC ：")
 
 
+    def funcC(C):  # 入参是函数
+        @wraps(C)  # 表示不改变入参函数，可以访问入参函数的属性
+        def temp(x, *args):
+            print("function is temp")
+            print(temp.__name__)
+            print(C(x, *args))
+        return temp  # 返回内部函数，用于func在外部可以独立调用
 
-# @funcA
-@funcB
-def func(c): # 等价于 funcA(funcB(func))
-    print("function C")
-    return c**2
-func(4)
-# funcB(func)(4)
+    @funcC   # 使用@修饰函数后 func 变成 funcC 内部返回的函数对象 func = temp
+    def func(x, *args):  # 等价于 funcC(func)(4, test", 2323)
+        """ 使用函数修饰符"""
+        print("function is func", args)
+        return x**2
 
-def a_new_decorator(a_func):
-    def wrapTheFunction():
-        print("I am doing some boring work before executing a_func()")
-        a_func()
-        print("I am doing some boring work after executing a_func()")
-    return wrapTheFunction
+    print("name :", func.__name__)
+    print("doc :", func.__doc__)
+    func(4, "test", 2323)  # 修饰器下的函数可以独立调用
 
-@a_new_decorator
-def a_function_requiring_decoration(): # 等价于 a_new_decorator(a_function_requiring_decoration)
-    """Hey you! Decorate me!"""
-    print("I am the function which needs some decoration to "
-          "remove my foul smell")
+    print("@funcD ：")
+
+    def funcD(): #
+        print("function is funcD")
+        def inner(func):
+            print("function is inner")
+            @wraps(func)
+            def temp():
+                func()  # 执行修饰器下的函数
+            return temp
+        return inner
+
+    @funcD()  # 等价于  funcD()(func)()
+    def func():
+        print("function is func")
+
+    func()
+
+
 
