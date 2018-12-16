@@ -65,7 +65,7 @@ if __name__ == "__main__":
     @funcA  # 等价于 funcA(funcB(func))
     @funcB
     def func(c):  # 作为入参传递，无法单独调用
-        print("func")
+        print("装饰器传参：func")
         return c ** 2
     print("@funcC ：")
 
@@ -106,5 +106,52 @@ if __name__ == "__main__":
 
     func()
 
+    def set_fun1(func):
+        print("set_fun1")
+        def call_fun1(*args,**kwargs):
+            return func(*args,**kwargs)
+        return call_fun1
+
+    def set_fun2(func):
+        print("set_fun2")
+        def call_fun2(*args,**kwargs):
+            return func(*args,**kwargs)
+        return call_fun2
+
+    @set_fun1
+    @set_fun2
+    def test():
+        print("两个装饰器装饰一个函数")
+        pass
+    print(test.__name__)
+    test()
+
+    def set_args(args):
+        print(args)
+        def set_fun(func):
+            def call_fun(*args,**kwargs):
+                return func(*args,**kwargs)
+            return call_fun
+        return set_fun
+
+    @set_args("test")
+    def test():
+        print("装饰器传参")
+        pass
+    test()
 
 
+    class Funcc(object):
+        def __init__(self, func):
+            self.func = func
+
+        def __call__(self, *args, **kwargs):
+            self.func()
+
+
+    @Funcc  # test = Funcc(test)
+    def test():
+        print("类装饰器")
+        pass
+
+    test()
