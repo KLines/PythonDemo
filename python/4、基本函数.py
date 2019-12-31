@@ -1,5 +1,6 @@
 print("======= 1、固定参数 ========")
 
+
 def printinfo(name, age=20):
     "打印任何传入的字符串"
     print("名字：", name)
@@ -10,32 +11,43 @@ printinfo("test", 10) # 必须参数，根据参数顺序入参
 printinfo(age=50, name="runoob")  # 关键字参数，可根据参数名匹配
 printinfo("func")  # 使用默认参数，默认参数必须放在最后面
 
+
 print("======= 2、可变参数 ========")
+
 
 def printinfo(number, *args):  # 以元组(tuple)的形式导入
     print(number, args)
 
 printinfo(1, "test", 3, 4)
 
+
 def printinfo(number, **kwargs):  # 以字典(dict)的形式导入
     print(number, kwargs)
 
-
 printinfo(1, name="test", age=20)  # key必须是字符串
+
+
+def printinfo(*args, **kwargs):  # 以元祖、字典的形式导入
+    print("入参为元祖&字典")
+    print(args, kwargs)
+
+printinfo("test", 3, 4, name="test", age=20)
 
 
 def printinfo(a, b, *, c):  # 如果单独出现星号 * 后的参数必须用参数名传入
     return a + b + c
 
-
 print(printinfo(1, 2, c=3))
 
-print("=======3、 lambda 表达匿名函数 ========")
+
+print("======= 3、 lambda 表达匿名函数 ========")
+
+
 count = lambda arg1, arg2: arg1 + arg2  # lambda 表达匿名函数
 print("lambad", count(1, 2))
 
 
-print("=======4、函数参数可以是一个函数 ========")
+print("======= 4、函数参数可以是一个函数 ========")
 
 
 def func1():
@@ -49,7 +61,10 @@ def excute(f):
 excute(func1)
 print(excute.__doc__)  # 通过 函数名.__doc__ 的方式来显示函数的说明文档
 
-print("=======5、在函数中定义函数 ========")
+
+print("======= 5、在函数中定义函数 ========")
+
+
 # 在函数中定义函数
 def func2():
     print("func2()")
@@ -61,7 +76,9 @@ def func2():
 
 func2()
 
-print("=======6、从函数中返回函数 ========")
+
+print("======= 6、从函数中返回函数 ========")
+
 
 def func3():
     print("func3()")
@@ -74,7 +91,9 @@ def func3():
 f = func3()
 f()
 
-print("=======7、函数引用传递 ========")
+
+print("======= 7、函数引用传递 ========")
+
 
 temp = excute
 print("temp = excute")
@@ -84,7 +103,9 @@ del excute  # 删除函数，其实就是删除引用，函数内容仍然存在
 print("del excute")
 temp(func1)
 
+
 print("======= 8、循环创建函数 ========")
+
 
 def count():
     fs = []
@@ -102,7 +123,9 @@ f1, f2, f3 = f
 print(f1, f2, f3)
 print(f1(), f2(), f3())  # 9,9,9 此时执行创建的函数，对应的循环变量已经变为最后一个值 i=3
 
+
 print("======= 9、拷贝和引用的用法 ========")
+
 
 # 直接赋值：其实就是对象的引用（别名）
 # b = a: 赋值引用，a 和 b 都指向同一个对象
