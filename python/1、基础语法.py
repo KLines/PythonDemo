@@ -1,27 +1,27 @@
 print("======= 1、str list tuple dict 数据类型 的用法 ========")
 
 String = "hello world"
-print('str : ' + String)
+print('str：' + String)
 # 有序，元素可以是可变对象
 List = ['runoob', 786, "john", 'john', 70.2, ['test1', 'test2']]
-print('修改前 list : ', List)
+print('修改前 list：', List)
 List[2] = 123
-print('修改后 list : ', List[::])  # 返回所有值
-print('反向取值 list : ', List[::-1])  # 反向取值
+print('修改后 list：', List[::])  # 返回所有值
+print('反向取值 list：', List[::-1])  # 反向取值
 
 # 元组不能二次赋值，有序，元素可以是可变对象
 Tuple = ('tuple', 123, 'test', ['test1', 'test2'])
 typle = ('test2', 'test1')
-print('tuple : ', Tuple)
+print('tuple：', Tuple)
 
 # 无序，元素必须是不可变对象
 Set = {'Tom', 'Mary', 'Tom', 'Jack', 'Rose'}
-print('set : ', Set)
+print('set：', Set)
 
 # 无序，key 值必须是不可变对象，赋值时可以重复，运行时去重
 Dictionary = {'name': 'test', 'name': 'john', tuple: 6734, 'dept': 'sales'}
 
-print('dict : ', Dictionary)
+print('dict：', Dictionary)
 # print(Dictionary.get(tuple))  # 获取对应键的值
 # print(Dictionary['name'])
 # print(Dictionary.keys())  # 输出所有键
@@ -41,10 +41,10 @@ class B(A):
 # type() 不会认为子类是一种父类类型
 # isinstance() 会认为子类是一种父类类型
 # print(isinstance(String, (str, list)))  # 是元组中的一个返回 True
-print("isinstance(A(), A) :", isinstance(A(), A))  # returns True
-print("isinstance(B(), A) :", isinstance(B(), A))  # returns True
-print("type(A()) == A :", type(A()) == A)  # returns True
-print("type(B()) == A :", type(B()) == A)  # returns False
+print("isinstance(A(), A)：", isinstance(A(), A))  # returns True
+print("isinstance(B(), A)：", isinstance(B(), A))  # returns True
+print("type(A()) == A：", type(A()) == A)  # returns True
+print("type(B()) == A：", type(B()) == A)  # returns False
 
 
 print("======= 3、and or not 的用法 ========")
@@ -76,8 +76,8 @@ print("===== 4、is 与 == 的区别 ========")
 a = [1, 2, 3]
 b = a  # 引用同一个对象
 print("前提条件：b = a ")
-print("b is a:", b is a)  # true
-print("b == a:", b == a)  # true
+print("b is a：", b is a)  # true
+print("b == a：", b == a)  # true
 b = a[:]  # 给b重新赋值，重新开辟一块内存空间
 print("前提条件：b = a[:]")
 print(b is a)  # false

@@ -2,8 +2,8 @@ print("======= 1、固定参数 ========")
 
 def printinfo(name, age=20):
     "打印任何传入的字符串"
-    print("名字: ", name)
-    print("年龄: ", age)
+    print("名字：", name)
+    print("年龄：", age)
     return
 
 printinfo("test", 10) # 必须参数，根据参数顺序入参
