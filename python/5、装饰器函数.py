@@ -1,10 +1,12 @@
 
+# 函数装饰器
+# https://blog.csdn.net/legend818/article/details/95165703
+
 from functools import wraps
 
-
+# 程序只是简单的将定义代码块读入内存中
 def func(func):
-    @wraps(func)
-    def wrapper(*args,**kwargs):
+    def wrapper(*args,**kwargs):# 封装内部函数，防止被装饰的函数未进行调用的情况下，程序已经执行完毕
         print("装饰器")
         func(*args,**kwargs)
     return wrapper
@@ -17,12 +19,13 @@ origin = func(origin) # 等价于 func(origin)()
 origin()
 
 print("======= 1、使用@装饰 ========")
+# @func这句代码在程序执行到这里时会自动执行func函数内部的代码
 @func # 等价于 demo = func(demo)
 def demo():
     print("函数装饰器--被装饰的函数")
     pass
 print(demo.__name__)
-demo()
+demo() #  只有调用了，才会执行
 
 
 
@@ -68,12 +71,6 @@ def test(*args, **kwargs):
     pass
 
 test("demo", 1, name="test", age=20)
-
-
-
-
-
-
 
 
 print("======= 4、两个装饰器装饰一个函数 ========")
