@@ -277,6 +277,8 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 		2、enumerate(sequence, [start=0])  #第二个参数为指定索引函数：多用于在for循环中得到计数，利用它可以同时获得索引和值
 		3、id()函数能够获取对象的内存地址
 		4、hash() 函数可以应用于数字、字符串和对象，不能直接应用于 list、set、dictionary
+		5、str()： 函数返回一个用户易读的表达形式
+		6、repr()： 产生一个解释器易读的表达形式
 	
 	直接赋值、浅拷贝、深度拷贝
 		* 直接赋值：其实就是对象的引用（别名）
@@ -420,7 +422,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 		2、函数、模块、类主要包括关键字：
 			 from　　import　　as　　def　　pass　　lambda　　return　　class
 		3、异常主要包括关键字：
-			 try　　except　　finally　　raise 
+			 try　　except　　else   finally　  assert 　raise 
 		4、其他关键字
 			 print　　del　　global　　with　　assert　　yield　　exec
 		重点注意：
@@ -448,3 +450,61 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 				loads     json数据转python格式
 				load	  反序列化json文件到python数据	
 			
+
+**10、异常和断言**
+	
+	异常分类：
+
+		BaseExcetion 
+			|--SystemExit	Python解释器退出
+			|--Exception    常见错误的基类
+				　　|--AssertionError	断言语句失败
+				　　|--AttributeError	对象没有这个属性
+				　　|--EOFError	没有内建输入,到达EOF 标记
+				　　|--EnvironmentError	操作系统错误的基类
+			|--KeyboardInterrupt   用户中断执行
+			|--GeneratorExit    生成器(generator)发生异常来通知退出
+	
+	try...except：
+		* 执行 try 子句（在关键字 try 和关键字 except 之间的语句）
+		* 如果没有异常发生，忽略 except 子句，try 子句执行后结束
+		* 执行 try 子句的过程中发生了异常，那么 try 子句余下的部分将被忽略。如果异常的类型和 except 之后的名称相符，那么对应的 except 子句将被执行
+		* 如果一个异常没有与任何的 excep 匹配，那么这个异常将会传递给上层的 try 中
+		注意：
+		1、一个 try 语句可能包含多个except子句，分别来处理不同的特定的异常。最多只有一个分支会被执行
+		2、一个except子句可以同时处理多个异常，这些异常将被放在一个括号里成为一个元组，例如:
+			except (RuntimeError, TypeError, NameError):
+			    pass
+		3、最后一个except子句可以忽略异常的名称，它将被当作通配符使用
+
+	try...except...else
+		* else 子句必须放在所有的 except 子句之后，将在 try 子句没有发生任何异常的时候执行
+	
+	try...except...else...finally 
+		* finally 语句无论是否发生异常都将执行其中的代码
+		* 如果一个异常在 try 、except 、else 子句里任意一处被抛出，而又没有任何的 except 把它截住，那么这个异常会在 finally 子句执行后被抛出
+		
+		try:
+			执行代码
+		except:
+			程序异常时执行
+		else:
+			没有异常时执行
+		finally:
+			始终都会执行
+
+	抛出异常
+		* raise 语句抛出一个指定的异常
+		* raise 唯一的一个参数指定了要被抛出的异常，它必须是一个异常的实例或者是异常的类（也就是 Exception 的子类）
+		* 如果你只想知道这是否抛出了一个异常，并不想去处理它，那么一个简单的 raise 语句就可以再次把它抛出
+
+	assert（断言）
+		* assert（断言）用于判断一个表达式，在表达式条件为 false 的时候触发异常
+			assert expression
+			等价于：
+			if not expression:
+    			raise AssertionError
+			assert 1==2,'1 不等于 2'
+
+
+**11、**
