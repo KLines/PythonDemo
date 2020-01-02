@@ -145,7 +145,6 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 		is 与 == 区别，is 用于判断两个变量引用对象是否为同一个， == 用于判断引用变量的值是否相等。
 	    a is b 相当于 id(a)==id(b)
 
-
 **4、条件语句、循环语句**
 
 	条件语句：
@@ -367,6 +366,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 		* 类装饰器类似函数装饰器,创建类对象时使用一个__init__方法接收需要装饰的函数,并定义__call__方法运行需要添加的功能并执行原先的函数代码
 		* 被类装饰器装饰的函数不论被调用几次，__init__ 函数只会执行一次，并且它的执行是被装饰函数声明装饰时就自动执行，不需要手动调用
 		* 装饰器的参数从 __init__ 函数中传，函数的参数从 __call__ 函数中传
+		* 单例模式的使用
 
 
 **8、变量作用域**
@@ -409,21 +409,21 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 **9、模块&关键字&序列化**
 
 	import 与 from...import:
-		* 1、将整个模块(somemodule)导入，格式为： import somemodule
-		* 2、从某个模块中导入某个函数,格式为： from somemodule import somefunction
-		* 3、从某个模块中导入多个函数,格式为： from somemodule import firstfunc, secondfunc, thirdfunc
-		* 4、将某个模块中的全部函数导入，格式为： from somemodule import *
+		1、将整个模块(somemodule)导入，格式为： import somemodule
+		2、从某个模块中导入某个函数,格式为： from somemodule import somefunction
+		3、从某个模块中导入多个函数,格式为： from somemodule import firstfunc, secondfunc, thirdfunc
+		4、将某个模块中的全部函数导入，格式为： from somemodule import *
 	
 	关键字：
-		* 1、循环及判断主要包括关键字：
+		1、循环及判断主要包括关键字：
 		     if　　elif　　else　　for　　while　　break　　continue　　and　　 or　　is　　not　　in
-		* 2、函数、模块、类主要包括关键字：
+		2、函数、模块、类主要包括关键字：
 			 from　　import　　as　　def　　pass　　lambda　　return　　class
-		* 3、异常主要包括关键字：
+		3、异常主要包括关键字：
 			 try　　except　　finally　　raise 
-		* 4、其他关键字
+		4、其他关键字
 			 print　　del　　global　　with　　assert　　yield　　exec
-		* 重点注意：
+		重点注意：
 		  1、pass：是空语句，是为了保持程序结构的完整性，不做任何事情，一般用做占位语句。 
 		  2、with...as
 		  3、raise 
@@ -431,3 +431,20 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 		  5、exec 
 	
 	序列化&反序列化：
+		pickle模块
+			pickle模块实现了用于对Python对象结构进行 序列化 和 反序列化 的二进制协议
+			* pickle模块是python专用的持久化模块，可以持久化包括自定义类在内的各种数据，只能在python程序之间进行数据交换
+			* 方法：
+	            dumps 　　将对象序列化成bytes对象
+	            dump 　　 对象序列化到文件对象，就是存入文件
+	            loads　　 从bytes对象反序列化
+	            load　　  对象反序列化，从文件读取数据
+			* 注意：在使用dump()序列化时，打开文件必须要以wb模式，使用load()反序列化，打开文件必须以rb模式
+			
+		json模块	
+			* 方法：
+				dumps	  python数据转json格式
+				dump      序列化python数据到json文件
+				loads     json数据转python格式
+				load	  反序列化json文件到python数据	
+			

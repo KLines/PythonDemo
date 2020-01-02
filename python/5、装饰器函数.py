@@ -132,9 +132,9 @@ test("demo", 1, name="test", age=20)
 print("======= 6、类装饰器-带参数 ========")
 
 class Func(object):
-    def __init__(self, args):
-        self.args = args
-        print(self.args)
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+        print(self.kwargs)
 
     def __call__(self,func):
         def wrapper(*args, **kwargs):
@@ -153,3 +153,61 @@ def test(*args, **kwargs):
 
 # 函数的参数从 __call__ 函数中传
 test("demo", 1, name="test", age=20)
+
+
+if __name__ == '__main__':
+
+    # 单例模式1
+    def singleton(obj):
+        instance = {}
+        def wrapper(*args, **kwargs):
+            if obj not in instance:
+                instance[obj] = obj(*args,**kwargs)
+            return instance[obj]
+        return wrapper
+
+    @singleton
+    class Person(object): # Person = singleton(Person)
+        def __init__(self, *args, **kwargs):
+            self.args = args
+            self.kwargs = kwargs
+
+        def printInfo(self):
+            print(self.args)
+
+
+    test1 = Person("test1",12)
+    test2 = Person("test2",13)
+    test1.printInfo()
+    test2.printInfo()
+    print(id(test1),id(test1))
+
+
+    # 单例模式2
+    def cls(obj):
+        def wrapper(*args, **kwargs):
+            if not obj.instance:
+                obj.instance = obj(*args, **kwargs)
+            return obj.instance
+        return wrapper
+
+    @cls
+    class Demo(object):
+
+        instance = None
+
+        def __init__(self, *args, **kwargs):
+            self.args = args
+            self.kwargs = kwargs
+
+        def printInfo(self):
+            print(self.args)
+
+
+    zs = Demo("zs",12)
+    ls = Demo("ls",32)
+    zs.printInfo()
+    ls.printInfo()
+    print(id(zs),id(ls))
+
+
