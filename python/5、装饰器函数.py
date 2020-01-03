@@ -137,6 +137,7 @@ class Func(object):
         print(self.kwargs)
 
     def __call__(self,func):
+        print(self.kwargs)
         def wrapper(*args, **kwargs):
             print("class start")
             print(args)
