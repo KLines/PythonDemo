@@ -1,14 +1,5 @@
 # 面向对象
 
-# 1、self与变量关系
-# 2、_和__的使用场景
-# 3、对象访问权限
-# 4、类属性和实例属性
-
-# "单下划线" 开始的成员变量叫做保护变量，意思是只有类对象和子类对象自己能访问到这些变量
-# "双下划线" ：私有成员，不能在类外通过类对象访问私有的类属性，只有在类内部才能访问
-# https://blog.csdn.net/pfm685757/article/details/45918575
-
 print("====== 类属性和实例属性 ======")
 
 class Classname(object):  # 类对象
@@ -20,15 +11,18 @@ class Classname(object):  # 类对象
         self.name = name   # 公有实例属性
         self.__sex = sex  # 私有实例属性
 
+    # 静态方法，对象和类调用，可以没有参数
     @staticmethod
-    def func_static():      # 静态方法，可以没有参数
+    def func_static():
         print("类的静态方法")
 
+    # 类方法，对象和类调用，cls 指向类对象
     @classmethod
-    def func_cls(cls):   # 类方法  cls 指向类对象
+    def func_cls(cls):
         print('类的类方法')
 
-    def func_normal(self):  # 公有方法  self指向实例对象
+    # 普通方法，对象调用，对象调用
+    def func_normal(self):
         print("类的普通方法")
 
     def __func_normal(self):  # 私有方法
@@ -42,6 +36,7 @@ c.age  = 20
 print("实例属性-name：",c.name) # class
 print("实例属性-age：",c.age) # 20
 # print("实例属性-sex：",c.__sex) # error
+# print("类属性-name：",Classname.__like) # error
 # print("实例属性-name：",Classname.name) # error
 print("类属性-age：",Classname.age) # 0
 
@@ -75,7 +70,7 @@ class Person(object):
     sex = '男'
 
     def __init__(self):
-        Person.count+=1
+        Person.count += 1
         print("Person")
         pass
 

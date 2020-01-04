@@ -14,6 +14,7 @@ List.append(123456)
 print(id(List))
 print('修改后 list：', List[::])  # 返回所有值
 print('反向取值 list：', List[::-1])  # 反向取值
+# append() extend() insert() remove() pop() clear() copy()
 
 # 元组不能二次赋值，有序，元素可以是可变对象
 Tuple = ('tuple', 123, 'test', ['test1', 'test2'])
@@ -22,9 +23,11 @@ print('tuple：', Tuple)
 # 无序，元素必须是不可变对象
 Set = {'Tom', 'Mary', 'Tom', 'Jack', 'Rose'}
 print('set：', Set)
+# add() update() remove() discard() pop() clear() copy()
 
 # 无序，key 值必须是不可变对象，赋值时可以重复，运行时去重
 Dictionary = {'name': 'test', 'name': 'john', ('test2', 'test1'): 6734, 'dept': 'sales'}
+# update() pop() clear() copy()s
 
 print('dict：', Dictionary)
 # print(Dictionary.get(tuple))  # 获取对应键的值
