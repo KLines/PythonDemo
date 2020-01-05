@@ -1,13 +1,14 @@
-# 面向对象
+# 面向对象基础
 
 print("====== 类属性和实例属性 ======")
+from types import MethodType
 
 class Classname(object):  # 类对象
 
     age = 0  # 公有类属性
-    __like = None  # 私有类属性
+    __like = None  # 私有类属性，解释器对外把__like改成了_Classname__like
 
-    def __init__(self,name,sex):
+    def __init__(self, name, sex):
         self.name = name   # 公有实例属性
         self.__sex = sex  # 私有实例属性
 
@@ -21,41 +22,45 @@ class Classname(object):  # 类对象
     def func_cls(cls):
         print('类的类方法')
 
-    # 普通方法，对象调用，对象调用
+    # 普通方法，对象调用
     def func_normal(self):
         print("类的普通方法")
 
-    def __func_normal(self):  # 私有方法
+    # 私有方法
+    def __func_normal(self):
         pass
 
-
-c = Classname('class','男')
+m = Classname('man','男')
 
 # 通过实例更改类属性的值，不影响类访问类属性的值
-c.age  = 20
-print("实例属性-name：",c.name) # class
-print("实例属性-age：",c.age) # 20
-# print("实例属性-sex：",c.__sex) # error
-# print("类属性-name：",Classname.__like) # error
-# print("实例属性-name：",Classname.name) # error
 print("类属性-age：",Classname.age) # 0
+# print("类属性-__like：",Classname.__like) # error
+# print("实例属性-name：",Classname.name) # error
+m.age = 20
+print("类属性-age：",m.age) # 20
+print("实例属性-name：",m.name) # class
+# print("实例属性-sex：",m.__sex) # error
+
 
 # 通过类更改类属性的值，不影响实例访问类属性的值
-Classname.nage = 'temp'
+m.temp = 'temp'
 Classname.age = 50
-print("实例属性-name：",c.name) # class
-print("实例属性-age：",c.age) # 20
 print("类属性-age：",Classname.age) # 50
+print("类属性-age：",m.age) # 20
+print("实例属性-temp：",m.temp) # temp
+
 
 # 另外实例化一个对象,其值不是默认值,而是上次由类更改类属性后的值
-c1 = Classname('temp','女')
-print("实例属性-name：",c1.name) # temp
-print("实例属性-age：",c1.age) # 50
+w = Classname('woman','女')
+# w.set_name("test") # error
 print("类属性-age：",Classname.age) # 50
+print("类属性-age：",w.age) # 50
+print("实例属性-name：",w.name) # temp
+# print("实例属性-temp：",c1.temp) # 50 error
 
 Classname.func_static()
 Classname.func_cls()
-c.func_normal()
+w.func_normal()
 
 print(__name__)
 
@@ -93,8 +98,8 @@ class Person(object):
 # p.__private() # Error
 # p._Person__private()
 
-print("====== 单继承 ======")
 
+print("====== 单继承 ======")
 
 # 单继承
 class Student(Person):
@@ -131,8 +136,8 @@ temp.speak()
 # s.__private() # Error
 # s._Student__private() # Error
 
-print("====== 多继承 ======")
 
+print("====== 多继承 ======")
 
 class Speaker():
 
@@ -160,8 +165,20 @@ class Sample(Student, Speaker):
 s = Sample("Tim", 25,'女')
 s.speak()  # 方法名同，默认调用的是在括号中排前地父类的方法
 
-print("====== suepr()使用 ======")
 
+print("====== 鸭子类型 ======")
+
+class Duck(object):
+
+    def speak(self):
+        print('鸭子类型...')
+
+def run(person):
+    person.speak()
+
+run(Duck())
+
+print("====== suepr()使用 ======")
 
 class A:
     def __init__(self):
@@ -203,21 +220,5 @@ class Test():
     def __repr__(self):
         return "repr-->%s"%(self.prompt)
 
-
 t = Test()
 print(t)
-
-
-print("====== @dataclass使用 ======")
-
-from dataclasses import dataclass
-
-@dataclass
-class Data:
-    name:str = "test"
-    age:int = 21
-    isFlag:bool = False
-    value : float = 2.0
-
-d = Data()
-print(d)

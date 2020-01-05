@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+' a test module '
+
+__author__ = 'liuk'
 
 import datetime
 from functools import wraps
