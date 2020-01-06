@@ -165,8 +165,12 @@ class Speaker():
     def speak(self):
         print("姓名 %s，年龄 %s" % (self.name, self.age))
 
+    def lecture(self):
+        print("lecture")
+
 # 多重继承
 class Sample(Student, Speaker):
+
     name = "test"
     aget = 0
 
@@ -176,23 +180,15 @@ class Sample(Student, Speaker):
         # super().__init__(name, age, sex)
         Student.__init__(self,name, age, sex)
         Speaker.__init__(self, name, age)
+        print("Sample")
 
 
 s = Sample("Tim", 25,'女')
 s.speak()  # 方法名同，默认调用的是在括号中排前地父类的方法
+s.lecture()
+print(Sample.__bases__) # 查询继承的基类
+print(Sample.__mro__) # 查询类的调用顺序
 
-
-print("====== 鸭子类型 ======")
-
-class Duck(object):
-
-    def speak(self):
-        print('鸭子类型...')
-
-def run(person):
-    person.speak()
-
-run(Duck())
 
 print("====== suepr()使用 ======")
 
@@ -236,5 +232,25 @@ class Test():
     def __repr__(self):
         return "repr-->%s"%(self.prompt)
 
+    def __getattr__(self, attr): # 自定义属性
+        if attr == "score":
+            return 99
+        elif attr == "age":
+            return lambda : 20
+        else:
+            return None
+
+    def __call__(self, *args, **kwargs):
+        print("call-->",self.prompt)
+
+
 t = Test()
+
 print(t)
+t() # 对实例进行调用
+print(t.score)
+print(t.age())
+
+print(callable(t))
+print(callable(Test()))
+print(callable(Test)) # True

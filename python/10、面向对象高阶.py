@@ -84,7 +84,6 @@ print(dir(w))
 print(w.__dict__)
 
 
-
 print("====== @dataclass使用 ======")
 
 from dataclasses import dataclass
@@ -196,3 +195,23 @@ print('b.x=',b.x)
 b.y = 8
 print('b.y=',b.y)
 
+print("====== @property属性使用 ======")
+
+class Animal:
+
+    def __init__(self,name=None):
+        self.__name = name
+        pass
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self,value):
+        self.__name = value
+
+a = Animal("test")
+print(a.name)
+a.name = "animal"
+print(a.name)
