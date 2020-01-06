@@ -1,7 +1,6 @@
 # 面向对象基础
 
 print("====== 类属性和实例属性 ======")
-from types import MethodType
 
 class Classname(object):  # 类对象
 
@@ -9,6 +8,7 @@ class Classname(object):  # 类对象
     __like = None  # 私有类属性，解释器对外把__like改成了_Classname__like
 
     def __init__(self, name, sex):
+        super(Classname,self).__init__()
         self.name = name   # 公有实例属性
         self.__sex = sex  # 私有实例属性
 
@@ -21,6 +21,7 @@ class Classname(object):  # 类对象
     @classmethod
     def func_cls(cls):
         print('类的类方法')
+        print(cls.age)
 
     # 普通方法，对象调用
     def func_normal(self):
@@ -31,33 +32,51 @@ class Classname(object):  # 类对象
         pass
 
 m = Classname('man','男')
+w = Classname('woman','女')
+
+
+# 添加类属性
+Classname.temp = "temp"
+print("类属性-temp：",Classname.temp) # class-temp
+m.temp = "m-temp"
+print("类属性-temp：",m.temp) # m-temp
+print("类属性-temp：",w.temp) # class-temp
+
+
+# 添加实例属性
+m.grade = 'grade'
+# print("实例属性-grade：",Classname.grade) # error
+print("实例属性-grade：",m.grade) # grade
+# print("实例属性-temp：",w.grade) # error
+
+
+# 访问实例属性
+# print("实例属性-name：",Classname.name) # error
+print("实例属性-name：",m.name) # man
+print("实例属性-name：",w.name) # woman
+
 
 # 通过实例更改类属性的值，不影响类访问类属性的值
-print("类属性-age：",Classname.age) # 0
-# print("类属性-__like：",Classname.__like) # error
-# print("实例属性-name：",Classname.name) # error
 m.age = 20
+print("类属性-age：",Classname.age)  # 0
 print("类属性-age：",m.age) # 20
-print("实例属性-name：",m.name) # class
-# print("实例属性-sex：",m.__sex) # error
+print("类属性-age：",w.age) # 0
 
 
 # 通过类更改类属性的值，不影响实例访问类属性的值
-m.temp = 'temp'
 Classname.age = 50
-print("类属性-age：",Classname.age) # 50
+print("类属性-age：",Classname.age)  # 50
 print("类属性-age：",m.age) # 20
-print("实例属性-temp：",m.temp) # temp
-
-
-# 另外实例化一个对象,其值不是默认值,而是上次由类更改类属性后的值
-w = Classname('woman','女')
-# w.set_name("test") # error
-print("类属性-age：",Classname.age) # 50
 print("类属性-age：",w.age) # 50
-print("实例属性-name：",w.name) # temp
-# print("实例属性-temp：",c1.temp) # 50 error
 
+
+# 通过另一个实例更改类属性的值，不影响类访问类属性的值和之前实例的值
+w.age = 30
+print("类属性-age：",Classname.age)  # 50
+print("类属性-age：",m.age) # 20
+print("类属性-age：",w.age) # 30
+
+# 调用方法
 Classname.func_static()
 Classname.func_cls()
 w.func_normal()
@@ -70,12 +89,12 @@ class Person(object):
 
     # 类属性
     count=0
-    name = 'Person'
-    age = 0
     sex = '男'
 
-    def __init__(self):
+    def __init__(self,name,age):
         Person.count += 1
+        self.__name = name
+        self.__age = age
         print("Person")
         pass
 
@@ -89,12 +108,12 @@ class Person(object):
         pass
 
     def speak(self):
-        print("name:", self.name)
-        print("age:", self.age)
+        print("name:", self.__name)
+        print("age:", self.__age)
         pass
 
 
-# p = Person("Person",20)
+# p = Person('person','10')
 # p.__private() # Error
 # p._Person__private()
 
@@ -104,32 +123,29 @@ print("====== 单继承 ======")
 # 单继承
 class Student(Person):
 
-    grade = 1
+    grade = 1 # 类属性
 
     def __init__(self, name, age, sex):
-        # 显示调用父类构造函数
-        super().__init__()
-        Person.name = name
-        Person.age = age
+        super().__init__(name,age) # 显示调用父类构造函数
         self.sex = sex
         print("Student")
         pass
 
     def speak(self):
         super().speak()  # 调用父类方法
-        print("sex:", self.sex)
         # 当实例属性和类属性重名时，实例属性优先级高，它将屏蔽掉对类属性的访问
+        print("sex:", self.sex)
         print("grade:", self.grade)
         pass
 
 
 # 实例化类
-s = Student("Student", 7, '男')
+s = Student("student", 7, '男')
 s.grade = 2
 s.speak()
 s.print_info()
 
-temp = Student("temp", 77, '女')
+temp = Student("temp", 6, '女')
 temp.speak()
 
 # super(Student, s).speak()  # 用子类对象调用父类已被覆盖的方法
@@ -157,8 +173,8 @@ class Sample(Student, Speaker):
     def __init__(self, name, age,sex):
         # 调用父类构造函数
         # super(Sample,self).__init__(name,age)
-        # Student.__init__(self,name,age)
-        super().__init__(name, age, sex)
+        # super().__init__(name, age, sex)
+        Student.__init__(self,name, age, sex)
         Speaker.__init__(self, name, age)
 
 
