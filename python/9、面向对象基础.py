@@ -36,7 +36,7 @@ w = Classname('woman','女')
 
 
 # 添加类属性
-Classname.temp = "temp"
+Classname.temp = "class-temp"
 print("类属性-temp：",Classname.temp) # class-temp
 m.temp = "m-temp"
 print("类属性-temp：",m.temp) # m-temp

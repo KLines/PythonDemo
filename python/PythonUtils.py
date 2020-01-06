@@ -12,7 +12,7 @@ def logUtils(dir="log.txt"):
     def logging(func):
         @wraps(func)
         def wrapper():
-            with open(dir, "a+") as file:
+            with open(dir, "a+",encoding='utf-8') as file:
                 time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 file.write(time+"\n")
                 file.write(wrapper.__name__+" was called\n")
