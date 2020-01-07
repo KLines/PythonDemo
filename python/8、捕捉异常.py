@@ -1,28 +1,6 @@
 
 # 捕获异常
 
-# logging 模块 https://www.cnblogs.com/Nicholas0707/p/9021672.html
-import logging,os,datetime
-# 等级 DEBUG < INFO < WARNING < ERROR，日志的信息量是依次减少的
-logging.basicConfig(level=logging.DEBUG,
-                    format="%(asctime)s,%(name)s,level-->%(levelname)s,funcName-->%(funcName)s\n"+
-                           "msg-->%(message)s\n"+
-                           "%(pathname)s",
-                    datefmt="%Y-%m-%d %H:%M:%S %a",
-                    handlers=[logging.FileHandler(".\logging.log",encoding="utf-8")])
-                    # filename=os.getcwd()+"\logging.log")
-
-def log():
-    logging.debug("这是msg1")
-    logging.info("msg2")
-    logging.warning("msg3")
-    logging.error("msg4")
-
-log()
-
-time_now = datetime.datetime.now().strftime('%H:%M:%S.%f')
-print(time_now)
-
 try:
     print("程序执行")
     i = 1 / 0
@@ -53,4 +31,30 @@ except MyError as e:
     print('My exception occurred, value:', e.value)
 
 # 断言使用
-assert  1==2,'1 不等于 2'
+# assert  1==2,'1 不等于 2'
+
+
+# logging模块
+# https://www.cnblogs.com/Nicholas0707/p/9021672.html
+
+import logging
+
+# 等级 DEBUG < INFO < WARNING < ERROR，日志的信息量是依次减少的
+
+LOG_FORMAT = "%(asctime)s,%(name)s,level-->%(levelname)s,funcName-->%(funcName)s\nmsg-->%(message)s\n%(pathname)s"
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S %a"
+
+# filename=os.getcwd()+"\logging.log"
+
+logging.basicConfig(level=logging.DEBUG,
+                    format= LOG_FORMAT,
+                    datefmt= DATE_FORMAT,
+                    handlers=[logging.FileHandler("logging.log",encoding="utf-8")])
+
+def log():
+    logging.debug("这是msg1")
+    logging.info("msg2")
+    logging.warning("msg3")
+    logging.error("msg4")
+
+log()

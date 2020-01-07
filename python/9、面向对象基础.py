@@ -20,6 +20,7 @@ class Classname(object):  # 类对象
     # 类方法，对象和类调用，cls 指向类对象
     @classmethod
     def func_cls(cls):
+        print(cls)
         print('类的类方法')
         print(cls.age)
 

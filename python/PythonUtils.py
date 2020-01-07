@@ -57,7 +57,7 @@ if __name__ == '__main__':
     nowStramp = time.time()
     print(nowTime)
     print(nowStramp)
-    nowTime.strftime("%Y-%m-%d %H:%M:%S")
+    nowTime.strftime("%Y-%m-%d %H:%M:%S.%f")
     int(nowStramp)
 
     # 选择排序

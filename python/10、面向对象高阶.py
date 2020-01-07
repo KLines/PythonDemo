@@ -24,6 +24,7 @@ def set_score(self, score):
 
 Classname.set_score = MethodType(set_score,Classname)
 m.set_score(50)
+m.score = 20
 print(Classname.score)
 print(m.score)
 print(w.score)
