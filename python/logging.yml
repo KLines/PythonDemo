@@ -1,0 +1,27 @@
+
+version: 1
+
+# 可选项
+#root:
+#  level: DEBUG
+#  handlers: [consoleHandler]
+
+loggers:
+  log_dict: # name为loggers里面keys的值则调用对应的配置，如果name没有则调用默认root的配置
+    level: DEBUG
+    handlers: [fileHandler,consoleHandler]
+    # propagate: no 不继承父类配置
+
+handlers:
+  fileHandler:
+    formatter: myformatter
+    class: logging.FileHandler
+    filename: "logging.log" # FielHandler中的入参
+    encoding: "utf-8"
+  consoleHandler:
+    formatter: myformatter
+    class: logging.StreamHandler
+
+formatters:
+  myformatter:
+    format: "%(asctime)s %(name)s-->%(levelname)s\n%(process)s-->%(processName)s\nmsg-->%(message)s"
