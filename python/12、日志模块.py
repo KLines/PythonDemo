@@ -5,11 +5,13 @@ logging模块
 
 https://www.cnblogs.com/Nicholas0707/p/9021672.html
 https://www.cnblogs.com/yyds/p/6885182.html
+https://www.cnblogs.com/zhbzz2007/p/5943685.html
 
 默认的日志级别设置为WARNING，DEBUG < INFO < WARNING < ERROR < CRITICAL，日志的信息量是依次减少的
 '''
 
 import logging
+import logging.handlers
 import logging.config
 import yaml
 
@@ -79,6 +81,13 @@ def log_components():
         # 3、创建处理器
         fh = logging.FileHandler(FILE_NAME,encoding="utf-8")
         ch = logging.StreamHandler() # 控制台输出
+        st = logging.handlers.SMTPHandler(
+            mailhost=("smtp.126.com","25"),
+            fromaddr="liukai19900820@126.com",
+            toaddrs="471636288@qq.com",
+            subject="python发送邮件",
+            credentials=("liukai19900820@126.com","10110068172008lk")
+        )
 
         # 4、设置格式器
         formatter = logging.Formatter("%(asctime)s  %(name)s-->%(levelname)s  %(filename)s[:%(lineno)d]-->%(funcName)s\nmsg-->%(message)s")
@@ -86,10 +95,13 @@ def log_components():
         # 5、设置处理器输出格式
         fh.setFormatter(formatter)
         ch.setFormatter(formatter)
+        st.setLevel(logging.ERROR)
+        st.setFormatter(formatter)
 
         # 6、添加处理器、格式器
         logger.addHandler(fh)
         logger.addHandler(ch)
+        logger.addHandler(st)
 
     # logger.removeHandler(fh)
 
@@ -123,7 +135,7 @@ def log_dictConfig():
 
 
 
-print_log("====== 通过basicConfig配置日志 ======\n")
+# print_log("====== 通过basicConfig配置日志 ======\n")
 print_log("====== 通过组件配置日志 ======\n",1)
-print_log("====== 通过fileConfig()配置日志 ======\n",2)
-print_log("====== 通过dictConfig()配置日志 ======\n",3)
+# print_log("====== 通过fileConfig()配置日志 ======\n",2)
+# print_log("====== 通过dictConfig()配置日志 ======\n",3)
