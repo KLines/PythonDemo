@@ -16,8 +16,8 @@ handlers:
   fileHandler:
     formatter: myformatter
     class: logging.FileHandler
-    filename: "logging.log" # FielHandler中的入参
-    encoding: "utf-8"
+    filename: logger.log # FielHandler中的入参
+    encoding: utf-8
   consoleHandler:
     formatter: myformatter
     class: logging.StreamHandler

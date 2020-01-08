@@ -5,18 +5,40 @@ logging模块
 
 https://www.cnblogs.com/Nicholas0707/p/9021672.html
 https://www.cnblogs.com/yyds/p/6885182.html
-https://www.cnblogs.com/zhbzz2007/p/5943685.html
 
-默认的日志级别设置为WARNING，DEBUG < INFO < WARNING < ERROR < CRITICAL，日志的信息量是依次减少的
+默认的日志级别设置为 WARNING，
+
+DEBUG < INFO < WARNING < ERROR < CRITICAL，日志的信息量是依次减少的
+
+handler名称：位置；作用
+
+StreamHandler：logging.StreamHandler；日志输出到流，可以是sys.stderr，sys.stdout或者文件
+FileHandler：logging.FileHandler；日志输出到文件
+
+注意多线程时的使用
+BaseRotatingHandler：logging.handlers.BaseRotatingHandler；基本的日志回滚方式
+RotatingFileHandler：logging.handlers.RotatingFileHandler；日志回滚方式，支持日志文件最大数量和日志文件回滚
+TimedRotatingFileHandler：logging.handlers.TimedRotatingFileHandler；日志回滚方式，在一定时间区域内回滚日志文件
+
+SocketHandler：logging.handlers.SocketHandler；远程输出日志到TCP/IP sockets
+DatagramHandler：logging.handlers.DatagramHandler；远程输出日志到UDP sockets
+SMTPHandler：logging.handlers.SMTPHandler；远程输出日志到邮件地址
+
+SysLogHandler：logging.handlers.SysLogHandler；日志输出到syslog
+NTEventLogHandler：logging.handlers.NTEventLogHandler；远程输出日志到Windows NT/2000/XP的事件日志
+MemoryHandler：logging.handlers.MemoryHandler；日志输出到内存中的指定buffer
+HTTPHandler：logging.handlers.HTTPHandler；通过"GET"或者"POST"远程输出到HTTP服务器
+
 '''
 
 import logging
 import logging.handlers
 import logging.config
 import yaml
+import time
 
 
-FILE_NAME = "logging.log"
+FILE_NAME = "logger.log"
 
 def print_log(info,type=0):
 
@@ -45,7 +67,12 @@ def print_log(info,type=0):
     log.debug(name+"debug")
     log.info(name+"info")
     log.warning(name+"warning")
-    log.error(name+"error")
+    try:
+        open("temp.txt","r")
+    except Exception:
+        # 捕获traceback
+        log.error(name+"error",exc_info = True)
+        # log.exception(name+"error")
     log.critical(name+"critical")
 
 
@@ -56,13 +83,12 @@ def log_config():
     LOG_FORMAT = "%(asctime)s,%(name)s,level-->%(levelname)s,funcName-->%(funcName)s\nmsg-->%(message)s\n%(pathname)s"
     DATE_FORMAT = "%Y-%m-%d %H:%M:%S %a"
 
-    # filename=os.getcwd()+"\logging.log"
+    # filename=os.getcwd()+"\logger.log"
 
     logging.basicConfig(level=logging.DEBUG,
                         format= LOG_FORMAT,
                         datefmt= DATE_FORMAT,
                         handlers=[logging.FileHandler(FILE_NAME,encoding="utf-8"),logging.StreamHandler()])
-
 
 "====== 通过组件配置日志 ======"
 
@@ -82,12 +108,22 @@ def log_components():
         fh = logging.FileHandler(FILE_NAME,encoding="utf-8")
         ch = logging.StreamHandler() # 控制台输出
         st = logging.handlers.SMTPHandler(
-            mailhost=("smtp.126.com","25"),
-            fromaddr="liukai19900820@126.com",
-            toaddrs="471636288@qq.com",
+            mailhost=("smtp.mxhichina.com","25"),
+            fromaddr="xxx@xx.com",
+            toaddrs="yyy@yy.com",
             subject="python发送邮件",
-            credentials=("liukai19900820@126.com","10110068172008lk")
+            credentials=("xxx@xx.com","xx")
         )
+
+        "====== 配置日志回滚 ======"
+
+        # 定义一个RotatingFileHandler，最多备份２个日志文件，每个日志文件最大128Bytes
+        rh = logging.handlers.RotatingFileHandler(FILE_NAME, maxBytes=1*128, backupCount=2, encoding="utf-8")
+
+        nowtime = time.strftime("%Y-%m-%d_%H-%M-%S",time.localtime(time.time()))
+
+        # 定义一个TimedRotatingFileHandler，最多备份２个日志文件，每隔１分钟自动保存
+        th = logging.handlers.TimedRotatingFileHandler(FILE_NAME, when="m", interval=1, backupCount=2, encoding="utf-8")
 
         # 4、设置格式器
         formatter = logging.Formatter("%(asctime)s  %(name)s-->%(levelname)s  %(filename)s[:%(lineno)d]-->%(funcName)s\nmsg-->%(message)s")
@@ -97,11 +133,17 @@ def log_components():
         ch.setFormatter(formatter)
         st.setLevel(logging.ERROR)
         st.setFormatter(formatter)
+        rh.setLevel(logging.ERROR)
+        rh.setFormatter(formatter)
+        th.setLevel(logging.ERROR)
+        th.setFormatter(formatter)
 
         # 6、添加处理器、格式器
         logger.addHandler(fh)
         logger.addHandler(ch)
-        logger.addHandler(st)
+        # logger.addHandler(st)
+        # logger.addHandler(rh)
+        # logger.addHandler(th)
 
     # logger.removeHandler(fh)
 
@@ -135,7 +177,12 @@ def log_dictConfig():
 
 
 
-# print_log("====== 通过basicConfig配置日志 ======\n")
-print_log("====== 通过组件配置日志 ======\n",1)
-# print_log("====== 通过fileConfig()配置日志 ======\n",2)
-# print_log("====== 通过dictConfig()配置日志 ======\n",3)
+if __name__ == '__main__':
+
+    # while True:
+    #     time.sleep(0.1)
+
+        print_log("\n====== 通过basicConfig配置日志 ======\n\n")
+        print_log("\n====== 通过组件配置日志 ======\n\n",1)
+        print_log("\n====== 通过fileConfig()配置日志 ======\n\n",2)
+        print_log("\n====== 通过dictConfig()配置日志 ======\n\n",3)
