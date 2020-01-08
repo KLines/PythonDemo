@@ -42,7 +42,7 @@ FILE_NAME = "logger.log"
 
 def print_log(info,type=0):
 
-    with open(FILE_NAME,"a") as file:
+    with open(FILE_NAME,"a",encoding="utf-8") as file:
         file.write(info)
 
     # 删除所有现有的处理程序，重新生成basicConfig
@@ -166,7 +166,7 @@ def log_fileConfig():
 
 def log_dictConfig():
 
-    with open("logging.yml", "r") as file:
+    with open("logging.yml", "r", encoding="utf-8") as file:
         dict_conf = yaml.safe_load(file)
 
     logging.config.dictConfig(dict_conf)
