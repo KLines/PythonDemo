@@ -244,6 +244,9 @@ class Test():
     def __call__(self, *args, **kwargs):
         print("call-->",self.prompt)
 
+    def __del__(self):
+        print("析构函数")
+
 
 t = Test()
 
@@ -251,7 +254,3 @@ print(t)
 t() # 对实例进行调用
 print(t.score)
 print(t.age())
-
-print(callable(t))
-print(callable(Test()))
-print(callable(Test)) # True
