@@ -1,4 +1,11 @@
-print("======= 1、if elif 条件语句 ========")
+
+
+# 条件语句
+
+
+print("===== 1、if elif 条件语句 =====")
+
+
 x = 0
 y = 10
 if (x > 0) and (y / x > 2):  # 采用短路规则
@@ -11,7 +18,8 @@ else:
 x = [1, 2, 3]
 print(x) if len(x) != 0 else ""
 
-print("======= 2、while 循环语句 ========")
+
+print("===== 2、while 循环语句 =====")
 
 
 def trim(args):
@@ -25,7 +33,9 @@ def trim(args):
 str = "  trim  "
 print(trim(str))  # 去掉首尾重复空格
 
-print("======= 3、for 循环语句 ========")
+
+print("===== 3、for 循环语句 =====")
+
 
 basket = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
 for i in sorted(set(basket)):  # 顺序遍历
@@ -65,7 +75,9 @@ for index, item in enumerate(fruits):  # 打印索引以及对应值
 else:
     print("当前水果：无")  # 在循环条件为 false 时执行 else 语句块
 
-print("======= 4、switcher使用 ========")
+
+print("===== 4、switcher使用 =====")
+
 
 def num(arg):  # switcher使用
     switcher = {
@@ -96,7 +108,7 @@ def num2Str(arg):
     return switcher.get(arg, lambda: "nothing")()  # 返回对应函数
 
 
-if __name__ == '__main__':  #
+if __name__ == '__main__':
     print("switcher普通字典映射：", end="")
     print((num(3)))
     print("switcher函数与lambda字典映射：", end="")

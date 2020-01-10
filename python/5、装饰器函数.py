@@ -1,24 +1,34 @@
-
-# 函数装饰器
-# https://blog.csdn.net/legend818/article/details/95165703
-
 from functools import wraps
+
+
+'''
+函数装饰器
+https://blog.csdn.net/legend818/article/details/95165703
+'''
+
 
 # 程序只是简单的将定义代码块读入内存中
 def func(func): # 闭包
-    def wrapper(*args,**kwargs):# 封装内部函数，防止被装饰的函数未进行调用的情况下，程序已经执行完毕
+    # 封装内部函数，防止被装饰的函数未进行调用的情况下，程序已经执行完毕
+    def wrapper(*args,**kwargs):
         print("装饰器")
         func(*args,**kwargs)
     return wrapper
 
-print("======= 1、装饰器函数-未使用@装饰 ========")
+
+print("===== 1、装饰器函数-未使用@装饰 =====")
+
+
 def origin():
     print("被装饰的函数")
     pass
 origin = func(origin) # 等价于 func(origin)()
 origin()
 
-print("======= 1、装饰器函数-使用@装饰 ========")
+
+print("===== 1、装饰器函数-使用@装饰 =====")
+
+
 # @func这句代码在程序执行到这里时会自动执行func函数内部的代码
 @func # 等价于 demo = func(demo)
 def demo(name, age):
@@ -29,8 +39,8 @@ print(demo.__name__)
 demo("test", 21) #  只有调用了，才会执行
 
 
+print("===== 2、装饰器函数-两个装饰器装饰一个函数 =====")
 
-print("======= 2、装饰器函数-两个装饰器装饰一个函数 ========")
 
 def func1(func):
     print("func1")
@@ -58,7 +68,8 @@ print("name：", test.__name__)
 test()
 
 
-print("======= 3、装饰器函数-一般参数 ========")
+print("===== 3、装饰器函数-一般参数 =====")
+
 
 def logit(args):
     def logging(func):
@@ -77,8 +88,8 @@ def test():
 test()
 
 
+print("===== 4、装饰器函数-函数名参数 =====")
 
-print("======= 4、装饰器函数-函数名参数 ========")
 
 def outh():
     print("认证成功")
@@ -106,10 +117,10 @@ def test():
 test()
 
 
+print("===== 5、类装饰器-不带参数 =====")
 
-print("======= 5、类装饰器-不带参数 ========")
 
-class Func():
+class Func1():
     def __init__(self, func):
         self.func = func
 
@@ -118,7 +129,7 @@ class Func():
         self.func(*args, **kwargs)
         print("class end")
 
-@Func
+@Func1
 def test(*args, **kwargs):
     print(args)
     print("函数装饰器--类作为装饰器使用")
@@ -129,9 +140,9 @@ test("demo", 1, name="test", age=20)
 
 
 
-print("======= 6、类装饰器-带参数 ========")
+print("===== 6、类装饰器-带参数 =====")
 
-class Func(object):
+class Func2(object):
     def __init__(self, **kwargs):
         self.kwargs = kwargs
         print(self.kwargs)
@@ -146,7 +157,7 @@ class Func(object):
         return wrapper
 
 # 装饰器的参数从 __init__ 函数中传
-@Func(args="class args")
+@Func2(args="class args")
 def test(*args, **kwargs):
     print("函数装饰器--类作为装饰器使用")
     print(kwargs)
@@ -210,5 +221,3 @@ if __name__ == '__main__':
     zs.printInfo()
     ls.printInfo()
     print(id(zs),id(ls))
-
-

@@ -1,4 +1,10 @@
-print("======= 1、str list tuple dict 数据类型 的用法 ========")
+
+
+# 基础语法
+
+
+print("===== 1、str list tuple dict 数据类型 的用法 =====")
+
 
 String = "hello world"
 print('str：' + String)
@@ -38,7 +44,8 @@ print('dict：', Dictionary)
 print("数据类型：", type(1.0), type(String), type(List), type(Tuple), type(Set), type(Dictionary))
 
 
-print("======= 2、type isinstance 用法 ========")
+print("===== 2、type isinstance 用法 =====")
+
 
 class A:  # 空类
     pass  # pass是空语句，是为了保持程序结构的完整性，不做任何事情，一般用做占位语句。
@@ -55,7 +62,8 @@ print("type(A()) == A：", type(A()) == A)  # returns True
 print("type(B()) == A：", type(B()) == A)  # returns False
 
 
-print("======= 3、and or not 的用法 ========")
+print("===== 3、and or not 的用法 =====")
+
 
 a = 10
 b = 20
@@ -79,8 +87,11 @@ print("a or b :", a or b)
 print("not (a and b) :", not (a and b))
 
 
-print("===== 4、is 与 == 的区别 ========")
+print("===== 4、is 与 == 的区别 =====")
+
+
 "== 与 is 的区别：is 与 == 区别，is 用于判断两个变量引用对象是否为同一个， == 用于判断引用变量的值是否相等。"
+
 a = [1, 2, 3]
 b = a  # 引用同一个对象
 print("前提条件：b = a ")

@@ -1,7 +1,10 @@
 
+
 # 捕获异常
 
-print("====== 捕获异常 ======")
+
+print("===== 捕获异常 =====")
+
 
 try:
     print("程序执行")
@@ -20,7 +23,10 @@ else:
 finally:
     print("程序结束")
 
-# 自定义异常
+
+'自定义异常'
+
+
 class MyError(Exception):
     def __init__(self,value):
         self.value = value
@@ -32,6 +38,10 @@ try:
 except MyError as e:
     print('My exception occurred, value:', e.value)
 
-# 断言使用
+
+
+'断言使用'
+
+
 assert  1==2,'1 不等于 2'
 
