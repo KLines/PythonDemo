@@ -38,12 +38,11 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 		# -*- coding: utf-8 -*-
 
 
-###2、变量类型###
+### 2、变量类型 ###
 
 **变量类型**
    
-* 变量存储在内存中的值，这就意味着在创建变量时会在内存中开辟一个空间。基于变量的数据类型，解释器会分配指定内存，并决定什么数据可以被存储在内存中。
-因此，变量可以指定不同的数据类型，这些变量可以存储整数，小数或字符。
+* 变量存储在内存中的值，这就意味着在创建变量时会在内存中开辟一个空间。基于变量的数据类型，解释器会分配指定内存，并决定什么数据可以被存储在内存中。因此，变量可以指定不同的数据类型，这些变量可以存储整数，小数或字符。
 		
 **变量赋值**
 
@@ -117,22 +116,19 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 * 7、bool（布尔值）布尔值和布尔代数的表示完全一致，一个布尔值只有True、False两种值。
 		
 * 注意：
-
-		1、Python可以通过内置函数进行数据类型的转换，从而返回一个新的对象，表示转换的值
-		2、Python程序语言指定任何非0和非空（null）值为true，0 或者 null为false。
-		3、不可变数据（3 个）：Number、str、tuple
-		4、可变数据（3 个）：list、dict、set，  list、set、dict类中存在copy方法
-		5、可迭代对象：str、list、tuple、set、dict（默认输出key值）
-		6、有序数据：str、list、tuple    无序数据：set、dict
-		7、Python 的所有数据类型都是类，可以通过 type() 查看该变量的数据类型，还可以用 isinstance 来判断
-	   	 	* isinstance(object, classinfo) object -- 实例对象，classinfo -- 可以是直接或间接类名、基本类型或者有它们组成的元组。
-	   		* type()不会认为子类是一种父类类型。 
-	   		* isinstance()会认为子类是一种父类类型。
-		8、字典和集合无序的实现方式是hash表，通过hash值来将对象放入hash表中，从而达到无序的操作。（对象的hash值是不断变化的）Python中int型
-		   的hash值就是它本身，那么set或dict中的排序方式又是通过hash表实现的，所以自然顺序就不会变。
-		9、list和dict有以下几个特点：
-			dict查找和插入的速度极快，不会随着key的增加而变慢；list查找和插入的时间随着元素的增加而增加
-			dict需要占用大量的内存，内存浪费多；list占用空间小，浪费内存很少
+	* 1、Python可以通过内置函数进行数据类型的转换，从而返回一个新的对象，表示转换的值
+	* 2、Python程序语言指定任何非0和非空（null）值为true，0 或者 null为false。
+	* 3、不可变数据（3 个）：Number、str、tuple
+	* 4、可变数据（3 个）：list、dict、set，  list、set、dict类中存在copy方法
+	* 5、可迭代对象：str、list、tuple、set、dict（默认输出key值）
+	* 6、有序数据：str、list、tuple    无序数据：set、dict
+	* 7、Python 的所有数据类型都是类，可以通过 type() 查看该变量的数据类型，还可以用 isinstance 来判断
+   	 	* isinstance(object, classinfo) object -- 实例对象，classinfo -- 可以是直接或间接类名、基本类型或者有它们组成的元组。
+   		* type()不会认为子类是一种父类类型，isinstance()会认为子类是一种父类类型。
+	* 8、字典和集合无序的实现方式是hash表，通过hash值来将对象放入hash表中，从而达到无序的操作。（对象的hash值是不断变化的）Python中int型的hash值就是它本身，那么set或dict中的排序方式又是通过hash表实现的，所以自然顺序就不会变。
+	* 9、list和dict有以下几个特点：
+		* dict查找和插入的速度极快，不会随着key的增加而变慢；list查找和插入的时间随着元素的增加而增加
+		* dict需要占用大量的内存，内存浪费多；list占用空间小，浪费内存很少
 
 
 ### 3、运算符 ###
@@ -170,9 +166,8 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 * is：判断两个标识符是不是引用自一个对象 x is y，类似 id(x) == id(y)， 如果引用的是同一个对象则返回 True，否则返回 False
 * is not：判断两个标识符是不是引用自不同对象 x is not y，类似 id(a) != id(b)。如果引用的不是同一个对象则返回结果 True，否则返回 False。
 * 注意：
-
-		1、is 与 == 区别，is 用于判断两个变量引用对象是否为同一个， == 用于判断引用变量的值是否相等。
-		2、a is b 相当于 id(a)==id(b)
+	* is 与 == 区别，is 用于判断两个变量引用对象是否为同一个， == 用于判断引用变量的值是否相等。
+	* a is b 相当于 id(a)==id(b)
 
 
 ### 4、条件语句、循环语句 ###
@@ -214,136 +209,153 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 * 2、for … else 中的 else 语句会在循环正常执行完的情况下执行（即 for 不是通过 break 跳出而中断的）
 
 
-### 5、迭代器 ###
+### 5、函数用法 ###
 
-	迭代器（Iterator）：
-		* 迭代器是一个可以记住遍历的位置的对象。StopIteration 异常用于标识迭代的完成
-		* 迭代器对象从集合的第一个元素开始访问，直到所有的元素被访问完结束。迭代器只能往前不会后退。
-		* 迭代器有两个基本的方法：iter() 和 next()
-		* 使用iter()函数可以将list、dict、str等由Iterable变成Iterator
+* Python程序是从上往下顺序执行的，而且碰到函数的定义代码块是不会立即执行的，只有等到该函数被调用时，才会执行其内部的代码块。
 	
-	可迭代对象（Iterable）
-		* 可以直接作用于 for 循环的对象统称为可迭代对象，数据类型有以下几种：
-			1、集合数据类型，如list、tuple、dict、set、str等
-			2、generator，包括生成器和带yield的generator function
+**函数定义**
+
+* 函数名： foo、outer、inner
+* 函数体：函数的整个代码结构
+* 返回值： return后面的表达式
+* 函数的内存地址：id(foo)、id(outer)等
+* 函数名加括号：对函数进行调用，比如foo()、outer(foo)
+* 函数名作为参数： outer(foo)中的foo本身是个函数，但作为参数被传递给了outer函数
+* 函数名加括号被当做参数：其实就是先调用函数，再将它的返回值当做别的函数的参数，例如outer(foo())
+* 返回函数名：return inner
+* 返回函数名加括号：return inner()，其实就是先执行inner函数，再将其返回值作为别的函数的返回值。
 	
-	注意：
-		* 如果一个对象是迭代器，那么这个对象肯定是可迭代的；但是反过来，如果一个对象是可迭代的，那么这个对象不一定是迭代器。
-		* 凡是可作用于for循环的对象都是Iterable类型，凡是可用作next()函数的对象都是Iterator类型，它表示一个惰性计算的序列。
+**函数使用**
+
+* 1、函数中参数传递，具体为：不可变对象和可变对象。
+* 2、函数返回多个值的时候，是以元组的方式返回的
+* 3、参数分为：固定参数，可变参数
+	
+		* 固定参数：必需参数、关键字参数、默认参数
+			def printinfo(name, age=20):
+			    print("名字: ", name)
+			    print("年龄: ", age)
+			printinfo("test", 10)  # 必须参数，根据参数顺序入参
+			printinfo(age=50, name="runoob")  # 关键字参数，可根据参数名匹配
+			printinfo("func")  # 使用默认参数，默认参数必须放在最后面
+
+		* 可变参数：
+			def printinfo(number, *args):  # 以元组(tuple)的形式导入
+			    print(number)
+			    print(args)
+			printinfo(1, "test", 3, 4)
 		
-	生成器（generator）：
-		* 在Python中，使用了 yield 的函数被称为生成器（generator），生成器是一个返回Iterator对象的函数
-		* yield 是一个类似 return 的关键字，生成器的唯一注意事项就是：生成器只能遍历一次。
-		* 在调用生成器运行的过程中，每次遇到 yield 时函数会暂停并保存当前所有的运行信息，返回 yield 的值, 并在下一次执行 next() 方法时从当前位置继续运行。
-		* 注意：
-		一个带有yield的函数和普通函数不同，Python解释器会将其视为一个生成器（generator），调用函数时不会执行任何函数代码，而是返回一个Iterator对象，直到对
-	    其调用 next()（在 for 循环中会自动调用 next()）才开始执行。虽然执行流程仍按函数的流程执行，但每执行到一个 yield 语句就会中断，并返回一个迭代值，下
-		次执行时从 yield 的下一个语句继续执行。
+			def printinfo(number, **kwargs):  # 以字典(dict)的形式导入
+			    print(number)
+			    print(kwargs)
+			printinfo(1, name="test", age=20)  # key必须是字符串
+			
+			def printinfo(a, b, *, c):  # 如果单独出现星号 * 后的参数必须用参数名传入
+			    return a + b + c
+			print(printinfo(1, 2, c=3))
 
+* 4、lambda 表达匿名函数，也可以使用关键字参数、默认参数
 
-**6、函数使用**
+		count = lambda arg1, arg2: arg1 + arg2 
+		print(count(1, 2))
 
-	Python程序是从上往下顺序执行的，而且碰到函数的定义代码块是不会立即执行的，只有等到该函数被调用时，才会执行其内部的代码块。
-	
-	函数定义：
-		* 函数名： foo、outer、inner
-		* 函数体：函数的整个代码结构
-		* 返回值： return后面的表达式
-		* 函数的内存地址：id(foo)、id(outer)等
-		* 函数名加括号：对函数进行调用，比如foo()、outer(foo)
-		* 函数名作为参数： outer(foo)中的foo本身是个函数，但作为参数被传递给了outer函数
-		* 函数名加括号被当做参数：其实就是先调用函数，再将它的返回值当做别的函数的参数，例如outer(foo())
-		* 返回函数名：return inner
-		* 返回函数名加括号：return inner()，其实就是先执行inner函数，再将其返回值作为别的函数的返回值。
-	
-	函数使用：
-		1、函数中参数传递，具体为：不可变对象和可变对象。
-		2、函数返回多个值的时候，是以元组的方式返回的
-		3、参数分为：固定参数，可变参数
-			* 固定参数：必需参数、关键字参数、默认参数
-				def printinfo(name, age=20):
-				    print("名字: ", name)
-				    print("年龄: ", age)
-				printinfo("test", 10)  # 必须参数，根据参数顺序入参
-				printinfo(age=50, name="runoob")  # 关键字参数，可根据参数名匹配
-				printinfo("func")  # 使用默认参数，默认参数必须放在最后面
-			* 可变参数：
-				def printinfo(number, *args):  # 以元组(tuple)的形式导入
-				    print(number)
-				    print(args)
-				printinfo(1, "test", 3, 4)
+* 5、函数参数可以是一个函数:
+
+		def func():
+			print("func()")
+		def excute(f):
+			f()	
+			print("excute()")
+		excute(func) 
+
+* 6、在函数中定义函数
 		
-				def printinfo(number, **kwargs):  # 以字典(dict)的形式导入
-				    print(number)
-				    print(kwargs)
-				printinfo(1, name="test", age=20)  # key必须是字符串
-				
-				def printinfo(a, b, *, c):  # 如果单独出现星号 * 后的参数必须用参数名传入
-				    return a + b + c
-				print(printinfo(1, 2, c=3))
-		4、lambda 表达匿名函数，也可以使用关键字参数、默认参数
-				count = lambda arg1, arg2: arg1 + arg2 
-				print(count(1, 2))
-		5、函数参数可以是一个函数:
-				def func():
-					print("func()")
-				def excute(f):
-					f()	
-					print("excute()")
-				excute(func) 
-		6、在函数中定义函数
-				def func():
-					print("func()")
-				    def temp():
-				        print("temp()")
-					temp()
-				func()
-		7、从函数中返回函数
-		 		def func():
-					print("func()")
-				    def temp():
-				        print("temp()")
-				 	return temp
-				f = func()
-				f()
+		def func():
+			print("func()")
+		    def temp():
+		        print("temp()")
+			temp()
+		func()
+
+* 7、从函数中返回函数
+
+		def func():
+			print("func()")
+		    def temp():
+		        print("temp()")
+		 	return temp
+		f = func()
+		f()
 	
-	相关函数：
-		1、range([start=0], stop, step) 函数返回的是一个可迭代对象（类型是对象），而不是列表类型，它只是在迭代的情况下返回指定索引的值，但是它并不会在内存
-		   中真正产生一个列表对象，这种对象被称为可迭代对象
-		2、enumerate(sequence, [start=0])  #第二个参数为指定索引函数：多用于在for循环中得到计数，利用它可以同时获得索引和值
-		3、id()：函数能够获取对象的内存地址
-		4、hash()：函数可以应用于数字、字符串和对象，不能直接应用于 list、set、dictionary
-		5、str()： 函数返回一个用户易读的表达形式
-		6、repr()： 产生一个解释器易读的表达形式
-		7、map()：函数接收两个参数，一个是函数，一个是Iterable，map将传入的函数依次作用到序列的每个元素，并把结果作为新的Iterator返回
-			      list(map(str, [1, 2, 3, 4]))--> ['1', '2', '3', '4']
-		8、reduce()：累积函数
-		9、sorted()：排序函数
+**相关函数**
+
+* 1、range([start=0], stop, step) 函数返回的是一个可迭代对象（类型是对象），而不是列表类型，它只是在迭代的情况下返回指定索引的值，但是它并不会在内存中真正产生一个列表对象，这种对象被称为可迭代对象
+* 2、enumerate(sequence, [start=0])  #第二个参数为指定索引函数：多用于在for循环中得到计数，利用它可以同时获得索引和值
+* 3、id()：函数能够获取对象的内存地址
+* 4、hash()：函数可以应用于数字、字符串和对象，不能直接应用于 list、set、dictionary
+* 5、str()： 函数返回一个用户易读的表达形式
+* 6、repr()： 产生一个解释器易读的表达形式
+* 7、map()：函数接收两个参数，一个是函数，一个是Iterable，map将传入的函数依次作用到序列的每个元素，并把结果作为新的Iterator返回
+		list(map(str, [1, 2, 3, 4]))--> ['1', '2', '3', '4']
+* 8、reduce()：累积函数
+* 9、sorted()：排序函数
 	
-	直接赋值、浅拷贝、深度拷贝
-		* 直接赋值：其实就是对象的引用（别名）
-		  b = a: 赋值引用，a 和 b 都指向同一个对象
-		* 浅拷贝(copy)：拷贝父对象，不会拷贝对象的内部的子对象
-		  b = a.copy(): 浅拷贝, a 和 b 是一个独立的对象，但他们的子对象还是指向统一对象（是引用）
-		* 深拷贝(deepcopy)：copy 模块的 deepcopy 方法，完全拷贝了父对象及其子对象
-		  b = copy.deepcopy(a): 深度拷贝, a 和 b 完全拷贝了父对象及其子对象，两者是完全独立的
+**直接赋值、浅拷贝、深度拷贝**
+
+* 直接赋值：其实就是对象的引用（别名）
+	* b = a: 赋值引用，a 和 b 都指向同一个对象
+* 浅拷贝(copy)：拷贝父对象，不会拷贝对象的内部的子对象
+  	* b = a.copy(): 浅拷贝, a 和 b 是一个独立的对象，但他们的子对象还是指向统一对象（是引用）
+* 深拷贝(deepcopy)：copy 模块的 deepcopy 方法，完全拷贝了父对象及其子对象
+	* b = copy.deepcopy(a): 深度拷贝, a 和 b 完全拷贝了父对象及其子对象，两者是完全独立的
 
 
-**7、函数装饰器**
+### 6、生成器函数 ###
 
-	含义：
-	    1、首先在Python中的函数是可以看做一个特殊变量的，而装饰器是建立在闭包的前提上的。
-	    2、闭包就是将函数当做参数传入另一个函数，两个函数的嵌套，外部函数返回内部函数的引用。
-	    3、装饰器本质上是一个Python函数，它可以让其他函数在不需要做任何代码变动的前提下增加额外功能，装饰器的返回值也是一个函数对象。
-	       总结：装饰器就是在不改变原先函数代码的情况下，给原先的函数添加功能。
-		4、闭包：
-	        def outer(x):
-	            def inner(y):
-	                return x + y
-	            return inner    
-	装饰器：
-		1、创建一个闭包
-		2、@符号装饰已定义的函数
+**迭代器（Iterator）**
+
+* 迭代器是一个可以记住遍历的位置的对象。StopIteration 异常用于标识迭代的完成
+* 迭代器对象从集合的第一个元素开始访问，直到所有的元素被访问完结束。迭代器只能往前不会后退。
+* 迭代器有两个基本的方法：iter() 和 next()
+* 使用iter()函数可以将list、dict、str等由Iterable变成Iterator
+	
+**可迭代对象（Iterable）**
+
+* 可以直接作用于 for 循环的对象统称为可迭代对象，数据类型有以下几种：
+	* 集合数据类型，如list、tuple、dict、set、str等
+	* generator，包括生成器和带yield的generator function
+* 注意：
+	* 如果一个对象是迭代器，那么这个对象肯定是可迭代的；但是反过来，如果一个对象是可迭代的，那么这个对象不一定是迭代器。
+	* 凡是可作用于for循环的对象都是Iterable类型，凡是可用作next()函数的对象都是Iterator类型，它表示一个惰性计算的序列。
+		
+**生成器（generator）**
+
+* 在Python中，使用了 yield 的函数被称为生成器（generator），生成器是一个返回Iterator对象的函数
+* yield 是一个类似 return 的关键字，生成器的唯一注意事项就是：生成器只能遍历一次。
+* 在调用生成器运行的过程中，每次遇到 yield 时函数会暂停并保存当前所有的运行信息，返回 yield 的值, 并在下一次执行 next() 方法时从当前位置继续运行。
+* 注意：
+	* 一个带有yield的函数和普通函数不同，Python解释器会将其视为一个生成器（generator），调用函数时不会执行任何函数代码，而是返回一个Iterator对象，直到对其调用 next()（在 for 循环中会自动调用 next()）才开始执行。虽然执行流程仍按函数的流程执行，但每执行到一个 yield 语句就会中断，并返回一个迭代值，下次执行时从 yield 的下一个语句继续执行。
+
+
+### 7、装饰器函数 ###
+
+**装饰器含义**
+
+* 1、首先在Python中的函数是可以看做一个特殊变量的，而装饰器是建立在闭包的前提上的。
+* 2、闭包就是将函数当做参数传入另一个函数，两个函数的嵌套，外部函数返回内部函数的引用。
+* 3、装饰器本质上是一个Python函数，它可以让其他函数在不需要做任何代码变动的前提下增加额外功能，装饰器的返回值也是一个函数对象。
+* 总结：装饰器就是在不改变原先函数代码的情况下，给原先的函数添加功能。
+
+**装饰器创建**
+
+* 1、创建一个闭包
+		
+		def outer(x):
+		    def inner(y):
+		        return x + y
+		    return inner    
+
+* 2、@符号装饰已定义的函数
 	
 	        def func(func):
 	        	# 这里就直接写万能装饰器了
@@ -366,86 +378,85 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 	    		pass
 			demo()
 	    
-	    3、执行顺序：
-	        1、Python会按照自下而上的顺序把各自的函数结果作为下一个函数（上面的函数）的输入
-	        2、当解释器读到@修饰符时，会先解析@后的内容，直接就把@下一行的函数或者类作为@后边的函数的参数，然后将返回值赋值给下一行修饰的函数对象
-	        3、functools wraps：@wraps表示在装饰器里面访问在装饰之前的函数的属性。
-	        4、先执行修饰器函数，然后有return fn的时候，修饰器下的函数需要单独调用执行，没有return fn时，系统会自动执行修饰器下的函数
+* 3、执行顺序：
+	* 1、Python会按照自下而上的顺序把各自的函数结果作为下一个函数（上面的函数）的输入
+	* 2、当解释器读到@修饰符时，会先解析@后的内容，直接就把@下一行的函数或者类作为@后边的函数的参数，然后将返回值赋值给下一行修饰的函数对象
+	* 3、functools wraps：@wraps表示在装饰器里面访问在装饰之前的函数的属性。
+	* 4、先执行修饰器函数，然后有return fn的时候，修饰器下的函数需要单独调用执行，没有return fn时，系统会自动执行修饰器下的函数
 	
-	装饰器类型：
-		1、一般装饰器
-		2、带参数的装饰器
+**装饰器类型**
+
+* 1、一般装饰器
+* 2、带参数的装饰器
 		
-			def logit(args):
-	            def logging(func):
-	                @wraps(func)
-	                def wrapper():
-	                    print(args)
-	                    print(func.__name__+" was called")
-	                    func()
-	                return wrapper
-	            return logging
-	
-	        @logit("使用logit")
-	        def test():
-	            print("函数装饰器--带参数的装饰器")
-	            pass
-	        test()
+		def logit(args):
+		    def logging(func):
+		        @wraps(func)
+		        def wrapper():
+		            print(args)
+		            print(func.__name__+" was called")
+		            func()
+		        return wrapper
+		    return logging
+		
+		@logit("使用logit")
+		def test():
+		    print("函数装饰器--带参数的装饰器")
+		    pass
+		test()
 	        
-		3、类装饰器（无参数、带参数）
+* 3、类装饰器（无参数、带参数）
 		
-			class Func(object):
-			    def __init__(self,func):
-			        self.func = func
-			   	def __call__(self, *args, **kwargs):
-			        self.func()
-			        
-		    @Func
-		    def test():
-		        pass
-		
-		    test()
-		* 类装饰器类似函数装饰器,创建类对象时使用一个__init__方法接收需要装饰的函数,并定义__call__方法运行需要添加的功能并执行原先的函数代码
-		* 被类装饰器装饰的函数不论被调用几次，__init__ 函数只会执行一次，并且它的执行是被装饰函数声明装饰时就自动执行，不需要手动调用
-		* 装饰器的参数从 __init__ 函数中传，函数的参数从 __call__ 函数中传
-		* 单例模式的使用
-
-
-**8、变量作用域**
-
-	Python的作用域一共有4种，分别是：
-		* L （Local） 局部作用域
-		* E （Enclosing） 闭包函数外的函数中
-		* G （Global） 全局作用域
-		* B （Built-in） 内建作用域（一般指系统自带）
-	以 局部作用域 > 嵌套作用域 > 全局作用域 > 内置作用域 的规则查找，即：在局部找不到，便会去局部外的局部找（例如闭包），再找不到就会去全局找，再者去内建中找。
-		
-		    g = 4  # 全局变量
-		    b =int(3.3) # 内建作用域
-		    def outer():
-		        e = 2  # 闭包函数外的函数中
-		        def inner():
-		            l = 1  # 局部变量
-		            print("全局作用域：",g)
-		            print("内建作用域：", b)
-		            print("闭包函数外的函数中："+str(e))
-		            print("局部作用域：",l)
-		        return inner  # 返回一个函数
-		    outer()()
-	    
-	注意：
-	    模块（module），类（class）以及函数（def、lambda）才会引入新的作用域，其它的代码块（如if/elif/else/、try/except、for/while等）
-		是不会引入新的作用域，这些语句内定义的变量，外部也可以访问
-	    
-	LEGB法则： 
-		当在函数中使用未确定的变量名时，Python会按照优先级依次搜索4个作用域，以此来确定该变量名的意义。首先搜索局部作用域(L)，之后是上一层嵌套
-		结构中def或lambda函数的嵌套作用域(E)，之后是全局作用域(G)，最后是内置作用域(B)。按这个查找原则，在第一处找到的地方停止。如果没有找到，
-		则会出发NameError错误。    
+		class Func(object):
+		    def __init__(self,func):
+		        self.func = func
+		   	def __call__(self, *args, **kwargs):
+		        self.func()
+		        
+	    @Func
+	    def test():
+	        pass
 	
-	global和nonlocal关键字
-		* 当内部作用域想修改全局变量时，则需要 global 关键字
-		* 当内部作用域想修改嵌套作用域（enclosing作用域，外层非全局作用域）中的变量，则需要 nonlocal 关键字
-		* nonlocal 只能修改外层函数的变量而不能修改外层函数所引用的全局变量
+	    test()
+	* 类装饰器类似函数装饰器,创建类对象时使用一个__init__方法接收需要装饰的函数,并定义__call__方法运行需要添加的功能并执行原先的函数代码
+	* 被类装饰器装饰的函数不论被调用几次，__init__ 函数只会执行一次，并且它的执行是被装饰函数声明装饰时就自动执行，不需要手动调用
+	* 装饰器的参数从 __init__ 函数中传，函数的参数从 __call__ 函数中传
+	* 单例模式的使用
+
+
+### 8、变量作用域 ###
+
+**4种类型**
+
+* L （Local） 局部作用域
+* E （Enclosing） 闭包函数外的函数中
+* G （Global） 全局作用域
+* B （Built-in） 内建作用域（一般指系统自带）
+* 以 局部作用域 > 嵌套作用域 > 全局作用域 > 内置作用域 的规则查找，即：在局部找不到，便会去局部外的局部找（例如闭包），再找不到就会去全局找，再者去内建中找。
+		
+		g = 4  # 全局变量
+		b =int(3.3) # 内建作用域
+		def outer():
+		    e = 2  # 闭包函数外的函数中
+		    def inner():
+		        l = 1  # 局部变量
+		        print("全局作用域：",g)
+		        print("内建作用域：", b)
+		        print("闭包函数外的函数中："+str(e))
+		        print("局部作用域：",l)
+		    return inner  # 返回一个函数
+		outer()()
+
+**LEGB法则** 
+
+* 当在函数中使用未确定的变量名时，Python会按照优先级依次搜索4个作用域，以此来确定该变量名的意义。首先搜索局部作用域(L)，之后是上一层嵌套结构中def或lambda函数的嵌套作用域(E)，之后是全局作用域(G)，最后是内置作用域(B)。按这个查找原则，在第一处找到的地方停止。如果没有找到，则会出发NameError错误。    
+* 模块（module），类（class）以及函数（def、lambda）才会引入新的作用域，其它的代码块（如if/elif/else/、try/except、for/while等）是不会引入新的作用域，这些语句内定义的变量，外部也可以访问
+	    
+** global和nonlocal关键字**
+
+* 当内部作用域想修改全局变量时，则需要 global 关键字
+* 当内部作用域想修改嵌套作用域（enclosing作用域，外层非全局作用域）中的变量，则需要 nonlocal 关键字
+* nonlocal 只能修改外层函数的变量而不能修改外层函数所引用的全局变量
 
 
 **9、模块&关键字&序列化**
