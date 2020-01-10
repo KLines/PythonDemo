@@ -14,6 +14,7 @@ class Person(object):
         Person.count += 1
         self.__name = name
         self.__age = age
+        self.score = 0
         print("Person")
         pass
 
@@ -56,12 +57,14 @@ class Student(Person):
         # 当实例属性和类属性重名时，实例属性优先级高，它将屏蔽掉对类属性的访问
         print("sex:", self.sex)
         print("grade:", self.grade)
+        print("score:", self.score)
         pass
 
 
 # 实例化类
 s = Student("student", 7, '男')
 s.grade = 2
+s.score = 25
 s.speak()
 s.print_info()
 
