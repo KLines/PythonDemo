@@ -1,5 +1,9 @@
-# 　with 实现原理
-# https://www.cnblogs.com/wanglei-xiaoshitou1/p/9238275.html
+
+'''
+with 实现原理
+with后面的语句被求值后，返回对象的 __enter__() 方法被调用，这个方法的返回值将被赋值给as后面的变量。
+当with后面的代码块全部被执行完之后，将调用前面返回对象的 __exit__()方法。
+'''
 
 class Sample:
 
@@ -17,6 +21,7 @@ class Sample:
         print("exc_val:", exc_val)
         print("exc_tb:", exc_tb)
 
+        # 跳过一个异常，只需要返回该函数True即可
         if self.error == exc_type:
             print("test passed")
             return True

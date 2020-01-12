@@ -2,7 +2,7 @@
 Python ： 交互式编程，不需要经过编译阶段，可以直接运行。（动态语言）
 
 
-### 1、基本语法 ###
+## 1、基本语法 ##
 
 **单下划线**
 
@@ -38,7 +38,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 		# -*- coding: utf-8 -*-
 
 
-### 2、变量类型 ###
+## 2、变量类型 ##
 
 **变量类型**
    
@@ -131,7 +131,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 		* dict需要占用大量的内存，内存浪费多；list占用空间小，浪费内存很少
 
 
-### 3、运算符 ###
+## 3、运算符 ##
 
 **算术运算符**
 
@@ -170,7 +170,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 	* a is b 相当于 id(a)==id(b)
 
 
-### 4、条件语句、循环语句 ###
+## 4、条件语句、循环语句 ##
 
 **条件语句**
 
@@ -209,7 +209,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 * 2、for … else 中的 else 语句会在循环正常执行完的情况下执行（即 for 不是通过 break 跳出而中断的）
 
 
-### 5、函数用法 ###
+## 5、函数用法 ##
 
 * Python程序是从上往下顺序执行的，而且碰到函数的定义代码块是不会立即执行的，只有等到该函数被调用时，才会执行其内部的代码块。
 	
@@ -310,7 +310,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 	* b = copy.deepcopy(a): 深度拷贝, a 和 b 完全拷贝了父对象及其子对象，两者是完全独立的
 
 
-### 6、生成器函数 ###
+## 6、生成器函数 ##
 
 **迭代器（Iterator）**
 
@@ -337,7 +337,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 	* 一个带有yield的函数和普通函数不同，Python解释器会将其视为一个生成器（generator），调用函数时不会执行任何函数代码，而是返回一个Iterator对象，直到对其调用 next()（在 for 循环中会自动调用 next()）才开始执行。虽然执行流程仍按函数的流程执行，但每执行到一个 yield 语句就会中断，并返回一个迭代值，下次执行时从 yield 的下一个语句继续执行。
 
 
-### 7、装饰器函数 ###
+## 7、装饰器函数 ##
 
 **装饰器含义**
 
@@ -424,7 +424,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 	* 单例模式的使用
 
 
-### 8、变量作用域 ###
+## 8、变量作用域 ##
 
 **4种类型**
 
@@ -452,68 +452,45 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 * 当在函数中使用未确定的变量名时，Python会按照优先级依次搜索4个作用域，以此来确定该变量名的意义。首先搜索局部作用域(L)，之后是上一层嵌套结构中def或lambda函数的嵌套作用域(E)，之后是全局作用域(G)，最后是内置作用域(B)。按这个查找原则，在第一处找到的地方停止。如果没有找到，则会出发NameError错误。    
 * 模块（module），类（class）以及函数（def、lambda）才会引入新的作用域，其它的代码块（如if/elif/else/、try/except、for/while等）是不会引入新的作用域，这些语句内定义的变量，外部也可以访问
 	    
-** global和nonlocal关键字**
+**global和nonlocal关键字**
 
 * 当内部作用域想修改全局变量时，则需要 global 关键字
 * 当内部作用域想修改嵌套作用域（enclosing作用域，外层非全局作用域）中的变量，则需要 nonlocal 关键字
 * nonlocal 只能修改外层函数的变量而不能修改外层函数所引用的全局变量
 
 
-**9、模块&关键字&序列化**
+## 9、模块&关键字 ##
+ 
+**import 与 from...import**
 
-	import 与 from...import:
-		1、将整个模块(somemodule)导入，格式为： import somemodule
-		2、从某个模块中导入某个函数,格式为： from somemodule import somefunction
-		3、从某个模块中导入多个函数,格式为： from somemodule import firstfunc, secondfunc, thirdfunc
-		4、将某个模块中的全部函数导入，格式为： from somemodule import *
-		* 模块A中的代码在模块B中进行import A时，只要B模块代码运行到该import语句，模块A的代码会被执行
+* 1、将整个模块(somemodule)导入，格式为： import somemodule
+* 2、从某个模块中导入某个函数,格式为： from somemodule import somefunction
+* 3、从某个模块中导入多个函数,格式为： from somemodule import firstfunc, secondfunc, thirdfunc
+* 4、将某个模块中的全部函数导入，格式为： from somemodule import *
+* 模块A中的代码在模块B中进行import A时，只要B模块代码运行到该import语句，模块A的代码会被执行
 	
-	package：	
-		* 每一个包目录下面都会有一个__init__.py的文件，这个文件是必须存在的，否则Python就把这个目录当成普通目录，而不是一个包
-		* __init__.py可以是空文件，也可以有Python代码，因为__init__.py本身就是一个模块，而它的模块名就是 demo
-			demo
-			|---__init__.py
-			|---abc.py
-			|---xyz.py
+**package**	
+
+* 每一个包目录下面都会有一个__init__.py的文件，这个文件是必须存在的，否则Python就把这个目录当成普通目录，而不是一个包
+* __init__.py可以是空文件，也可以有Python代码，因为__init__.py本身就是一个模块，而它的模块名就是 demo
+
+		demo
+		|---__init__.py
+		|---abc.py
+		|---xyz.py
 		
-	关键字：
-		1、循环及判断主要包括关键字：
-		     if　　elif　　else　　for　　while　　break　　continue　　and　　 or　　is　　not　　in
-		2、函数、模块、类主要包括关键字：
-			 from　　import　　as　　def　　pass　　lambda　　return　　class
-		3、异常主要包括关键字：
-			 try　　except　　else   finally　  assert 　raise 
-		4、其他关键字
-			 print　　del　　global　　with　　assert　　yield　　exec
-		重点注意：
-		  1、pass：是空语句，是为了保持程序结构的完整性，不做任何事情，一般用做占位语句。 
-		  2、with...as
-		  3、raise 
-		  4、assert 
-		  5、exec 
-	
-	序列化&反序列化：
-		pickle模块
-			pickle模块实现了用于对Python对象结构进行 序列化 和 反序列化 的二进制协议
-			* pickle模块是python专用的持久化模块，可以持久化包括自定义类在内的各种数据，只能在python程序之间进行数据交换
-			* 方法：
-	            dumps 　　将对象序列化成bytes对象
-	            dump 　　 对象序列化到文件对象，就是存入文件
-	            loads　　 从bytes对象反序列化
-	            load　　  对象反序列化，从文件读取数据
-			* 注意：在使用dump()序列化时，打开文件必须要以wb模式，使用load()反序列化，打开文件必须以rb模式
-			
-		json模块	
-			* 方法：
-				dumps	  python数据转json格式
-				dump      序列化python数据到json文件
-				loads     json数据转python格式
-				load	  反序列化json文件到python数据	
+**关键字**
+
+* 1、循环及判断主要包括关键字：if elif　else　for　while　break　continue　and　 or　is　not　in
+* 2、函数、模块、类主要包括关键字：from　import　as　def　pass　lambda　return　class
+* 3、异常主要包括关键字：try　except　else  finally  assert raise 
+* 4、其他关键字：print　del　global　with　assert　yield　exec
 
 
-**10、异常和断言**
+## 10、异常和断言 ##
 
-	异常分类：
+**异常分类**
+		
 		BaseExcetion 
 			|--SystemExit	Python解释器退出
 			|--Exception    常见错误的基类
@@ -524,169 +501,250 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 			|--KeyboardInterrupt   用户中断执行
 			|--GeneratorExit    生成器(generator)发生异常来通知退出
 			
-	捕获异常：
-	    try...except：
-	        * 执行 try 子句（在关键字 try 和关键字 except 之间的语句）
-	        * 如果没有异常发生，忽略 except 子句，try 子句执行后结束
-	        * 执行 try 子句的过程中发生了异常，那么 try 子句余下的部分将被忽略。如果异常的类型和 except 之后的名称相符，那么对应的 except 子句将被执行
-	        * 如果一个异常没有与任何的 excep 匹配，那么这个异常将会传递给上层的 try 中
-	        注意：
-	        1、一个 try 语句可能包含多个except子句，分别来处理不同的特定的异常。最多只有一个分支会被执行
-	        2、一个except子句可以同时处理多个异常，这些异常将被放在一个括号里成为一个元组，例如:
-	            except (RuntimeError, TypeError, NameError):
-	                pass
-	        3、最后一个except子句可以忽略异常的名称，它将被当作通配符使用
+**捕获异常**
+
+* try...except：
+    * 首先，执行 try 子句（在关键字 try 和关键字 except 之间的语句）
+    * 如果没有异常发生，忽略 except 子句，try 子句执行后结束
+    * 执行 try 子句的过程中发生了异常，那么 try 子句余下的部分将被忽略。如果异常的类型和 except 之后的名称相符，那么对应的 except 子句将被执行
+    * 如果一个异常没有与任何的 excep 匹配，那么这个异常将会传递给上层的 try 中
+    * 注意：
+    	* 1、一个 try 语句可能包含多个except子句，分别来处理不同的特定的异常。最多只有一个分支会被执行
+    	* 2、一个except子句可以同时处理多个异常，这些异常将被放在一个括号里成为一个元组，例如:
+        	except (RuntimeError, TypeError, NameError):
+        	    pass
+    	* 3、最后一个except子句可以忽略异常的名称，它将被当作通配符使用
+
+* try...except...else
+    * else 子句必须放在所有的 except 子句之后，将在 try 子句没有发生任何异常的时候执行
+
+* try...except...else...finally 
+    * finally 语句无论是否发生异常都将执行其中的代码
+    * 如果一个异常在 try 、except 、else 子句里任意一处被抛出，而又没有任何的 except 把它截住，那么这个异常会在 finally 子句执行后被抛出
+
+**执行流程**
+        
+		try:
+            执行代码
+		except XXXError as err:
+			程序异常时执行
+        except:
+            程序异常时执行
+        else:
+            没有异常时执行
+        finally:
+            始终都会执行
 	
-	    try...except...else
-	        * else 子句必须放在所有的 except 子句之后，将在 try 子句没有发生任何异常的时候执行
+**抛出异常**
+
+* raise 唯一的一个参数指定了要被抛出的异常，它必须是一个异常的实例或者是异常的类（也就是 Exception 的子类）
+* 如果只想知道这是否抛出了一个异常，并不想去处理它，那么一个简单的 raise 语句就可以再次把它抛出
 	
-	    try...except...else...finally 
-	        * finally 语句无论是否发生异常都将执行其中的代码
-	        * 如果一个异常在 try 、except 、else 子句里任意一处被抛出，而又没有任何的 except 把它截住，那么这个异常会在 finally 子句执行后被抛出
-		
-		执行流程：
-	            try:
-	                执行代码
-	            except:
-	                程序异常时执行
-	            else:
-	                没有异常时执行
-	            finally:
-	                始终都会执行
-	
-	抛出异常：
-		* raise 唯一的一个参数指定了要被抛出的异常，它必须是一个异常的实例或者是异常的类（也就是 Exception 的子类）
-		* 如果你只想知道这是否抛出了一个异常，并不想去处理它，那么一个简单的 raise 语句就可以再次把它抛出
-	
-	assert（断言）：
-		* assert（断言）用于判断一个表达式，在表达式条件为 false 的时候触发异常
-			assert expression
-			等价于：
-			if not expression:
-				raise AssertionError
-			assert 1==2,'1 不等于 2'
+**assert（断言）**
+
+* assert（断言）用于判断一个表达式，在表达式条件为 false 的时候触发异常
+
+		assert expression
+		等价于：
+		if not expression:
+			raise AssertionError
+		assert 1==2,'1 不等于 2'
 
 
-**11、面向对象**
+## 11、面向对象 ##
 
-	类对象：
-		1、类有一个名为 __init__() 的特殊方法（构造方法），该方法在类实例化时会自动调用
-		2、 __init__() 方法可以有参数，参数通过 __init__() 传递到类的实例化操作上，无返回值
-		3、self 代表类的实例，也就是当前对象的地址，而 self.class 则指向类
-		4、单继承，多继承，方法重写
-		   		class DerivedClassName(modname.BaseClassName) 单继承
-				class DerivedClassName(Base1, Base2, Base3)  多继承
-				* 若是父类中有相同的方法名，而在子类使用时未指定，python从左至右搜索即方法在子类中未找到时，从左到右查找父类中是否包含方法，不然就抛出异常
-	
-	构造方法：		
-		1、子类调用父类的构造方法：显式调用父类的构造方法，或者不重写父类的构造方法
-		2、调用父类构造函数方式：
-			* super(子类，self).__init__(参数1，参数2，....)
-			* super().__init__(参数1，参数2，....)
-			* 父类名称.__init__(self,参数1，参数2，...)
-		3、使用场景：
-			* 子类需要自动调用父类的方法：子类不重写__init__()方法，实例化子类后，会自动调用父类的__init__()的方法。
-		  	* 子类不需要自动调用父类的方法：子类重写__init__()方法，实例化子类后，将不会自动调用父类的__init__()的方法。
-			* 子类重写__init__()方法又需要调用父类的方法：使用super关键词
-		4、super() 函数是用于调用父类(超类)的一个方法
-			* super(type[, object-or-type]) type -- 类  object-or-type -- 类，一般是self
-			* super().xxx = super(Class, self).xxx
+**构造方法**		
+
+* 1、类有一个名为 __init__() 的构造方法，该方法在类实例化时会自动调用，无返回值 
+	* def __init__(参数1，参数2，....)：参数通过 __init__() 传递到类的实例化操作上
+* 2、self 代表类的实例，也就是当前对象的地址，而 self.class 则指向类
+* 3、子类调用父类的构造方法：显式调用父类的构造方法，或者不重写父类的构造方法
+* 4、调用父类构造函数方式：
+	* super(子类，self).__init__(参数1，参数2，....)
+	* super().__init__(参数1，参数2，....)
+	* 父类名称.__init__(self,参数1，参数2，...)
+* 5、使用场景：
+	* 子类需要自动调用父类的方法：子类不重写__init__()方法，实例化子类后，会自动调用父类的__init__()的方法。
+	* 子类不需要自动调用父类的方法：子类重写__init__()方法，实例化子类后，将不会自动调用父类的__init__()的方法。
+	* 子类重写__init__()方法又需要调用父类的方法：使用super关键词
+* 6、super() 函数是用于调用父类(超类)的一个方法
+	* super(type[, object-or-type]) type -- 类  object-or-type -- 类，一般是self
+	* super().xxx = super(Class, self).xxx
+
+**类属性和实例属性**
+
+* 类属性有且只有1份，创建的实例都会继承自唯一的类属性。如果在类上绑定一个属性，那么所有的实例都可以访问类属性，一旦类属性改变就会影响到所有的实例
+* 实例属性和方法每个实例各自拥有，相互独立，绑定在一个实例上的属性不会影响到其它的实例
+* 当实例属性和类属性重名时，实例属性优先级高，它将屏蔽掉对类属性的访问
+* 类或者实例可以任意绑定属性和方法，如果绑定的方法中存在属性，绑定方法且执行之后才能访问其属性
+
+		1、绑定类属性和类方法	 
+			# 给class绑定类方法和类属性
+			def set_score(self, score):
+			    print(self)
+			    self.score = score  # 方法中的属性值实际是类属性
+			Classname.set_score = MethodType(set_score,Classname)
+		2、绑定实例属性和普通方法
+			# 给class绑定普通方法和实例属性
+			def set_sex(self, sex):
+			    print(self)
+			    self.sex = sex
+			Classname.set_sex = set_sex
+		3、单个实例绑定实例属性和普通方法
+			# 给单个实例绑定一个方法
+			def set_grade(self, grade):
+			    print(self)
+			    self.grade = grade
+			m.set_grade= MethodType(set_grade,m)
+
+**静态方法、普通方法、类方法**
+
+* 静态方法: 用 @staticmethod 装饰的不带 self 参数的方法叫做静态方法，类的静态方法可以没有参数，可以被类和对象调用
+* 类方法: 默认有个 cls 参数，可以被类和对象调用，需要加上 @classmethod 装饰器
+* 普通方法: 默认有个self参数，代表的是类的实例且只能被对象调用，self 的名字并不是规定死的，也可以使用 this，但是最好还是按照约定是用 self		
+
+
+**其他属性**
+
+* 单继承，多继承，方法重写
+   		
+		class DerivedClassName(modname.BaseClassName) 单继承
+		class DerivedClassName(Base1, Base2, Base3)  多继承
+		若是父类中有相同的方法名，而在子类使用时未指定，python从左至右搜索即方法在子类中未找到时，从左到右查找父类中是否包含方法，不然就抛出异常		
 			
-	属性和方法：
-		1、类的私有属性：__private_attrs：两个下划线开头，声明该属性为私有，不能在类的外部被使用或直接访问。在类内部的方法中使用时 self.__private_attrs
-		2、类的方法：在类的内部，使用 def 关键字来定义一个方法，与一般函数定义不同，类方法必须包含参数 self，且为第一个参数，self 代表的是类的实例。
-		   self 的名字并不是规定死的，也可以使用 this，但是最好还是按照约定是用 self
-		3、类的私有方法：__private_method：两个下划线开头，声明该方法为私有方法，只能在类的内部调用，不能在类的外部调用。self.__private_methods
-		4、专用方法：
-			__init__：构造函数，在生成对象时调用
-			__name__：内置类属性，用于指代当前模块
-				* 当前模块时被直接执行，__name__的值就是__main__
-				* 导入另一模块时，“__name__”的值就是模块的真实名称
-			__del__：析构函数，释放对象时使用
-			__repr__：默认打印对象内存地址，可重写打印对象中具体的属性值
-			重构__repr__方法后，不管直接输出对象还是通过print打印的信息都按我们__repr__方法中定义的格式进行显示
-			__str__：默认打印对象内存地址，可重写打印对象中具体的属性值
-			重构__str__方法后，直接输出对象打印内存地址，通过print打印的信息都按我们__str__方法中定义的格式进行显示
-			__getattr__：在没有找到属性的情况下，调用__getattr__可以返回自定义属性值
-		5、@dataclass装饰器的使用
-		6、metaclass元类、抽象类
-		7、对象复制、垃圾回收、循环引用和弱引用
-		
-	类属性和实例属性：	
-		* 实例属性和方法每个实例各自拥有，相互独立，绑定在一个实例上的属性不会影响到其它的实例
-		* 类属性有且只有1份，创建的实例都会继承自唯一的类属性。如果在类上绑定一个属性，那么所有的实例都可以访问类属性，一旦类属性改变就会影响到所有的实例
-		* 当实例属性和类属性重名时，实例属性优先级高，它将屏蔽掉对类属性的访问
-		* 类或者实例可以任意绑定属性和方法，如果绑定的方法中存在属性，绑定方法且执行之后才能访问其属性
-				1、绑定类属性和类方法	 
-					# 给class绑定类方法和类属性
-					def set_score(self, score):
-					    print(self)
-					    self.score = score  # 方法中的属性值实际是类属性
-					Classname.set_score = MethodType(set_score,Classname)
-				2、绑定实例属性和普通方法
-					# 给class绑定普通方法和实例属性
-					def set_sex(self, sex):
-					    print(self)
-					    self.sex = sex
-					Classname.set_sex = set_sex
-				3、单个实例绑定实例属性和普通方法
-					# 给单个实例绑定一个方法
-					def set_grade(self, grade):
-					    print(self)
-					    self.grade = grade
-					m.set_grade= MethodType(set_grade,m)
-					
-	类的静态方法、普通方法、类方法：
-		* 静态方法: 用 @staticmethod 装饰的不带 self 参数的方法叫做静态方法，类的静态方法可以没有参数，可以被类和对象调用
-		* 类方法: 默认有个 cls 参数，可以被类和对象调用，需要加上 @classmethod 装饰器
-		* 普通方法: 默认有个self参数，且只能被对象调用
-		
-	__slots__和__dict__：
+* 私有属性和方法：两个下划线开头，声明该属性为私有，不能在类的外部被使用或直接访问，只能在类内部中使用 
+
+* __slots__和__dict__
 	
-		__dict__：返回对象的属性名和方法名，key：value=名称:值。默认情况类对象和实例对象都会有一个dict
-	        * 类的dict返回类的属性和方法，并不包含其父类的属性
-	        * 实例的dict只返回实例的属性名，对于类的属性和方法是不保存的
-	        * 每次实例化一个类都要分配一个新的dict，因此存在内存空间的浪费
-	        * dir()返回一个对象的所有有效属性名的集合（包括从父类中继承的属性）
-	
-		__slots__：是一个元组，可定义当前能访问到的属性，相当于变成了类的描述符，类似java中的成员变量声明
-			* 限制对象任意绑定属性，并且节省内存空间
-	 		* __slots__ = ('name', 'age'，'set_sex') # 用tuple定义允许绑定的属性名称和方法名称
-	 		* 类的实例只能拥有slots中定义的变量，不能再增加新的变量
-	 		* 类属性的添加不受__slots__的限制
-	 		* 父类定义__slots__对当前类实例起作用，对继承的子类是不起作用的
-	 		* 父类和子类中都定义__slots__，子类允许定义的属性：子类__slots__+父类__slots__
-	 		* 父类存在__dict__属性，子类将继承__dict__，即使该子类包含了__slots__属性，该子类的实例依然可以任意添加变量属性
-	 		* 给类的实例绑定方法时，不能添加__slots__限制之外的属性
-	    
-	    使用区别：
-	        1、每次实例化一个类都要分配一个新的dict，因此存在空间的浪费，因此有了__slots__
-	        2、一个普通对象使用 __dict__ 来保存它自己的属性，可以动态地向其中添加或删除属性
-	        3、一个普通对象使用 __slots__ 属性，则该对象用来保存其自身属性的结构一旦创建就不能再进行任何修改
-	        4、定义了slots后，类的实例就不再有__dict__，但是类的__dict__还可以使用
-	        5、__slots__ 会为声明了的变量预留空间，同时阻止该类为它的每个实例自动创建 __dict__ 和 __weakref__
+	__dict__：返回对象的属性名和方法名，key：value=名称:值。默认情况类对象和实例对象都会有一个dict
+
+        * 类的dict返回类的属性和方法，并不包含其父类的属性
+        * 实例的dict只返回实例的属性名，对于类的属性和方法是不保存的
+        * 每次实例化一个类都要分配一个新的dict，因此存在内存空间的浪费
+        * dir()返回一个对象的所有有效属性名的集合（包括从父类中继承的属性）
+
+	__slots__：是一个元组，可定义当前能访问到的属性，相当于变成了类的描述符，类似java中的成员变量声明
+
+		* 限制对象任意绑定属性，并且节省内存空间
+ 		* __slots__ = ('name', 'age'，'set_sex') # 用tuple定义允许绑定的属性名称和方法名称
+ 		* 类的实例只能拥有slots中定义的变量，不能再增加新的变量
+ 		* 类属性的添加不受__slots__的限制
+ 		* 父类定义__slots__对当前类实例起作用，对继承的子类是不起作用的
+ 		* 父类和子类中都定义__slots__，子类允许定义的属性：子类__slots__+父类__slots__
+ 		* 父类存在__dict__属性，子类将继承__dict__，即使该子类包含了__slots__属性，该子类的实例依然可以任意添加变量属性
+ 		* 给类的实例绑定方法时，不能添加__slots__限制之外的属性
+    
+    使用区别：
+
+        1、每次实例化一个类都要分配一个新的dict，因此存在空间的浪费，因此有了__slots__
+        2、一个普通对象使用 __dict__ 来保存它自己的属性，可以动态地向其中添加或删除属性
+        3、一个普通对象使用 __slots__ 属性，则该对象用来保存其自身属性的结构一旦创建就不能再进行任何修改
+        4、定义了slots后，类的实例就不再有__dict__，但是类的__dict__还可以使用
+        5、__slots__ 会为声明了的变量预留空间，同时阻止该类为它的每个实例自动创建 __dict__ 和 __weakref__
 	        
-	@property属性：
+* @property属性
+
 	    1、属性名与方法名一定要区分开，不然会进入死循环（self._age，def age()）
 	    2、实例化的对象使用属性时，不是调用属性（stu._age），而是用的方法名（stu.age）
 	    3、@property其实就是实现了getter功能，@xxx.setter实现的是setter功能；还有一个@xxx.deleter实现删除功能
 	    4、定义方法的时候@property必须在@xxx.setter之前，且二者修饰的方法名相同（age()）
 	    5、如果只实现了 @property（而没有实现@xxx.setter），那么该属性为只读属性
+
+* 专用方法
+
+		__name__：内置类属性，用于指代当前模块
+			* 当前模块时被直接执行，__name__的值就是__main__
+			* 导入另一模块时，“__name__”的值就是模块的真实名称
+		__del__：析构函数，释放对象时使用
+		__repr__：默认打印对象内存地址，重写__repr__方法后，不管直接输出对象还是通过print打印的信息都按我们__repr__方法中定义的格式进行显示
+		__str__：默认打印对象内存地址，重写__str__方法后，直接输出对象打印内存地址，通过print打印的信息都按我们__str__方法中定义的格式进行显示
+		__getattr__：在没有找到属性的情况下，调用__getattr__可以返回自定义属性值
 	
-	Mixin模式：
-		MixIn是基于多继承实现的一种设计模式，一般是将复杂类的一些功能拆分出来，不用__init__初始化方法，不让其单独工作，只用作混入其他类使用
+**面向对象模式**
+
+* @dataclass装饰器的使用
+* metaclass元类、抽象类
+* 对象复制、垃圾回收、循环引用和弱引用	
+* Mixin模式：MixIn是基于多继承实现的一种设计模式，一般是将复杂类的一些功能拆分出来，不用__init__初始化方法，不让其单独工作，只用作混入其他类使用
+* 鸭子类型
+
+	* 对于静态语言（例如Java）来说，如果需要传入Animal类型，则传入的对象必须是Animal类型或者它的子类，否则，将无法调用run()方法。
 	
-	静态语言 vs 动态语言
-		* 对于静态语言（例如Java）来说，如果需要传入Animal类型，则传入的对象必须是Animal类型或者它的子类，否则，将无法调用run()方法。
-		* 对于Python这样的动态语言来说，则不一定需要传入Animal类型。我们只需要保证传入的对象有一个run()方法就可以了：
-		
-				class Timer(object):
-				    def run(self):
-				        print('Start...')
+			def run_twice(animal):
+			    animal.run()
+			    animal.run()
+
+	* 对于Python这样的动态语言来说，则不一定需要传入Animal类型。我们只需要保证传入的对象有一个run()方法就可以了：
 	
-		* 这就是动态语言的“鸭子类型”，它并不要求严格的继承体系，一个对象只要“看起来像鸭子，走起路来像鸭子”，那它就可以被看做是鸭子。
-		* Python的“file-like object“就是一种鸭子类型。对真正的文件对象，它有一个read()方法，返回其内容。但是，许多对象，只要有read()方法，
-	    * 都被视为“file-like object“。许多函数接收的参数就是“file-like object“，你不一定要传入真正的文件对象，完全可以传入任何实现了read()方法的对象。	
+			class Timer(object):
+			    def run(self):
+			        print('Start...')
+
+	* 这就是动态语言的“鸭子类型”，它并不要求严格的继承体系，一个对象只要“看起来像鸭子，走起路来像鸭子”，那它就可以被看做是鸭子。
 
 
-​	
+## 12、序列化&反序列化 ##
+
+**pickle模块**
+
+* pickle模块是python专用的持久化模块，实现了用于对Python对象结构进行 序列化 和 反序列化 的二进制协议	
+	* 把变量从内存中变成可存储或传输的过程称之为序列化，在Python中叫pickling
+	* 把变量内容从序列化的对象重新读到内存里称之为反序列化，即unpickling
+
+* 方法：
+
+	    dumps 　　将对象序列化成bytes对象
+	    dump 　　 对象序列化到文件对象，就是存入文件
+	    loads　　 从bytes对象反序列化
+	    load　　  对象反序列化，从文件读取数据
+		注意：在使用dump()序列化时，打开文件必须要以wb模式，使用load()反序列化，打开文件必须以rb模式
+			
+**json模块**	
+
+* json数据与Python实例对象转换​
+	* 序列化：Python对象 --> dict --> JSON object
+	* 反序列化的过程是“JSON object -> dict --> Python对象
+
+* json和Python内置的数据类型对应
+
+		JSON类型			Python类型
+		{}				dict
+		[]				list
+		"string"		str
+		1234.56			int或float
+		true/false		True/False
+		null			None
+
+* 方法：
+
+		dumps	  python数据转json格式
+		dump      序列化python数据到json文件
+		loads     json数据转python格式
+		load	  反序列化json文件到python数据	
+
+
+## 13、多线程 ##	
+
+**创建方式**
+    １、通过thread方法创建线程，
+    ２、通过继承Thread类创建线程
+
+**线程同步**
+    １、threading.Lock锁--->处理资源共享问题
+    ２、Condition锁，wait()，notify()--->生产者消费者问题
+    ３、threading.Semaphore信号量--->控制线程的并发数
+    ４、Event对象
+    ５、同步队列
+
+**多线程间通信**
+    １、使用全局变量，需要加锁　　
+    ２、使用queue模块，可在线程间进行通信，并保证了线程安全
+
+**线程中断问题**
+    １、退出标记
+    ２、使用ctypes强行杀掉线程
+    
+**多线程使用问题**
+    １、死锁问题
+    ２、生产者消费者问题
+    ３、获取线程任务执行结果

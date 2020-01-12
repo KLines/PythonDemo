@@ -5,8 +5,6 @@ print("===== 文件读取 =====")
 
 output_file = '/home/pc190559/demo/test.txt'
 
-
-
 f = open(output_file, "w+")  # 创建文件
 
 f.write("测试\nPython\n文件读写\n")  # 写入数据
