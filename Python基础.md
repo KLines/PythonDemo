@@ -357,26 +357,26 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 
 * 2、@符号装饰已定义的函数
 	
-	        def func(func):
-	        	# 这里就直接写万能装饰器了
-	    		def wrapper():
-	        		print("装饰器")
-	        		func()
-	    		return wrapper
-	
-			print("======= 未使用@装饰 ========")
-			def origin():
-	    		print("被装饰的函数")
-	    		pass
-			origin = func(origin) # 等价于 func(origin)()
-			origin()
-			
-			print("======= 使用@装饰 ========")
-			@func # 等价于 demo = func(demo)
-			def demo():
-	    		print("被装饰的函数")
-	    		pass
-			demo()
+        def func(func):
+        	# 这里就直接写万能装饰器了
+    		def wrapper():
+        		print("装饰器")
+        		func()
+    		return wrapper
+
+		print("======= 未使用@装饰 ========")
+		def origin():
+    		print("被装饰的函数")
+    		pass
+		origin = func(origin) # 等价于 func(origin)()
+		origin()
+		
+		print("======= 使用@装饰 ========")
+		@func # 等价于 demo = func(demo)
+		def demo():
+    		print("被装饰的函数")
+    		pass
+		demo()
 	    
 * 3、执行顺序：
 	* 1、Python会按照自下而上的顺序把各自的函数结果作为下一个函数（上面的函数）的输入
@@ -491,15 +491,15 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 
 **异常分类**
 		
-		BaseExcetion 
-			|--SystemExit	Python解释器退出
-			|--Exception    常见错误的基类
-				　　|--AssertionError	断言语句失败
-				　　|--AttributeError	对象没有这个属性
-				　　|--EOFError	没有内建输入,到达EOF 标记
-				　　|--EnvironmentError	操作系统错误的基类
-			|--KeyboardInterrupt   用户中断执行
-			|--GeneratorExit    生成器(generator)发生异常来通知退出
+	BaseExcetion 
+		|--SystemExit	Python解释器退出
+		|--Exception    常见错误的基类
+			　　|--AssertionError	断言语句失败
+			　　|--AttributeError	对象没有这个属性
+			　　|--EOFError	没有内建输入,到达EOF 标记
+			　　|--EnvironmentError	操作系统错误的基类
+		|--KeyboardInterrupt   用户中断执行
+		|--GeneratorExit    生成器(generator)发生异常来通知退出
 			
 **捕获异常**
 
@@ -524,16 +524,16 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 
 **执行流程**
         
-		try:
-            执行代码
-		except XXXError as err:
-			程序异常时执行
-        except:
-            程序异常时执行
-        else:
-            没有异常时执行
-        finally:
-            始终都会执行
+	try:
+        执行代码
+	except XXXError as err:
+		程序异常时执行
+    except:
+        程序异常时执行
+    else:
+        没有异常时执行
+    finally:
+        始终都会执行
 	
 **抛出异常**
 
@@ -556,13 +556,13 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 **构造方法**		
 
 * 1、类有一个名为 __init__() 的构造方法，该方法在类实例化时会自动调用，无返回值 
-	* def __init__(参数1，参数2，....)：参数通过 __init__() 传递到类的实例化操作上
+	* def __init__(self,参数1,参数2...)：参数通过 __init__() 传递到类的实例化操作上
 * 2、self 代表类的实例，也就是当前对象的地址，而 self.class 则指向类
 * 3、子类调用父类的构造方法：显式调用父类的构造方法，或者不重写父类的构造方法
 * 4、调用父类构造函数方式：
-	* super(子类，self).__init__(参数1，参数2，....)
-	* super().__init__(参数1，参数2，....)
-	* 父类名称.__init__(self,参数1，参数2，...)
+	* super(子类，self).__init__(参数1,参数2...)
+	* super().__init__(参数1,参数2...)
+	* 父类名称.__init__(self,参数1,参数2...)
 * 5、使用场景：
 	* 子类需要自动调用父类的方法：子类不重写__init__()方法，实例化子类后，会自动调用父类的__init__()的方法。
 	* 子类不需要自动调用父类的方法：子类重写__init__()方法，实例化子类后，将不会自动调用父类的__init__()的方法。
@@ -707,13 +707,13 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 
 * json和Python内置的数据类型对应
 
-		JSON类型			Python类型
-		{}				dict
-		[]				list
-		"string"		str
-		1234.56			int或float
-		true/false		True/False
-		null			None
+		JSON类型				Python类型
+		{}					dict
+		[]					list
+		"string"			str
+		1234.56				int或float
+		true/false			True/False
+		null				None
 
 * 方法：
 
@@ -723,28 +723,79 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 		load	  反序列化json文件到python数据	
 
 
-## 13、多线程 ##	
+## 13、多线程 ##
 
 **创建方式**
-    １、通过thread方法创建线程，
-    ２、通过继承Thread类创建线程
+
+* １、通过thread方法创建线程
+	
+		def func(args):
+		    n = 0
+		    while n < 5:
+		        n = n + 1
+		        print("%s 线程运行---"%threading.current_thread().name)
+		        sleep(1)
+	
+		t = threading.Thread(target=func,args=(1,),name="thread-1")
+	    t.start()
+
+* ２、通过继承Thread类创建线程
+
+	
+		class MyThread(Thread):
+		
+		    def __init__(self,name):
+		        super().__init__(name=name)
+		
+		    def run(self):
+		        n = 0
+		        while n < 5:
+		            n = n + 1
+		            print("%s 线程运行---"%threading.current_thread().name)
+		            sleep(1)
+		
+		t = MyThread('mythread')
+	    t.start()
 
 **线程同步**
-    １、threading.Lock锁--->处理资源共享问题
-    ２、Condition锁，wait()，notify()--->生产者消费者问题
-    ３、threading.Semaphore信号量--->控制线程的并发数
-    ４、Event对象
-    ５、同步队列
+
+* 1、Lock锁--->处理资源共享问题
+* 2、Condition锁，wait()，notify()--->生产者消费者问题
+* 3、Semaphore信号量--->控制线程的并发数
+* 4、Event对象
+* 5、同步队列（Queue）
+	* FIFO（先入先出)队列Queue，LIFO（后入先出）队列LifoQueue，优先级队列 PriorityQueue
 
 **多线程间通信**
-    １、使用全局变量，需要加锁　　
-    ２、使用queue模块，可在线程间进行通信，并保证了线程安全
+
+* 1、使用全局变量，需要加锁　　
+* 2、使用queue模块，可在线程间进行通信，并保证了线程安全
 
 **线程中断问题**
-    １、退出标记
-    ２、使用ctypes强行杀掉线程
+
+* 1、退出标记
+* 2、使用ctypes强行杀掉线程
     
 **多线程使用问题**
-    １、死锁问题
-    ２、生产者消费者问题
-    ３、获取线程任务执行结果
+
+* 1、死锁问题
+* 2、生产者消费者问题
+* 3、获取线程任务执行结果
+* 4、threadlocal
+* 5、线程池
+* 6、Time定时器
+
+**Python的线程GIL锁（待深入）**
+
+* Python解释器执行代码时，有一个GIL锁：Global Interpreter Lock，任何Python线程执行前，必须先获得GIL锁，然后，每执行100条字节码，解释器就自动释放GIL锁，让别的线程有机会执行。这个GIL全局锁实际上把所有线程的执行代码都给上了锁，所以，多线程在Python中只能交替执行，即使100个线程跑在100核CPU上，也只能用到1个核。
+
+* GIL是Python解释器设计的历史遗留问题，通常我们用的解释器是官方实现的CPython，要真正利用多核，除非重写一个不带GIL的解释器。
+
+* 在Python中可以使用多线程，但不要指望能有效利用多核，不过可以通过多进程实现多核任务，多个Python进程有各自独立的GIL锁，互不影响。
+
+**进程&多线程**
+
+* 实现多任务通常设计Master-Worker模式，Master负责分配任务，Worker负责执行任务，因此，多任务环境下，通常是一个Master，多个Worker。
+* 多进程模式最大的优点就是稳定性高，因为一个子进程崩溃了，不会影响主进程和其他子进程
+* 多进程模式的缺点是创建进程的代价大，在Unix/Linux系统下，用fork调用还行，在Windows下创建进程开销巨大。另外，操作系统能同时运行的进程数也是有限的，在内存和CPU的限制下，如果有几千个进程同时运行，操作系统连调度都会成问题。
+* 多线程模式致命的缺点就是任何一个线程挂掉都可能直接造成整个进程崩溃，因为所有线程共享进程的内存。在Windows上，如果一个线程执行的代码出了问题，你经常可以看到这样的提示：“该程序执行了非法操作，即将关闭”，其实往往是某个线程出了问题，但是操作系统会强制结束整个进程。
