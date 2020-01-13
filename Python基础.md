@@ -526,8 +526,10 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
     * 注意：
     	* 1、一个 try 语句可能包含多个except子句，分别来处理不同的特定的异常。最多只有一个分支会被执行
     	* 2、一个except子句可以同时处理多个异常，这些异常将被放在一个括号里成为一个元组，例如:
-        	except (RuntimeError, TypeError, NameError):
-          	    pass
+    	
+	        	except (RuntimeError, TypeError, NameError):
+	          	    pass
+
     	* 3、最后一个except子句可以忽略异常的名称，它将被当作通配符使用
 
 * try...except...else
@@ -763,7 +765,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 
 	
 		class MyThread(Thread):
-		
+
 		    def __init__(self,name):
 		        super().__init__(name=name)
 		
@@ -783,8 +785,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 * 2、Condition锁，wait()，notify()--->生产者消费者问题
 * 3、Semaphore信号量--->控制线程的并发数
 * 4、Event对象
-* 5、同步队列（Queue）
-	* FIFO（先入先出)队列Queue，LIFO（后入先出）队列LifoQueue，优先级队列 PriorityQueue
+* 5、队列（Queue）
 
 **多线程间通信**
 
@@ -807,32 +808,49 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 
 * 1、concurrent.futures模块
 
-  * 当该函数执行结束后，该线程并不会死亡，而是再次返回到线程池中变成空闲状态，等待执行下一个函数
-
-    ```
-	Executor
-			|--ThreadPoolExecutor 用于创建线程池
+* 当该函数执行结束后，该线程并不会死亡，而是再次返回到线程池中变成空闲状态，等待执行下一个函数
+  		
+		Executor
+			ThreadPoolExecutor 用于创建线程池
 				|---submit(fn, *args, **kwargs)：将 fn 函数提交给线程池，*args、*kwargs 代表 fn 函数传入参数
 				|---map(func, *iterables, timeout=None, chunksize=1)：该函数将会启动多个线程，以异步方式立即对 iterables 执行 map 处理
 				|---shutdown(wait=True)：关闭线程池
-		|--ProcessPoolExecutor 用于创建进程池
+			|--ProcessPoolExecutor 用于创建进程池
     
-    Future
+		Future
 			|--cancel()：取消该 Future 代表的线程任务。如果该任务正在执行，不可取消，则该方法返回 False；否则，程序会取消该任务，并返回 True。
 			|--cancelled()：返回 Future 代表的线程任务是否被成功取消。
 			|--running()：如果该 Future 代表的线程任务正在执行、不可被取消，该方法返回 True。
 			|--done()：如果该 Funture 代表的线程任务被成功取消或执行完成，则该方法返回 True。
-			|--result(timeout=None)：获取该 Future 代表的线程任务最后返回的结果。如果 Future 代表的线程任务还未完成，该方法将会阻塞当前线程，其中 timeout 参数指定最多阻塞多少秒。
+			|--result(timeout=None)：获取该 Future 代表的线程任务最后返回的结果。如果 Future 代表的线程任务还未完成，该方法将会阻塞当前线程
 			|--exception(timeout=None)：获取该 Future 代表的线程任务所引发的异常。如果该任务成功完成，没有异常，则该方法返回 None。
 			|--add_done_callback(fn)：为该 Future 代表的线程任务注册一个“回调函数”，当该任务成功完成时，程序会自动触发该 fn 函数。
-    ```
 
 * 2、threadpool第三方模块
+
+**队列（Queue）**
+
+* FIFO（先入先出)队列Queue，LIFO（后入先出）队列LifoQueue，优先级队列 PriorityQueue
+
+		Queue
+		    |--maxsize设置队列中，数据上限，小于或等于0则不限制，容器中大于这个数则阻塞，直到队列中的数据被消掉
+		    |--qsize()	返回队列的当前大小
+		    |--empty()	如果队列为空，返回True，否则返回False
+		    |--full()	如果队列已满，返回True，否则返回False
+		    |--put(item, block=True, timeout=None)	将项放入队列
+		        1、block=True, timeout=None 在必要时阻塞，直到有空位可用，timeout 为阻止的时间，超时抛出Full异常
+		        2、block=False 立即将item放入队列，队列已满引发Full异常
+		    |--put_nowait(item)	相当于put(item, False)
+		    |--get(block=True, timeout=None)  从队列中删除并返回一个项
+		        1、block=True, timeout=None 在必要时阻塞，直到有可用数据为止，timeout 为阻止的时间，超时抛出Empty异常
+		        2、block=False 立即获取队列中的可用数据，否则抛出Empty异常
+		    |--get_nowait()	等价于get(False)
+		    |--task_done() 向已完成的队列任务发送一个信号
+		    |--join() 阻塞线程，直到队列为空才放行
 
 **定时任务**
 
 * 1、循环+sleep
-
 * 2、线程模块中Timer类
 * 3、schedule第三方模块
 * 4、APScheduler任务框架

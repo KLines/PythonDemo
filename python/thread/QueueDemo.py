@@ -22,12 +22,7 @@ Queue
     |--get_nowait()	等价于get(False)
     |--task_done() 向已完成的队列任务发送一个信号
     |--join() 阻塞线程，直到队列为空才放行
-
-
 '''
-
-
-
 
 # Queue 先进先出队列
 

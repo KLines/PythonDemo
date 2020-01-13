@@ -232,14 +232,33 @@ def thread_queue():
     t1 = threading.Thread(target=producer,args = ("thread-1",))
     t2 = threading.Thread(target=consumer,args = ("thread-2",))
     t3 = threading.Thread(target=consumer,args = ("thread-3",))
+    t4 = threading.Thread(target=consumer,args = ("thread-4",))
     t1.start()
     t2.start()
     t3.start()
+    t4.start()
     print('---success---')
 
 
+'===== 线程同步：threadlocal ====='
 
 
+local = threading.local()  # 创建全局ThreadLocal对象
+
+def func_local1(name):
+    local.name = name  # 获取当前线程独立副本
+    print("%s 线程运行--- " % local.name)
+
+def func_local2(name,num):
+    local.name = name  # 获取当前线程独立副本
+    local.num = num
+    print("%s 线程运行---num=%s" % (local.name,local.num))
+
+def func_local():
+    t1 = threading.Thread(target=func_local1, args=("thread-A",))
+    t2 = threading.Thread(target=func_local2, args=("thread-B",5))
+    t1.start()
+    t2.start()
 
 if __name__ == '__main__':
 
@@ -248,7 +267,8 @@ if __name__ == '__main__':
     # thread_con()
     # thread_sem()
     # thread_event()
-    thread_queue()
+    # thread_queue()
+    func_local()
 
 
 
