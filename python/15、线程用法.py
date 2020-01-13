@@ -8,30 +8,31 @@ from thread.Producer import *
 多线程
 
 创建方式：
-    １、通过thread方法创建线程
-    ２、通过继承Thread类创建线程
+    1、通过thread方法创建线程
+    2、通过继承Thread类创建线程
 
 线程同步：
-    １、threading.Lock锁--->处理资源共享问题
-    ２、Condition锁，wait()，notify()--->生产者消费者问题
-    ３、threading.Semaphore信号量--->控制线程的并发数
-    ４、Event对象
-    ５、同步队列
+    1、Lock锁--->处理资源共享问题
+    2、Condition锁，wait()，notify()--->生产者消费者问题
+    3、Semaphore信号量--->控制线程的并发数
+    4、Event对象
+    5、同步队列
 
 多线程间通信：
-    １、使用全局变量，需要加锁　　
-    ２、使用queue模块，可在线程间进行通信，并保证了线程安全
+    1、使用全局变量，需要加锁　　
+    2、使用queue模块，可在线程间进行通信，并保证了线程安全
 
 线程中断问题：
-    １、退出标记
-    ２、使用ctypes强行杀掉线程
+    1、退出标记
+    2、使用ctypes强行杀掉线程
     
 多线程使用问题：
-    １、死锁问题
-    ２、生产者消费者问题
-    ３、获取线程任务执行结果
-
-threadlocal，线程池，Time定时器
+    1、死锁问题
+    2、生产者消费者问题
+    3、获取线程任务执行结果
+    4、多线程定时任务
+    5、threadlocal
+    6、线程池
 
 Python的线程：
 １、Python解释器执行代码时，有一个GIL锁：Global Interpreter Lock，任何Python线程执行前，必须先获得GIL锁，然后，每执行100条字节码，解释器就自动释放GIL锁，
@@ -140,10 +141,10 @@ sem = threading.Semaphore(1)
 def func_sem():
     while True:
         try:
-            sem.acquire()
-            global num
-            num = num + 1
-            print("%s 线程运行---num = "%threading.current_thread().name,num)
+          sem.acquire()
+          global num
+          num = num + 1
+          print("%s 线程运行---num = "%threading.current_thread().name,num)
         finally:
             sem.release()
 
@@ -181,12 +182,14 @@ def thread_event():
     t1.start()
     t2.start()
 
+
+
 if __name__ == '__main__':
 
     # create_thread()
     # thread_lock()
-    thread_con()
-    # thread_sem()
+    # thread_con()
+    thread_sem()
     # thread_event()
 
 
