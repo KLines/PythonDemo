@@ -2,7 +2,7 @@ from time import time,sleep
 from thread.Student import *
 from thread.Consumer import *
 from thread.Producer import *
-
+from queue import Queue, Empty
 
 '''
 多线程
@@ -64,6 +64,10 @@ class MyThread(Thread):
             n = n + 1
             print("%s 线程运行---"%threading.current_thread().name)
             sleep(1)
+        self.num = n
+
+    def result(self):
+        return self.num
 
 
 def create_thread():
@@ -84,6 +88,7 @@ def create_thread():
     t2 = MyThread('mythread')
     t2.start()
     t2.join()
+    print(t2.result())
 
     print("%s 线程结束---"%threading.current_thread().name)
     end = time()
@@ -94,7 +99,7 @@ def create_thread():
 '处理线程任务资源共享问题'
 
 
-'===== 线程同步：Lock锁 ====='
+'===== 线程同步：Lock ====='
 
 
 num = 0
@@ -119,7 +124,7 @@ def thread_lock():
     t2.start()
 
 
-'===== 线程同步：Condition锁 ====='
+'===== 线程同步：Condition ====='
 
 thread_local = threading.local()
 
@@ -133,7 +138,7 @@ def thread_con():
     con.start()
 
 
-'===== 线程同步：Semaphore信号量 ====='
+'===== 线程同步：Semaphore ====='
 
 
 sem = threading.Semaphore(1)
@@ -156,7 +161,7 @@ def thread_sem():
     t2.start()
 
 
-'===== 线程同步：Event对象 ====='
+'===== 线程同步：Event ====='
 
 '''
 wait(timeout=None) 挂起线程timeout秒(None时间无限)，直到超时或收到event()信号开关为True时才唤醒程序。
@@ -183,15 +188,67 @@ def thread_event():
     t2.start()
 
 
+'===== 线程同步：queue ====='
+
+q = Queue(maxsize=10)
+count = 0
+conn = threading.Condition()
+
+def producer(name):
+    global count
+    while True:
+        try:
+            conn.acquire()
+            if not q.empty():
+                conn.wait()
+            count+=1
+            q.put(count)
+            sleep(0.1)
+            print("%s 生产了--袜子%s"%(name,count))
+            conn.notify()
+        except:
+            raise
+        finally:
+            conn.release()
+
+def consumer(name):
+    while True:
+        try:
+            conn.acquire()
+            if q.empty():
+                conn.wait()
+            count = q.get(block=False)
+            sleep(0.1)
+            print("%s 卖掉了--袜子%s"%(name,count))
+            conn.notify()
+        except Empty:
+            conn.notify()
+        except:
+            raise
+        finally:
+            conn.release()
+
+def thread_queue():
+    t1 = threading.Thread(target=producer,args = ("thread-1",))
+    t2 = threading.Thread(target=consumer,args = ("thread-2",))
+    t3 = threading.Thread(target=consumer,args = ("thread-3",))
+    t1.start()
+    t2.start()
+    t3.start()
+    print('---success---')
+
+
+
+
 
 if __name__ == '__main__':
 
     # create_thread()
     # thread_lock()
     # thread_con()
-    thread_sem()
+    # thread_sem()
     # thread_event()
-
+    thread_queue()
 
 
 

@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
+from time import sleep
 import datetime
 import threading
-from time import sleep
 
 '''
 线程池
@@ -9,7 +9,6 @@ from time import sleep
     
         当该函数执行结束后，该线程并不会死亡，而是再次返回到线程池中变成空闲状态，等待执行下一个函数
         
-
         Executor
             |--ThreadPoolExecutor 用于创建线程池
             |--ProcessPoolExecutor 用于创建进程池
@@ -30,19 +29,20 @@ from time import sleep
 
     ２、threadpool第三方模块
 '''
-
+my_sum = 100
 def func(max):
-    my_sum = 0
-    for i in range(max):
-        time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        print("%s---%s 线程运行"%(time,threading.current_thread().name) + '  ' + str(i))
-        my_sum += i
-    sleep(1)
+    global my_sum
+    start = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print("%s---%s 开始运行"%(start,threading.current_thread().name) + '  ' + str(my_sum))
+    sleep(2)
+    my_sum=my_sum-1
+    end = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print("%s---%s 结束运行"%(end,threading.current_thread().name) + '  ' + str(my_sum))
     return my_sum
 
 
 def func_pool():
-
+    # 底层通过SimpleQueue队列控制线程同步
     thread_pool = ThreadPoolExecutor(max_workers=4,thread_name_prefix="thread_pool")
     for i in range(10):
         thread_pool.submit(func,10)
@@ -52,9 +52,9 @@ def func_pool():
 
 def func_future():
 
-    with ThreadPoolExecutor(4) as executor:
-        for i in range(10):
-            result = executor.submit(func,5)
+    with ThreadPoolExecutor(4) as executor: # 自动关闭线程池
+        for i in range(9):
+            result = executor.submit(func,10)
             # print('====',result.result())
             result.add_done_callback(func_result)
 
@@ -72,6 +72,6 @@ def func_map():
 
 if __name__ == '__main__':
 
-    # func_pool()
+    func_pool()
     # func_future()
-    func_map()
+    # func_map()
