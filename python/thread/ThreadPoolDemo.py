@@ -14,9 +14,9 @@ import threading
             |--ProcessPoolExecutor 用于创建进程池
 
         Exectuor    
-            |---submit(fn, *args, **kwargs)：将 fn 函数提交给线程池，*args、*kwargs 代表 fn 函数传入参数
-            |---map(func, *iterables, timeout=None, chunksize=1)：该函数将会启动多个线程，以异步方式立即对 iterables 执行 map 处理
-            |---shutdown(wait=True)：关闭线程池
+            |--submit(fn, *args, **kwargs)：将 fn 函数提交给线程池，*args、*kwargs 代表 fn 函数传入参数
+            |--map(func, *iterables, timeout=None, chunksize=1)：该函数将会启动多个线程，以异步方式立即对 iterables 执行 map 处理
+            |--shutdown(wait=True)：关闭线程池
 
         Future
             |--cancel()：取消该 Future 代表的线程任务。如果该任务正在执行，不可取消，则该方法返回 False；否则，程序会取消该任务，并返回 True。

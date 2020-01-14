@@ -3,6 +3,7 @@ from thread.Student import *
 from thread.Consumer import *
 from thread.Producer import *
 from queue import Queue, Empty
+import datetime
 
 '''
 多线程
@@ -98,11 +99,11 @@ def create_thread():
 
 '处理线程任务资源共享问题'
 
+num = 0
 
 '===== 线程同步：Lock ====='
 
 
-num = 0
 lock = threading.Lock()
 
 def func_lock():
@@ -163,6 +164,7 @@ def thread_sem():
 
 '===== 线程同步：Event ====='
 
+
 '''
 wait(timeout=None) 挂起线程timeout秒(None时间无限)，直到超时或收到event()信号开关为True时才唤醒程序。
 set() Even状态值设为True
@@ -190,33 +192,40 @@ def thread_event():
 
 '===== 线程同步：queue ====='
 
+
+q = Queue()
+
+def producer(name):
+    global num
+    while True:
+        num+=1
+        # sleep(0.01)
+        date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        print("%s %s 生产了--袜子%s"%(date,name,num))
+        q.put(num)
+
+def consumer(name):
+    while True:
+        date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        print("%s %s 卖掉了--袜子%s"%(date,name,q.get()))
+
 '''
-queue底层保证数据同步，但是在生产者消费者模式下使用会出现问题
+'利用queue、Condition模拟生产一条数据，消费一条数据'
 
-生产者消费者问题
-
-场景：
-    单生产者多消费者
-问题：
-    2020-01-14 18:03:20.612010 thread-2 卖掉了--袜子25
-    2020-01-14 18:03:20.612194 thread-1 生产了--袜子25
-'''
-
-q = Queue(maxsize=10)
-count = 0
+q = Queue()
 conn = threading.Condition()
 
 def producer(name):
-    global count
+    global num
     while True:
         try:
             conn.acquire()
             if not q.empty():
                 conn.wait()
-            count+=1
-            q.put(count)
-            sleep(0.1)
-            print("%s 生产了--袜子%s"%(name,count))
+            num+=1
+            date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+            print("%s %s 生产了--袜子%s"%(date,name,num))
+            q.put(num)
             conn.notify()
         except:
             raise
@@ -229,9 +238,8 @@ def consumer(name):
             conn.acquire()
             if q.empty():
                 conn.wait()
-            count = q.get(block=False)
-            sleep(0.1)
-            print("%s 卖掉了--袜子%s"%(name,count))
+            date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+            print("%s %s 卖掉了--袜子%s"%(date,name, q.get(block=False)))
             conn.notify()
         except Empty:
             conn.notify()
@@ -239,6 +247,7 @@ def consumer(name):
             raise
         finally:
             conn.release()
+'''
 
 def thread_queue():
     t1 = threading.Thread(target=producer,args = ("thread-1",))
@@ -249,7 +258,6 @@ def thread_queue():
     t2.start()
     t3.start()
     t4.start()
-    print('---success---')
 
 
 '===== 线程同步：threadlocal ====='

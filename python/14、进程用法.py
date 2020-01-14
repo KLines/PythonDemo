@@ -42,7 +42,7 @@ import datetime
 
 # Only works on Unix/Linux/Mac:
 
-def create_porcess():
+def process_create():
 
     if os.name is not 'posix':
         return
@@ -73,7 +73,6 @@ def create_porcess():
 def multi_run(name):
     print('Run child process %s (%s)...' % (name, os.getpid()))
     time.sleep(3)
-
 
 def process_multi():
 
@@ -133,7 +132,7 @@ def pool_map():
     results = p.map_async(map_run,(5,10,15))
     p.close()
     p.join()
-    for r in results.get():
+    for r in results.get(): # 获取执行结果
         print('result-->',r)
 
 '进程间通信--管道（Pipes）'
@@ -143,7 +142,7 @@ def pipe_run(out_pipe,in_pipe):
     while True:
         try:
             print("test")
-            print('Run child process(%s)...' % os.getpid(),out_pipe.recv())
+            print('Run child process(%s)...' % os.getpid(),out_pipe.recv()) # 无数据时阻塞
         except EOFError as e: # 当pipe的输入端被关闭，且无法接收到输入的值，那么就会抛出EOFError
             print("test1")
             print(e)
@@ -152,7 +151,6 @@ def pipe_run(out_pipe,in_pipe):
             print("test2")
             print(e)
             break
-
 
 def process_pipe():
     # 创建管道
@@ -169,30 +167,23 @@ def process_pipe():
 '生产者消费者问题'
 
 count = 0
-lock = multiprocessing.Lock()
+conn = multiprocessing.Condition()
 
 def producer(produce,consume,name):
     global count
     consume.close()
     while True:
-
-            count+=1
-            produce.send("袜子%s"%count)
-            time.sleep(0.1)
-            date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-            print("%s %s 生产了--袜子%s"%(date,name,count))
-
+        count+=1
+        # time.sleep(0.1)
+        date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        print("%s %s 生产了--袜子%s"%(date,name,count))
+        produce.send("袜子%s"%count)
 
 def consumer(produce,consume,name):
     produce.close()
     while True:
-        lock.acquire()
-        count = consume.recv() # 无数据时阻塞
-        time.sleep(0.1)
         date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-        print("%s %s 卖掉了--%s"%(date,name,count))
-        lock.release()
-
+        print("%s %s 卖掉了--%s"%(date,name,consume.recv()))
 
 def conn_pipe():
 
@@ -200,20 +191,44 @@ def conn_pipe():
 
     p1 = multiprocessing.Process(target=producer,args=(produce,consume,"p1"))
     p2 = multiprocessing.Process(target=consumer,args=(produce,consume,"p2"))
-    # p3 = multiprocessing.Process(target=consumer,args=(produce,consume,"p3"))
+    p3 = multiprocessing.Process(target=consumer,args=(produce,consume,"p3"))
 
     p1.start()
     p2.start()
-    # p3.start()
+    p3.start()
 
     produce.close()
     consume.close()
 
+
+# 数据共享 Manager
+# https://www.cnblogs.com/liuhailong-py-way/p/5680588.html
+
+lock = multiprocessing.Lock()
+
+def manager_run(dic):
+    lock.acquire()
+    dic['count'] -= 1
+    print('%s-->%s'%(os.getpid(),dic))
+    lock.release()
+
+def process_man(dic):
+    p_lst = []
+    for i in range(5):
+        p = multiprocessing.Process(target=manager_run,args=(dic,))
+        p.start()
+        p_lst.append(p)
+    for i in p_lst: i.join()
+
 if __name__ == '__main__':
 
-    # func_porcess()
-    # func_multi()
+    # process_create()
+    # process_multi()
     # pool_single()
-    # func_map()
+    # pool_map()
     # process_pipe()
-    conn_pipe()
+    # conn_pipe()
+    m = multiprocessing.Manager()
+    dic=m.dict({'count':100})
+    process_man(dic)
+    print('%s-->%s'%(os.getpid(),dic))
