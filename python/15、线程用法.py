@@ -190,6 +190,18 @@ def thread_event():
 
 '===== 线程同步：queue ====='
 
+'''
+queue底层保证数据同步，但是在生产者消费者模式下使用会出现问题
+
+生产者消费者问题
+
+场景：
+    单生产者多消费者
+问题：
+    2020-01-14 18:03:20.612010 thread-2 卖掉了--袜子25
+    2020-01-14 18:03:20.612194 thread-1 生产了--袜子25
+'''
+
 q = Queue(maxsize=10)
 count = 0
 conn = threading.Condition()
@@ -260,6 +272,7 @@ def func_local():
     t1.start()
     t2.start()
 
+
 if __name__ == '__main__':
 
     # create_thread()
@@ -267,9 +280,8 @@ if __name__ == '__main__':
     # thread_con()
     # thread_sem()
     # thread_event()
-    # thread_queue()
-    func_local()
-
+    thread_queue()
+    # func_local()
 
 
 

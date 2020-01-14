@@ -1,5 +1,6 @@
 import os,time
 import multiprocessing
+import datetime
 
 '''
 多进程
@@ -23,9 +24,9 @@ import multiprocessing
     6、管道（Pipes）
 
 多进程间通信：
-    1、使用全局变量，需要加锁　　
-    2、使用queue模块，可在进程间进行通信，并保证了进程安全
-    3、管道（Pipes）
+    1、使用queue模块，可在进程间进行通信，并保证了进程安全
+    2、管道（Pipes）
+    3、数据共享manager
 
 进程中断问题：
     1、退出标记
@@ -41,7 +42,7 @@ import multiprocessing
 
 # Only works on Unix/Linux/Mac:
 
-def func_porcess():
+def create_porcess():
 
     if os.name is not 'posix':
         return
@@ -69,15 +70,15 @@ def func_porcess():
 
 # multiprocessing模块就是跨平台版本的多进程模块
 
-def run_proc(name):
+def multi_run(name):
     print('Run child process %s (%s)...' % (name, os.getpid()))
     time.sleep(3)
 
 
-def func_multi():
+def process_multi():
 
     print('Parent process (%s) start...' % os.getpid())
-    p = multiprocessing.Process(target=run_proc,args=('test',))
+    p = multiprocessing.Process(target=multi_run,args=('test',))
     print('Child process will start.')
     p.start()
     p.join()  #　此方法可以等待子进程结束后再继续往下运行，通常用于进程间的同步
@@ -97,21 +98,21 @@ def func_multi():
 
 #　提交单个任务
 
-def func1(name):
+def single_run(name):
     print('Run child process %s (%s)...' % (name, os.getpid()))
     return "finished"
 
-def func2(m):
+def single_result(m):
     print("回调函数",os.getpid())
     print("回调函数",m)
 
-def func_pool()-> None:
+def pool_single()-> None:
 
     print('Parent process (%s) start...' % os.getpid())
     p = multiprocessing.Pool(4)
     for i in range(5):
         # p.apply(run_proc,args=(i,))  # 同步的执行
-        p.apply_async(func1,args=(i,),callback=func2)  # 异步的执行
+        p.apply_async(single_run,args=(i,),callback=single_result)  # 异步的执行
 
     p.close()  # 结束进程池提交任务
     p.join()
@@ -120,25 +121,99 @@ def func_pool()-> None:
 
 # 提交批量任务
 
-def func_add(max):
+def map_run(max):
     num = 0
     for i in range(max):
         num +=i
     return num
 
-def func_map():
+def pool_map():
 
     p = multiprocessing.Pool(5)
-    results = p.map_async(func_add,(5,10,15))
+    results = p.map_async(map_run,(5,10,15))
     p.close()
     p.join()
     for r in results.get():
         print('result-->',r)
 
+'进程间通信--管道（Pipes）'
+
+def pipe_run(out_pipe,in_pipe):
+    in_pipe.close() # 关闭子进程管道输入端
+    while True:
+        try:
+            print("test")
+            print('Run child process(%s)...' % os.getpid(),out_pipe.recv())
+        except EOFError as e: # 当pipe的输入端被关闭，且无法接收到输入的值，那么就会抛出EOFError
+            print("test1")
+            print(e)
+            out_pipe.close()
+        except OSError as e:
+            print("test2")
+            print(e)
+            break
+
+
+def process_pipe():
+    # 创建管道
+    out_pipe,in_pipe = multiprocessing.Pipe()
+    p = multiprocessing.Process(target=pipe_run,args=(out_pipe,in_pipe))
+    p.start()
+    # 关闭主进程的输出管道端口
+    out_pipe.close()
+    for i in range(10):
+        in_pipe.send("test"+str(i))
+    in_pipe.close()
+
+
+'生产者消费者问题'
+
+count = 0
+lock = multiprocessing.Lock()
+
+def producer(produce,consume,name):
+    global count
+    consume.close()
+    while True:
+
+            count+=1
+            produce.send("袜子%s"%count)
+            time.sleep(0.1)
+            date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+            print("%s %s 生产了--袜子%s"%(date,name,count))
+
+
+def consumer(produce,consume,name):
+    produce.close()
+    while True:
+        lock.acquire()
+        count = consume.recv() # 无数据时阻塞
+        time.sleep(0.1)
+        date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        print("%s %s 卖掉了--%s"%(date,name,count))
+        lock.release()
+
+
+def conn_pipe():
+
+    produce,consume = multiprocessing.Pipe()
+
+    p1 = multiprocessing.Process(target=producer,args=(produce,consume,"p1"))
+    p2 = multiprocessing.Process(target=consumer,args=(produce,consume,"p2"))
+    # p3 = multiprocessing.Process(target=consumer,args=(produce,consume,"p3"))
+
+    p1.start()
+    p2.start()
+    # p3.start()
+
+    produce.close()
+    consume.close()
 
 if __name__ == '__main__':
 
     # func_porcess()
     # func_multi()
-    # func_pool()
-    func_map()
+    # pool_single()
+    # func_map()
+    # process_pipe()
+    conn_pipe()
