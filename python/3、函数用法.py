@@ -7,11 +7,15 @@ import copy
 print("===== 1、固定参数 =====")
 
 
-def printinfo(name, age=20):
+'''
+１、函数参数中的冒号是参数的类型建议符，告诉程序员希望传入的实参的类型
+２、"->" 是返回值的注释，-> str 意思即是提醒函数使用者返回值会是一个str型
+'''
+def printinfo(name:str, age:int=20)-> str:
     "打印任何传入的字符串"
     print("名字：", name)
     print("年龄：", age)
-    return
+    return ""
 
 printinfo("test", 10) # 必须参数，根据参数顺序入参
 printinfo(age=50, name="runoob")  # 关键字参数，可根据参数名匹配

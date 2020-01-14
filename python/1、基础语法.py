@@ -43,6 +43,13 @@ print('dict：', Dictionary)
 # print(Dictionary.items())  # 输出所有项
 print("数据类型：", type(1.0), type(String), type(List), type(Tuple), type(Set), type(Dictionary))
 
+temp = ...
+
+def temp1() -> str:
+    pass
+
+def temp2() -> str:...
+
 
 print("===== 2、type isinstance 用法 =====")
 
