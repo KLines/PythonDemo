@@ -5,7 +5,7 @@ import threading
 
 '''
 线程池
-    １、concurrent.futures模块
+    1、concurrent.futures模块
     
         当该函数执行结束后，该线程并不会死亡，而是再次返回到线程池中变成空闲状态，等待执行下一个函数
         
@@ -27,51 +27,63 @@ import threading
             |--exception(timeout=None)：获取该 Future 代表的线程任务所引发的异常。如果该任务成功完成，没有异常，则该方法返回 None。
             |--add_done_callback(fn)：为该 Future 代表的线程任务注册一个“回调函数”，当该任务成功完成时，程序会自动触发该 fn 函数。
 
-    ２、threadpool第三方模块
+    2、threadpool第三方模块
 '''
+
 my_sum = 100
-def func(max):
+def func():
     global my_sum
     start = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print("%s---%s 开始运行"%(start,threading.current_thread().name) + '  ' + str(my_sum))
-    sleep(2)
+    sleep(1)
     my_sum=my_sum-1
     end = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print("%s---%s 结束运行"%(end,threading.current_thread().name) + '  ' + str(my_sum))
     return my_sum
 
 
+# 创建线程池
+
 def func_pool():
     # 底层通过SimpleQueue队列控制线程同步
     thread_pool = ThreadPoolExecutor(max_workers=4,thread_name_prefix="thread_pool")
     for i in range(10):
-        thread_pool.submit(func,10)
+        thread_pool.submit(func)
 
     thread_pool.shutdown()
 
 
+# 获取多线程执行结果
+
 def func_future():
 
     with ThreadPoolExecutor(4) as executor: # 自动关闭线程池
-        for i in range(9):
-            result = executor.submit(func,10)
+        for i in range(10):
+            result = executor.submit(func)
             # print('====',result.result())
             result.add_done_callback(func_result)
 
-
 def func_result(result):
-    print('====',result.result())
+    print('result-->',result.result())
 
+
+# 批量提交线程任务
+
+def func_add(max):
+    num = 0
+    for i in range(max):
+        num +=i
+    return num
 
 def func_map():
 
     with ThreadPoolExecutor(4) as executor:
-        results = executor.map(func,(5,10,15))
+        results = executor.map(func_add,(5,10,15))
         for r in results:
-            print('====',r)
+            print('result-->',r)
 
 if __name__ == '__main__':
 
-    func_pool()
+    # func_pool()
     # func_future()
-    # func_map()
+    func_map()
