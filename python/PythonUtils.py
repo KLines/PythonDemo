@@ -1,12 +1,14 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-' a test module '
-
-__author__ = 'liuk'
-
+import time
 import datetime
 from functools import wraps
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+__author__ = 'liuk'
+
+
+
+'函数装饰器'
 
 def logUtils(dir="log.txt"):
     def logging(func):
@@ -32,34 +34,14 @@ def myFunc2():
     'myFunc2 文档说明'
     print("test2")
 
-myFunc1()
-myFunc2()
+def wrapper_utils():
+    myFunc1()
+    myFunc2()
 
-import time
-if __name__ == '__main__':
 
-    # 字符串的时间转换为时间戳
-    str = "2020/5/10 23:40:00"
-    # 先转换为时间数组
-    timeArray = time.strptime(str, "%Y/%m/%d %H:%M:%S")
-    timeStamp = int(time.mktime(timeArray))
-    print(timeStamp)
+'冒泡排序 & 选择排序'
 
-    # 时间戳转换为指定格式的字符串时间
-    timeStamp = 1589125200
-    timeArray = time.localtime(timeStamp)
-    str = time.strftime("%Y-%m-%d %H:%M:%S",timeArray)
-    print(str)
-
-    # 获取当前时间
-    nowTime = datetime.datetime.now()
-    # 获取当前时间戳
-    nowStramp = time.time()
-    print(nowTime)
-    print(nowStramp)
-    nowTime.strftime("%Y-%m-%d %H:%M:%S.%f")
-    int(nowStramp)
-
+def sort_utils():
     # 选择排序
     A = [64, 25, 12, 22, 11]
     for i in range(len(A)):
@@ -77,3 +59,38 @@ if __name__ == '__main__':
             if (B[j] > B[j+1]):
                 B[j+1], B[j] =B[j], B[j+1]
     print(B)
+
+
+'内建模块：datetime'
+
+
+def time_utils():
+
+    # 字符串的时间转换为时间戳
+    str = "2020/5/10 23:40:00"
+    timeArray = time.strptime(str, "%Y/%m/%d %H:%M:%S")  # 先转换为时间数组
+    timeStamp = time.mktime(timeArray)  # 转换为时间戳
+    print("%s-->%s"%(str,timeStamp))
+
+    # 时间戳转换为指定格式的字符串时间
+    timeStamp = 1589125200
+    timeArray = time.localtime(timeStamp) # 先转换为时间数组
+    str = time.strftime("%Y-%m-%d %H:%M:%S",timeArray) # 转换为时间
+    print("%s-->%s"%(timeStamp,str))
+
+    # 获取当前时间
+    nowTime = datetime.datetime.now()
+    # 获取当前时间戳
+    nowStramp = time.time()
+    print('当前时间：',nowTime)
+    print('当前时间戳：',nowStramp)
+    # print(nowTime.strftime("%Y-%m-%d %H:%M:%S"))
+    # print(int(nowStramp))
+
+
+if __name__ == '__main__':
+
+    # wrapper_utils()
+    sort_utils()
+    time_utils()
+

@@ -188,14 +188,14 @@ def producer(name):
     while True:
         if socks < 100:
             socks+=1
-            date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+            date = datetime.datetime.now()
             print("%s %s 生产了--袜子%s"%(date,name,socks))
             q.put(socks)
 
 def consumer(name):
     global count
     while True:
-        date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        date = datetime.datetime.now()
         sock = q.get()
         print("%s %s 卖掉了--袜子%s"%(date,name,sock))
         count-=1
@@ -217,7 +217,7 @@ def producer(name):
                 conn.wait()
             if socks < 1000:
                 socks+=1
-                date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+                date = datetime.datetime.now()
                 print("%s %s 生产了--袜子%s"%(date,name,socks))
                 q.put(socks)
             conn.notify()
@@ -233,7 +233,7 @@ def consumer(name):
             conn.acquire()
             if q.empty():
                 conn.wait()
-            date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+            date = datetime.datetime.now()
             sock = q.get(block=False)
             print("%s %s 卖掉了--袜子%s"%(date,name,sock))
             count+=1
@@ -280,10 +280,10 @@ def thread_local():
 if __name__ == '__main__':
 
     # thread_create()
-    thread_sync()
+    # thread_sync()
     # thread_event()
     # thread_con()
-    # thread_queue()
+    thread_queue()
     # thread_local()
 
 
