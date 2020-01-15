@@ -107,32 +107,22 @@ sem = threading.Semaphore(1)  # 单信号量可以起到同步锁作用
 
 class TicketsThread(Thread):
 
-    tickets = 1000
+    tickets = 100
 
     def __init__(self,name):
         super().__init__(name = name)
 
     def run(self) -> None:
-        # self.thread_lock()
-        self.thread_sem()
+        while True:
+            with lock:  # 线程同步：Lock
+            # with sem: # 线程同步：Semaphore
+                self.func_tickets()
 
     def func_tickets(self):
         if TicketsThread.tickets > 0:
-            sleep(0.00001) # 模拟延迟，造成数据异常
+            sleep(0.001) # 模拟延迟，造成数据异常
             TicketsThread.tickets = TicketsThread.tickets - 1
             print("%s 线程运行---num = "%threading.current_thread().name,TicketsThread.tickets)
-
-    def thread_lock(self): # 线程同步：Lock
-        while True:
-            lock.acquire()
-            self.func_tickets()
-            lock.release()
-
-    def thread_sem(self): # 线程同步：Semaphore
-        while True:
-            sem.acquire()
-            self.func_tickets()
-            sem.release()
 
 def thread_sync():
     t1 = TicketsThread('thread-1')
@@ -290,10 +280,10 @@ def thread_local():
 if __name__ == '__main__':
 
     # thread_create()
-    # thread_sync()
+    thread_sync()
     # thread_event()
     # thread_con()
-    thread_queue()
+    # thread_queue()
     # thread_local()
 
 
