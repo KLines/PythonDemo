@@ -2,10 +2,10 @@ import threading
 
 
 '''
-１、线程同步问题
+１、线程同步问题-->加锁解决
     name: test0 ,age: 1
     name: test1 ,age: 0
-２、生产者消费者问题
+２、生产者消费者问题-->notify()、wait()解决
     name: test0 ,age: 0
     name: test0 ,age: 0
     name: test0 ,age: 1

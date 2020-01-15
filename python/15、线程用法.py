@@ -46,7 +46,7 @@ Python的线程：
 '创建线程任务'
 
 
-def func():
+def func_run():
     n = 0
     while n < 5:
         n = n + 1
@@ -71,7 +71,7 @@ class MyThread(Thread):
         return self.num
 
 
-def create_thread():
+def thread_create():
 
     start = time()
     print("%s 线程运行---"%threading.current_thread().name)
@@ -79,7 +79,7 @@ def create_thread():
 
     '===== 通过thread方法创建线程====='
 
-    t1 = threading.Thread(target=func,name="thread-1")
+    t1 = threading.Thread(target=func_run,name="thread-1")
     t1.start()
     t1.join()
 
@@ -87,6 +87,7 @@ def create_thread():
     '===== 通过继承Thread类创建线程 ====='
 
     t2 = MyThread('mythread')
+    # t2.name = 'mythread'
     t2.start()
     t2.join()
     print(t2.result())
@@ -99,78 +100,56 @@ def create_thread():
 
 '处理线程任务资源共享问题'
 
-num = 0
 
-'===== 线程同步：Lock ====='
+lock = threading.Lock() # Lock锁解决数据共享问题
 
+sem = threading.Semaphore(1)  # 单信号量可以起到同步锁作用
 
-lock = threading.Lock()
+class TicketsThread(Thread):
 
-def func_lock():
-    while True:
-        try:
+    tickets = 1000
+
+    def __init__(self,name):
+        super().__init__(name = name)
+
+    def run(self) -> None:
+        # self.thread_lock()
+        self.thread_sem()
+
+    def func_tickets(self):
+        if TicketsThread.tickets > 0:
+            sleep(0.00001) # 模拟延迟，造成数据异常
+            TicketsThread.tickets = TicketsThread.tickets - 1
+            print("%s 线程运行---num = "%threading.current_thread().name,TicketsThread.tickets)
+
+    def thread_lock(self): # 线程同步：Lock
+        while True:
             lock.acquire()
-            global num
-            num = num + 1
-            sleep(0.001)
-            print("%s 线程运行---num = "%threading.current_thread().name,num)
-        finally:
+            self.func_tickets()
             lock.release()
 
-def thread_lock():
-
-    t1 = threading.Thread(target=func_lock,name="thread-1")
-    t2 = threading.Thread(target=func_lock,name="thread-2")
-    t1.start()
-    t2.start()
-
-
-'===== 线程同步：Condition ====='
-
-thread_local = threading.local()
-
-def thread_con():
-
-    stu = Student(False)
-    pro = Producer(stu)
-    con = Consumer(stu)
-
-    pro.start()
-    con.start()
-
-
-'===== 线程同步：Semaphore ====='
-
-
-sem = threading.Semaphore(1)
-
-def func_sem():
-    while True:
-        try:
-          sem.acquire()
-          global num
-          num = num + 1
-          print("%s 线程运行---num = "%threading.current_thread().name,num)
-        finally:
+    def thread_sem(self): # 线程同步：Semaphore
+        while True:
+            sem.acquire()
+            self.func_tickets()
             sem.release()
 
-def thread_sem():
-
-    t1 = threading.Thread(target=func_sem,name="thread-1")
-    t2 = threading.Thread(target=func_sem,name="thread-2")
+def thread_sync():
+    t1 = TicketsThread('thread-1')
+    t2 = TicketsThread('thread-2')
     t1.start()
     t2.start()
-
-
-'===== 线程同步：Event ====='
 
 
 '''
+线程同步：Event对象
+
 wait(timeout=None) 挂起线程timeout秒(None时间无限)，直到超时或收到event()信号开关为True时才唤醒程序。
 set() Even状态值设为True
 clear() Even状态值设为 False
 is_set() 返回Even对象的状态值。
 '''
+
 
 event = threading.Event() # 默认False
 
@@ -190,42 +169,67 @@ def thread_event():
     t2.start()
 
 
-'===== 线程同步：queue ====='
+'生产者消费者模型'
+
+
+'===== 使用Condition模拟 ====='
+
+def thread_con():
+
+    stu = Student(False)
+    pro = Producer(stu)
+    con = Consumer(stu)
+
+    pro.start()
+    con.start()
+
+
+'===== 使用Queue模拟 ====='
 
 
 q = Queue()
 
+socks = 0
+
+count = 100
+
 def producer(name):
-    global num
+    global socks
     while True:
-        num+=1
-        # sleep(0.01)
-        date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-        print("%s %s 生产了--袜子%s"%(date,name,num))
-        q.put(num)
+        if socks < 100:
+            socks+=1
+            date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+            print("%s %s 生产了--袜子%s"%(date,name,socks))
+            q.put(socks)
 
 def consumer(name):
+    global count
     while True:
         date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-        print("%s %s 卖掉了--袜子%s"%(date,name,q.get()))
+        sock = q.get()
+        print("%s %s 卖掉了--袜子%s"%(date,name,sock))
+        count-=1
+        print("现在一共剩余%s袜子"%count)
+
 
 '''
-'利用queue、Condition模拟生产一条数据，消费一条数据'
+'利用Queue、Condition模拟生产一条数据，消费一条数据'
 
 q = Queue()
 conn = threading.Condition()
 
 def producer(name):
-    global num
+    global socks
     while True:
         try:
             conn.acquire()
             if not q.empty():
                 conn.wait()
-            num+=1
-            date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-            print("%s %s 生产了--袜子%s"%(date,name,num))
-            q.put(num)
+            if socks < 1000:
+                socks+=1
+                date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+                print("%s %s 生产了--袜子%s"%(date,name,socks))
+                q.put(socks)
             conn.notify()
         except:
             raise
@@ -233,13 +237,17 @@ def producer(name):
             conn.release()
 
 def consumer(name):
+    global count
     while True:
         try:
             conn.acquire()
             if q.empty():
                 conn.wait()
             date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-            print("%s %s 卖掉了--袜子%s"%(date,name, q.get(block=False)))
+            sock = q.get(block=False)
+            print("%s %s 卖掉了--袜子%s"%(date,name,sock))
+            count+=1
+            print("现在一共卖掉了%s袜子"%count)
             conn.notify()
         except Empty:
             conn.notify()
@@ -253,14 +261,12 @@ def thread_queue():
     t1 = threading.Thread(target=producer,args = ("thread-1",))
     t2 = threading.Thread(target=consumer,args = ("thread-2",))
     t3 = threading.Thread(target=consumer,args = ("thread-3",))
-    t4 = threading.Thread(target=consumer,args = ("thread-4",))
     t1.start()
     t2.start()
     t3.start()
-    t4.start()
 
 
-'===== 线程同步：threadlocal ====='
+'threadlocal--线程私有数据'
 
 
 local = threading.local()  # 创建全局ThreadLocal对象
@@ -274,7 +280,7 @@ def func_local2(name,num):
     local.num = num
     print("%s 线程运行---num=%s" % (local.name,local.num))
 
-def func_local():
+def thread_local():
     t1 = threading.Thread(target=func_local1, args=("thread-A",))
     t2 = threading.Thread(target=func_local2, args=("thread-B",5))
     t1.start()
@@ -283,13 +289,12 @@ def func_local():
 
 if __name__ == '__main__':
 
-    # create_thread()
-    # thread_lock()
-    # thread_con()
-    # thread_sem()
+    # thread_create()
+    # thread_sync()
     # thread_event()
+    # thread_con()
     thread_queue()
-    # func_local()
+    # thread_local()
 
 
 
