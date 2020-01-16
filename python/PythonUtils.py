@@ -2,6 +2,7 @@ import time,datetime
 from functools import wraps
 import collections,re,base64,hashlib
 
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 __author__ = 'liuk'
@@ -206,6 +207,8 @@ def base64_utils():
     2、SHA1的结果是160bit，通常用一个40位的16进制字符串表示
     3、原始数据加一个复杂字符串用md5加密，俗称“md5加盐”，
 '''
+
+
 def hashlib_utils():
 
     m = hashlib.md5()
@@ -221,6 +224,59 @@ def hashlib_utils():
     print(s1.hexdigest())
 
 
+'''
+内建模块：urllib
+    1、request：Get、Post
+    2、Parse
+    https://www.cnblogs.com/fiona-zhong/p/10179421.html
+'''
+from urllib import request,parse,error
+from http.client import HTTPResponse
+import json
+
+def urllib_utils():
+
+    try:
+
+        # url ='https://yesno.wtf/api'
+        url = 'http://httpbin.org/ip'
+        params = {'param1':'hello','param2':'world'}
+
+
+        # Get请求
+        get_params = parse.urlencode(params)
+
+        new_url = '?'.join([url,get_params,'&name=test'])
+        print(new_url)
+        with request.urlopen(new_url) as resp:  # type: # HTTPResponse
+            print(resp.status,resp.reason)
+            print(resp.info())
+            print(resp.read().decode('utf-8'))
+
+        # Post请求
+        req = request.Request(url)
+        python_data = {'name':'test', 'age': 10,'flag': True, 'company': None}
+        data = json.dumps(python_data)
+
+
+        params = parse.urlencode(params)
+        post_params = params.encode('utf-8') # 变成byte类型
+        print("request: url-->%s"%url)
+        print("request: params-->%s"%params)
+        print("request: data-->%s"%data.encode('utf-8'))
+
+        with request.urlopen(req,data=post_params,timeout=10) as resp: # type: HTTPResponse
+            print(resp.status,resp.reason)
+            print(resp.info())
+            print(resp.read().decode('utf-8'))
+
+    except error.HTTPError as e:
+        print(e)
+    except BaseException as e:
+        print(e)
+
+
+
 if __name__ == '__main__':
 
     # wrapper_utils()Counter
@@ -229,4 +285,5 @@ if __name__ == '__main__':
     # time_utils()
     # collections_utils()
     # base64_utils()
-    hashlib_utils()
+    # hashlib_utils()
+    urllib_utils()
