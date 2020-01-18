@@ -57,7 +57,7 @@ def sort_utils():
 
     # 冒泡排序
     B = [64, 25, 12, 22, 11]
-    for i in range(len(B)):
+    for i in range(len(B)-1):
         for j in range(0,len(B)-i-1):
             if (B[j] > B[j+1]):
                 B[j+1], B[j] =B[j], B[j+1]
@@ -224,6 +224,17 @@ def hashlib_utils():
     print(s1.hexdigest())
 
 
+def test(num):
+    for x in range(num):
+        for y in range(1,num+1):
+            print(str( x * num + y)," ",end="")
+        print()
+
+    for i in range(num*(num-1),num*num):
+        for j in range(i+1,0,-num):
+            print(str(j), " ", end="")
+        print()
+
 if __name__ == '__main__':
 
     # wrapper_utils()Counter
@@ -233,3 +244,5 @@ if __name__ == '__main__':
     # collections_utils()
     base64_utils()
     hashlib_utils()
+    test(3)
+
