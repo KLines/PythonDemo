@@ -1,6 +1,8 @@
 import time,datetime
-from functools import wraps
 import collections,re,base64,hashlib
+from functools import wraps
+from _hashlib import HASH
+
 
 
 #!/usr/bin/env python3
@@ -208,18 +210,18 @@ def base64_utils():
     3、原始数据加一个复杂字符串用md5加密，俗称“md5加盐”，
 '''
 
-
 def hashlib_utils():
 
-    m = hashlib.md5()
+    m = hashlib.md5() # type: HASH
     m.update('how to use md5 in python hashlib?'.encode('utf-8'))
     print(m.hexdigest())
+
     m5 = hashlib.md5()
     m5.update("how to use md5 ".encode('utf-8'))
     m5.update("in python hashlib?".encode('utf-8'))
     print(m5.hexdigest())
 
-    s1 = hashlib.sha1()
+    s1 = hashlib.sha1() # type: HASH
     s1.update('test'.encode('utf-8'))
     print(s1.hexdigest())
 
