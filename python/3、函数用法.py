@@ -28,7 +28,7 @@ print("===== 2、可变参数 =====")
 def printinfo(number, *args):  # 以元组(tuple)的形式导入
     print(number, args)
 
-printinfo(1, "test", 3, 4)
+printinfo(1, {'name':"test"}, 3, 4)
 
 
 def printinfo(number, **kwargs):  # 以字典(dict)的形式导入

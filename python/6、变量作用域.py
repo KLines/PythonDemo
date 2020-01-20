@@ -43,6 +43,7 @@ if __name__ == "__main__":
 
     global_num = 10
     def func():
+        global  global_num
         enclosing_num = 100  # 闭包函数外的函数中
         def inner():
             '修改作用域变量'
