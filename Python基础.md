@@ -502,6 +502,18 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 * 4、其他关键字：print　del　global　with　assert　yield　exec
 
 
+
+**第三方模块**
+
+* 1、psutil：运维
+
+* 2、chardet：判断编码类型
+
+* 3、Pillow：图像处理
+
+  
+
+
 ## 10、异常和断言 ##
 
 **异常分类**
@@ -533,8 +545,9 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
     	* 3、最后一个except子句可以忽略异常的名称，它将被当作通配符使用
 
 * try...except...else
-    * else 子句必须放在所有的 except 子句之后，将在 try 子句没有发生任何异常的时候执行
-
+    
+* else 子句必须放在所有的 except 子句之后，将在 try 子句没有发生任何异常的时候执行
+    
 * try...except...else...finally 
     * finally 语句无论是否发生异常都将执行其中的代码
     * 如果一个异常在 try 、except 、else 子句里任意一处被抛出，而又没有任何的 except 把它截住，那么这个异常会在 finally 子句执行后被抛出
@@ -816,7 +829,7 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 				|--map(func, *iterables, timeout=None, chunksize=1)：该函数将会启动多个线程，以异步方式立即对 iterables 执行 map 处理
 				|--shutdown(wait=True)：关闭线程池
 			|--ProcessPoolExecutor 用于创建进程池
-    
+   
 		Future
 			|--cancel()：取消该 Future 代表的线程任务。如果该任务正在执行，不可取消，则该方法返回 False；否则，程序会取消该任务，并返回 True。
 			|--cancelled()：返回 Future 代表的线程任务是否被成功取消。
