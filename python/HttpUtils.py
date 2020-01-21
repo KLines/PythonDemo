@@ -25,7 +25,6 @@ import random,ssl
 my_cookiejar = None
 
 
-
 def init_opener():
 
     # 创建opener
@@ -89,10 +88,13 @@ def set_request_headers():
 cookie使用
 
     1、http.cookiejar：为存储和管理cookie提供客户端支持
-        CookieJar：Cookie对象存储在内存中，包含request、response中的cookie信息，若两者中cookie名字一致，则重复显示
+        CookieJar：Cookie对象存储在内存中，包含request、response中的cookie信息，若两者中存在cookie名字一致，则重复显示
         FileCookieJar：检索cookie信息并将信息存储到文件中
         MozillaCookieJar：创建与Mozilla cookies.txt文件兼容的FileCookieJar实例
         LWPCookieJar：创建与libwww-perl Set-Cookie3文件兼容的FileCookieJar实例
+        # save()函数带有两个参数，ignore_discard和ignore_expires
+            ignore_discard：即使cookies将被丢弃也将它保存下来
+            ignore_expires：cookies已经过期也将它保存并且文件已存在时将覆盖
     2、http.cookies：创建以HTTP报头形式表示的cookie数据输出
 '''
 
@@ -128,5 +130,9 @@ def decode_data(resp:HTTPResponse):
         buff = BytesIO(resp.read())
         f = gzip.GzipFile(fileobj=buff)
         return f.read().decode('utf-8')
+    elif 'br' == type:
+        import brotli
+        f = brotli.decompress(resp.read())
+        return f.decode('utf-8')
     else:
         return resp.read().decode('utf-8') # 返回的数据为byte类型，使用utf-8解码

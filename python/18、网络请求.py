@@ -2,12 +2,13 @@ from http import cookiejar
 from urllib import request,parse,error
 from http.client import HTTPResponse
 import json,HttpUtils
+
+
 '''
 
 https://www.cnblogs.com/fiona-zhong/p/10179421.html
-https://www.kancloud.cn/turing/www-tuling123-com/718227
 
-    
+
 HTTP内容编码：在http协议中，可以对内容（也就是body部分）进行编码
 
     1、可以采用压缩编码，比如gzip这样的从而达到压缩的目的，因此http压缩就是HTTP内容编码的一种
@@ -29,11 +30,10 @@ HTTP压缩：采用通用的压缩算法，比如gzip来压缩HTML,Javascript, C
         deflate：表明实体是用zlib的格式压缩的
         identity：表明没有对实体进行编码。当没有Content-Encoding header时， 就默认为这种情况
         gzip, compress, 以及deflate编码都是无损压缩算法，用于减少传输报文的大小，不会导致信息损失，其中gzip通常效率最高， 使用最为广泛。
-'''
+        
+        
+HTTP请求：
 
-
-'''
-http请求
     1、模拟Get、Post请求
     2、异步请求，取消任务
 '''
@@ -44,7 +44,7 @@ cookie_list = [{'name':'token','value':'test1','domain':'.httpbin.org'},
 
 
 # 打印http日志信息
-def log_info(req:request.Request=None,resp:HTTPResponse=None):
+def log_info(req:request.Request = None,resp:HTTPResponse = None):
 
     if req is not None:
 
@@ -70,14 +70,13 @@ def request_get():
     # 无参数，底层调用OpenerDirector
     # url = 'http://httpbin.org/ip'
     url = 'https://www.httpbin.org/get'
-    with request.urlopen(url) as resp:  # type: HTTPResponse
+    with request.urlopen(url) as resp: # type: HTTPResponse
         log_info(None,resp)
-
 
     # 带参数
     url = 'https://www.baidu.com'
     params = {}
-    params.update(name='test',age=20)
+    params.update(name='测试',age=20)
     get_params = parse.urlencode(params)
     new_url = '?'.join([url,get_params]) # join参数为 list、tuple
     print(new_url)
@@ -85,12 +84,12 @@ def request_get():
         log_info(None,resp)
 
     # 重置request中的cookie
-    for item in my_cookiejar: # type: cookiejar.Cookie
-        if 'BAIDUID'==item.name:
-            value = item.value
-            break
+    # for item in my_cookiejar: # type: cookiejar.Cookie
+    #     if 'BAIDUID'==item.name:
+    #         value = item.value
+    #         break
     cookie_list[0]['value'] = 'test2'
-    cookie_list[1]['value'] = value
+    cookie_list[1]['value'] = "tesdsfffsdfsdfds="
     HttpUtils.set_request_cookies(cookie_list)
 
 
@@ -145,7 +144,7 @@ if __name__ == '__main__':
 
         HttpUtils.init_opener()  # 初始化opener
         HttpUtils.set_request_cookies(cookie_list)  # 设置cookie
-        my_cookiejar = HttpUtils.my_cookiejar  # type: cookiejar.CookieJar
+        my_cookiejar = HttpUtils.my_cookiejar  # type: cookiejar.LWPCookieJar
 
         request_get()
         request_post()
@@ -153,8 +152,13 @@ if __name__ == '__main__':
         for item in my_cookiejar: # type: cookiejar.Cookie
             print(':'.join([item.name,item.value]))
 
-    except error.HTTPError as e:
+    except error.URLError as e: # HTTPError是 URLError的子类
         print(e)
-
+        if hasattr(e,'code'):
+            print('code',e.code)
+        if hasattr(e,'reason'):
+            print('reason',e.reason)
+        if hasattr(e,'headers'):
+            print('headers',e.headers)
     except:
         raise
