@@ -502,16 +502,11 @@ Python ： 交互式编程，不需要经过编译阶段，可以直接运行。
 * 4、其他关键字：print　del　global　with　assert　yield　exec
 
 
-
 **第三方模块**
 
 * 1、psutil：运维
-
 * 2、chardet：判断编码类型
-
 * 3、Pillow：图像处理
-
-  
 
 
 ## 10、异常和断言 ##
