@@ -1,8 +1,11 @@
-from urllib import request
+import json
+import logging
+import ssl
+from http import cookiejar, cookies
 from http.client import HTTPResponse
-from http import cookiejar,cookies
-import random,ssl
+from urllib import request, parse, error
 
+from . import headers
 
 '''
 自定义全局opener：
@@ -24,9 +27,11 @@ import random,ssl
 
 my_cookiejar = None
 
+opener = None
 
-def init_opener():
+def __init_opener():
 
+    global opener,my_cookiejar
     # 创建opener
     opener = request.build_opener()
 
@@ -40,48 +45,17 @@ def init_opener():
     proxy_handler = request.ProxyHandler({'http': 'http://127.0.0.1:8888/','https': 'https://127.0.0.1:8888/'})
 
     # 设置cookie
-    global my_cookiejar
     my_cookiejar = cookiejar.CookieJar()   # 创建cookie管理器
     cookiejar_handler = request.HTTPCookieProcessor(my_cookiejar)  # 创建cookie处理器
     opener.add_handler(cookiejar_handler)
 
     # 设置headers
-    opener.addheaders = set_request_headers().items() # 默认是 [('User-agent', 'Python-urllib/3.7')]
+    opener.addheaders = headers.items() # 默认是 [('User-agent', 'Python-urllib/3.7')]
 
     # 设置全局opener
     request.install_opener(opener)
 
-    return opener
 
-
-'''
-headers使用
-
-    1、urllib底层默认设置：
-        headers["Connection"] = "close" 
-        headers["User-Agent"] = "Python-urllib/%s" % __version__
-    2、request header中Accept-Encoding中若包含gzip，response header通常会返回Content-Encoding: gzip
-    3、response header中包含Content-Encoding: gzip，需要先解压再转码
-'''
-
-
-USER_AGENTS =[
-    "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
-]
-
-
-# 设置请求头
-def set_request_headers():
-    headers = {
-        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-        'Accept-Encoding':'gzip,deflate,br',  # 支持的压缩编码
-        'Accept-language':'zh-CN,zh;q=0.9',
-        'Connection':'keep-alive',
-        'User-Agent':random.choice(USER_AGENTS)
-    }
-    return headers
 
 
 '''
@@ -118,11 +92,92 @@ def set_response_cookies():
     print(cookie.output(header="Cookie:"))
 
 
-'''日志信息＆解析数据'''
 
 
-# 解码response中的数据
-def decode_data(resp:HTTPResponse):
+'''网络请求工具'''
+
+
+def urllib_utils(url:str,method:str,params=None,json_data=None):
+
+    try:
+
+        if opener is None:
+            __init_opener()
+
+        req_method = method.upper()
+
+        if params is not None:
+            # 去掉 None
+            if None in params.values():
+                for key,value in params.items():
+                    if None == value:
+                        params.pop(key)
+                        break
+            # 拼接参数
+            params = parse.urlencode(params)
+            if 'GET' == req_method:
+                url = '?'.join([url,params])
+                params = None
+            elif 'POST' == req_method:
+                params = params.encode('utf-8') # 变成byte类型
+
+        req = request.Request(url)
+
+        if json_data is not None:
+            params = json.dumps(json_data).encode('utf-8')
+            req.add_header('Content-Type', 'application/json')
+
+        with opener.open(req,data=params,timeout=10) as resp:
+            __http_log(req,resp)
+
+    except error.URLError as e: # HTTPError是 URLError的子类
+        print(e)
+        if hasattr(e,'code'):
+            print('code',e.code)
+        if hasattr(e,'reason'):
+            print('reason',e.reason)
+        if hasattr(e,'headers'):
+            print('headers',e.headers)
+    except:
+        raise
+
+
+
+
+'''http日志信息'''
+
+
+def __http_log(req:request.Request = None,resp:HTTPResponse = None):
+
+    if req is not None:
+
+        logging.info("------request header-------")
+        logging.info('url:'+req.full_url)
+        logging.info('method:'+req.get_method())
+        for header in req.header_items():
+            logging.info(': '.join(header))
+
+        if req.data is not None:
+            logging.info("------request body-------")
+            logging.info(req.data.decode('utf-8'))
+
+    if resp is not None:
+
+        logging.info("------response header-------")
+        logging.info("%s %s"%(resp.code,resp.msg))
+        for header in resp.headers.items():
+            logging.info(': '.join(header))
+
+        logging.info("------response body-------")
+        logging.info(__decode_data(resp))
+
+
+
+
+'''解码response中的数据'''
+
+
+def __decode_data(resp:HTTPResponse):
     type = resp.getheader('Content-Encoding')
     if 'gzip'==type:
         from io import BytesIO

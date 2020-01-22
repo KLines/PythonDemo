@@ -1,8 +1,8 @@
-from http import cookiejar
-from urllib import request,parse,error
 from http.client import HTTPResponse
-import json,HttpUtils
+from urllib import request, parse
 
+import json
+import network
 
 '''
 
@@ -39,126 +39,83 @@ HTTP请求：
 '''
 
 
+def request_demo():
+
+    # Get请求
+    url = 'http://jfx.qdfaw.com:8081/api/qingqi/product/login'
+    params = {'userName':'linqi', 'password': 'Qweasd','deviceId': '111'}
+    new_url = '?'.join([url, parse.urlencode(params)])
+    print(new_url)
+    # 底层调用OpenerDirector
+    with request.urlopen(new_url) as resp:  # type: HTTPResponse
+        print(resp.read().decode('utf-8'))
+
+
+    # Post请求
+    url = 'http://itg.sih.cq.cn:18080/api/hongyan/serverstation/login'
+    req = request.Request(url,headers=network.headers)
+    req.add_header('Content-Type', 'application/json')
+    dict_data = {'userName':'zhfan01', 'password': '123456','deviceId': '111', 'deviceType': '1'}
+    post_params = json.dumps(dict_data).encode('utf-8')
+    with request.urlopen(req,data=post_params,timeout=10) as resp:  # type: HTTPResponse
+        print(resp.read().decode('utf-8'))
+
+
+
+
 cookie_list = [{'name':'token','value':'test1','domain':'.httpbin.org'},
                {'name':'BAIDUID','value':'tesdsff=','domain':'.httpbin.org'}]
-
-
-# 打印http日志信息
-def log_info(req:request.Request = None,resp:HTTPResponse = None):
-
-    if req is not None:
-
-        print("<------request header------->")
-        for header in req.header_items():
-            print(': '.join(header))
-
-    if resp:
-
-        print("<------response header------->")
-        print(resp.code,resp.msg)
-        print(resp.headers)
-
-        print("<------response body------->")
-        print(HttpUtils.decode_data(resp))
 
 
 # Get请求
 def request_get():
 
-    print("===== request_get ======")
-
-    # 无参数，底层调用OpenerDirector
-    # url = 'http://httpbin.org/ip'
+    # 无参数
     url = 'https://www.httpbin.org/get'
-    with request.urlopen(url) as resp: # type: HTTPResponse
-        log_info(None,resp)
+    network.urllib_utils(url,'get')
 
     # 带参数
     url = 'https://www.baidu.com'
+    url = 'https://www.httpbin.org/get'
     params = {}
-    params.update(name='测试',age=20)
-    get_params = parse.urlencode(params)
-    new_url = '?'.join([url,get_params]) # join参数为 list、tuple
-    print(new_url)
-    with request.urlopen(new_url) as resp:  # type: HTTPResponse
-        log_info(None,resp)
+    params.update(name='测试',age=20,flag=True,company=None)
+    network.urllib_utils(url,'get',params=params)
 
     # 重置request中的cookie
     # for item in my_cookiejar: # type: cookiejar.Cookie
     #     if 'BAIDUID'==item.name:
     #         value = item.value
     #         break
-    cookie_list[0]['value'] = 'test2'
-    cookie_list[1]['value'] = "tesdsfffsdfsdfds="
-    HttpUtils.set_request_cookies(cookie_list)
-
+    # cookie_list[0]['value'] = 'test2'
+    # cookie_list[1]['value'] = "tesdsfffsdfsdfds="
+    # HttpUtils.set_request_cookies(cookie_list)
 
 # Post请求
 def request_post():
 
-    print("===== request_post ======")
 
     url = "https://www.httpbin.org/post"
 
     data = {
             "userName":"test",
-            "password":"123456"
-    }
+            "password":"123456",
+            "flag":True,
+            "company":None
+           }
 
-    req = request.Request(url)
-    req.add_header('Content-Type', 'application/json')
-    post_params = json.dumps(data).encode('utf-8') # 变成byte类型
-    with request.urlopen(req,data=post_params,timeout=10) as resp: # type: HTTPResponse
-        log_info(req,resp)
+    network.urllib_utils(url,'post',params=data)
 
-
-def request_demo():
-
-    # 设置代理，通过fiddler抓包
-    proxy_handler = request.ProxyHandler({'http': 'http://127.0.0.1:8888/'})
-    opener = request.build_opener()
-
-    # Get请求
-    url = 'http://jfx.qdfaw.com:8081/api/qingqi/product/login'
-    params = {'userName':'linqi', 'password': 'Qweasd','deviceId': '111'}
-    new_url = '?'.join([url, parse.urlencode(params)])
-    req = request.Request(new_url,headers=HttpUtils.set_request_headers())
-    print(new_url)
-    with opener.open(req) as resp:  # type: HTTPResponse
-        log_info(req,resp)
-
-
-    # Post请求
-    url = 'http://itg.sih.cq.cn:18080/api/hongyan/serverstation/login'
-    req = request.Request(url,headers=HttpUtils.set_request_headers())
-    req.add_header('Content-Type', 'application/json')
-    dict_data = {'userName':'zhfan01', 'password': '123456','deviceId': '111', 'deviceType': '1'}
-    post_params = json.dumps(dict_data).encode('utf-8')
-    with opener.open(req,data=post_params,timeout=10) as resp:  # type: HTTPResponse
-        log_info(req,resp)
+    network.urllib_utils(url,'post',json_data=data)
 
 
 if __name__ == '__main__':
 
-    try:
+    # HttpUtils.set_request_cookies(cookie_list)  # 设置cookie
+    # my_cookiejar = HttpUtils.my_cookiejar  # type: cookiejar.LWPCookieJar
 
-        HttpUtils.init_opener()  # 初始化opener
-        HttpUtils.set_request_cookies(cookie_list)  # 设置cookie
-        my_cookiejar = HttpUtils.my_cookiejar  # type: cookiejar.LWPCookieJar
+    request_get()
 
-        request_get()
-        request_post()
+    request_post()
 
-        for item in my_cookiejar: # type: cookiejar.Cookie
-            print(':'.join([item.name,item.value]))
-
-    except error.URLError as e: # HTTPError是 URLError的子类
-        print(e)
-        if hasattr(e,'code'):
-            print('code',e.code)
-        if hasattr(e,'reason'):
-            print('reason',e.reason)
-        if hasattr(e,'headers'):
-            print('headers',e.headers)
-    except:
-        raise
+    # for item in my_cookiejar: # type: cookiejar.Cookie
+    #     print(':'.join([item.name,item.value]))

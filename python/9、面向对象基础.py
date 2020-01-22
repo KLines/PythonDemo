@@ -45,9 +45,10 @@ w = Classname('woman','女')
 2、类⽅法，不论任何情况,都是⽅法--method
 3、实例方法，如果是实例访问就是⽅法，如果是类名访问就是函数
 '''
-print(type(Classname.func_static))
+from types import FunctionType,MethodType
+print(type(Classname.func_static)==FunctionType)
 print(type(Classname('test',0).func_static))
-print(type(Classname.method_cls))
+print(type(Classname.method_cls)==MethodType)
 print(type(Classname('test',0).method_cls))
 print(type(Classname.method_normal))
 print(type(Classname('test',0).method_normal))
