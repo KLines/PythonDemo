@@ -23,21 +23,34 @@ class Classname(object):  # 类对象
 
     # 类方法，对象和类调用，cls 指向类对象
     @classmethod
-    def func_cls(cls):
+    def method_cls(cls):
         print(cls)
         print('类的类方法')
         print(cls.age)
 
     # 普通方法，对象调用
-    def func_normal(self):
+    def method_normal(self):
         print("类的普通方法")
 
     # 私有方法
-    def __func_normal(self):
+    def __method_normal(self):
         pass
 
 m = Classname('man','男')
 w = Classname('woman','女')
+
+
+'''
+1、静态方法，不论任何情况.都是函数--function
+2、类⽅法，不论任何情况,都是⽅法--method
+3、实例方法，如果是实例访问就是⽅法，如果是类名访问就是函数
+'''
+print(type(Classname.func_static))
+print(type(Classname('test',0).func_static))
+print(type(Classname.method_cls))
+print(type(Classname('test',0).method_cls))
+print(type(Classname.method_normal))
+print(type(Classname('test',0).method_normal))
 
 
 # 添加类属性
@@ -83,8 +96,8 @@ print("类属性-age：",w.age) # 30
 
 # 调用方法
 Classname.func_static()
-Classname.func_cls()
-w.func_normal()
+Classname.method_cls()
+w.method_normal()
 
 print(__name__)
 
