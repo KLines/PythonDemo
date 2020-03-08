@@ -1,5 +1,3 @@
-
-
 '''
 变量作用域
 UnboundLocalError和NameError错误根源解析
@@ -8,6 +6,13 @@ https://blog.csdn.net/weixin_34061555/article/details/93452652
 
 
 if __name__ == "__main__":
+
+
+    print("===== import&package =====")
+    # 只要代码运行到import语句，被导入模块的代码会被执行
+    import test
+    test.printA()
+    test.printB()
 
 
     print("===== 变量作用域类型 =====")
@@ -72,7 +77,7 @@ if __name__ == "__main__":
 
     variable = 300
     def scope():
-        print(variable) # variable是test_scopt()的局部变量，但是在打印时并没有绑定内存对象
+        # print(variable) # variable是test_scopt()的局部变量，但是在打印时并没有绑定内存对象
         variable = 200 # 因为这里，所以variable就变为了局部变量
     scope()
     print(variable)

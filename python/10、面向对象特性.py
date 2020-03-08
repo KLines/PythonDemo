@@ -49,6 +49,7 @@ class Student(Person):
     def __init__(self, name, age, sex):
         super().__init__(name,age) # 显示调用父类构造函数
         self.sex = sex
+        self.score = 2
         print("Student")
         pass
 
@@ -96,7 +97,7 @@ class Speaker():
 class Sample(Student, Speaker):
 
     name = "test"
-    aget = 0
+    age = 0
 
     def __init__(self, name, age,sex):
         # 调用父类构造函数

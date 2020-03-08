@@ -9,6 +9,7 @@ https://blog.csdn.net/legend818/article/details/95165703
 
 # 程序只是简单的将定义代码块读入内存中
 def func(func): # 闭包
+    print("闭包")
     # 封装内部函数，防止被装饰的函数未进行调用的情况下，程序已经执行完毕
     def wrapper(*args,**kwargs):
         print("装饰器")
@@ -123,6 +124,7 @@ print("===== 5、类装饰器-不带参数 =====")
 class Func1():
     def __init__(self, func):
         self.func = func
+        print("init")
 
     def __call__(self, *args, **kwargs):
         print("class start")
@@ -198,13 +200,13 @@ if __name__ == '__main__':
     # 单例模式2
     def cls(obj):
         def wrapper(*args, **kwargs):
-            if not obj.instance:
+            if obj.instance is None:
                 obj.instance = obj(*args, **kwargs)
             return obj.instance
         return wrapper
 
     @cls
-    class Demo(object):
+    class Demo(object):  # func = cls(Demo) -> obj = func("zs",12)
 
         instance = None
 
@@ -215,7 +217,9 @@ if __name__ == '__main__':
         def printInfo(self):
             print(self.args)
 
-
+    # func = cls(Demo)
+    # zs = func("zs",12)
+    # ls = func("ls",32)
     zs = Demo("zs",12)
     ls = Demo("ls",32)
     zs.printInfo()

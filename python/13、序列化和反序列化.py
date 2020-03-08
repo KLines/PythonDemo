@@ -146,5 +146,6 @@ class Dict:
 d = json.loads(json_data,object_hook=Dict)
 
 print(d)
+print(d.name)
 print(d.score)
 print(d.books)

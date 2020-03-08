@@ -31,13 +31,13 @@ def set_score(self, score):
 Classname.set_score = MethodType(set_score,Classname)
 m.set_score(50)
 m.score = 20
-print(Classname.score)
-print(m.score)
-print(w.score)
+print(Classname.score)  # 50
+print(m.score)  # 20
+print(w.score)  # 50
 Classname.set_score(100)
-print(Classname.score)
-print(m.score)
-print(w.score)
+print(Classname.score)  # 100
+print(m.score)  # 20
+print(w.score)  # 100
 
 
 print("===== 绑定实例属性和普通方法 =====")
@@ -52,8 +52,8 @@ Classname.set_sex = set_sex
 # Classname.set_sex('男') # error
 m.set_sex("男")
 w.set_sex('女')
-print(m.sex)
-print(w.sex)
+print(m.sex)  # 男
+print(w.sex)  # 女
 
 
 print("===== 单个实例绑定实例属性和普通方法 =====")
@@ -67,8 +67,8 @@ def set_grade(self, grade):
 m.set_grade= MethodType(set_grade,m)
 
 m.set_grade("grade") # 只属于 m 实例对象的特定方法，其他实例中不存在
-print("实例方法-set_name：",m.grade) # grade
-# w.set_name("test") # error
+print("实例方法-set_name：",m.grade)  # grade
+# w.set_name("test")  # error
 
 
 print("===== Classname 属性和方法 =====")
