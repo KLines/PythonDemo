@@ -1,11 +1,10 @@
-import json
-import logging
-import ssl
+import json,ssl
 from http import cookiejar, cookies
 from http.client import HTTPResponse
 from urllib import request, parse, error
 
-from . import headers
+from . import headers,log_info,log_error
+
 
 '''
 自定义全局opener：
@@ -25,9 +24,9 @@ from . import headers
 '''
 
 
-my_cookiejar = None
-
 opener = None
+
+my_cookiejar = None
 
 def __init_opener():
 
@@ -56,45 +55,7 @@ def __init_opener():
     request.install_opener(opener)
 
 
-
-
-'''
-cookie使用
-
-    1、http.cookiejar：为存储和管理cookie提供客户端支持
-        CookieJar：Cookie对象存储在内存中，包含request、response中的cookie信息，若两者中存在cookie名字一致，则重复显示
-        FileCookieJar：检索cookie信息并将信息存储到文件中
-        MozillaCookieJar：创建与Mozilla cookies.txt文件兼容的FileCookieJar实例
-        LWPCookieJar：创建与libwww-perl Set-Cookie3文件兼容的FileCookieJar实例
-        # save()函数带有两个参数，ignore_discard和ignore_expires
-            ignore_discard：即使cookies将被丢弃也将它保存下来
-            ignore_expires：cookies已经过期也将它保存并且文件已存在时将覆盖
-    2、http.cookies：创建以HTTP报头形式表示的cookie数据输出
-'''
-
-
-# 设置request中的cookie
-def set_request_cookies(cookie_list:list):
-    if not cookie_list or len(cookie_list) == 0:
-        return
-    for cookie in cookie_list:
-        cookie = cookiejar.Cookie(0,cookie['name'], cookie['value'], None, None, cookie['domain'],
-                                  None, None, '/', None, None, None, None, None, None, None, False)
-        my_cookiejar.set_cookie(cookie)
-
-
-# 设置response中的cookie
-def set_response_cookies():
-    cookie = cookies.SimpleCookie()
-    cookie["token"] = "test"
-    cookie["token"]["domain"] = ".baidu.com"
-    print(cookie)
-    print(cookie.output(header="Cookie:"))
-
-
-
-
-'''网络请求工具'''
+'''urllib请求工具'''
 
 
 def urllib_utils(url:str,method:str,params=None,json_data=None):
@@ -131,17 +92,15 @@ def urllib_utils(url:str,method:str,params=None,json_data=None):
             __http_log(req,resp)
 
     except error.URLError as e: # HTTPError是 URLError的子类
-        print(e)
-        if hasattr(e,'code'):
-            print('code',e.code)
-        if hasattr(e,'reason'):
-            print('reason',e.reason)
-        if hasattr(e,'headers'):
-            print('headers',e.headers)
+        log_error(e)
+        # if hasattr(e,'code'):
+        #     print('code: '+str(e.code))
+        # if hasattr(e,'reason'):
+        #     print('reason'+e.reason)
+        # if hasattr(e,'headers'):
+        #     print('headers',e.headers)
     except:
         raise
-
-
 
 
 '''http日志信息'''
@@ -151,27 +110,25 @@ def __http_log(req:request.Request = None,resp:HTTPResponse = None):
 
     if req is not None:
 
-        logging.info("------request header-------")
-        logging.info('url:'+req.full_url)
-        logging.info('method:'+req.get_method())
+        log_info("------request header-------")
+        log_info('url:'+req.full_url)
+        log_info('method:'+req.get_method())
         for header in req.header_items():
-            logging.info(': '.join(header))
+            log_info(': '.join(header))
 
         if req.data is not None:
-            logging.info("------request body-------")
-            logging.info(req.data.decode('utf-8'))
+            log_info("------request body-------")
+            log_info(req.data.decode('utf-8'))
 
     if resp is not None:
 
-        logging.info("------response header-------")
-        logging.info("%s %s"%(resp.code,resp.msg))
+        log_info("------response header-------")
+        log_info("%s %s"%(resp.code,resp.msg))
         for header in resp.headers.items():
-            logging.info(': '.join(header))
+            log_info(': '.join(header))
 
-        logging.info("------response body-------")
-        logging.info(__decode_data(resp))
-
-
+        log_info("------response body-------")
+        log_info(__decode_data(resp))
 
 
 '''解码response中的数据'''
@@ -191,3 +148,41 @@ def __decode_data(resp:HTTPResponse):
         return f.decode('utf-8')
     else:
         return resp.read().decode('utf-8') # 返回的数据为byte类型，使用utf-8解码
+
+
+
+
+
+'''
+cookie使用
+
+    1、http.cookiejar：为存储和管理cookie提供客户端支持
+        CookieJar：Cookie对象存储在内存中，包含request、response中的cookie信息，若两者中存在cookie名字一致，则重复显示
+        FileCookieJar：检索cookie信息并将信息存储到文件中
+        MozillaCookieJar：创建与Mozilla cookies.txt文件兼容的FileCookieJar实例
+        LWPCookieJar：创建与libwww-perl Set-Cookie3文件兼容的FileCookieJar实例
+        # save()函数带有两个参数，ignore_discard和ignore_expires
+            ignore_discard：即使cookies将被丢弃也将它保存下来
+            ignore_expires：cookies已经过期也将它保存并且文件已存在时将覆盖
+    2、http.cookies：创建以HTTP报头形式表示的cookie数据输出
+'''
+
+
+
+# 设置request中的cookie
+def set_request_cookies(cookie_list:list):
+    if not cookie_list or len(cookie_list) == 0:
+        return
+    for cookie in cookie_list:
+        cookie = cookiejar.Cookie(0,cookie['name'], cookie['value'], None, None, cookie['domain'],
+                                  None, None, '/', None, None, None, None, None, None, None, False)
+        my_cookiejar.set_cookie(cookie)
+
+
+# 设置response中的cookie
+def set_response_cookies():
+    cookie = cookies.SimpleCookie()
+    cookie["token"] = "test"
+    cookie["token"]["domain"] = ".baidu.com"
+    print(cookie)
+    print(cookie.output(header="Cookie:"))

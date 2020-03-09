@@ -1,7 +1,7 @@
-import logging
 import requests
 
-from . import headers
+from . import headers,log_info,log_error
+
 
 '''
 requests
@@ -38,9 +38,7 @@ requests
 '''
 
 
-
-
-'''网络请求工具'''
+'''requests请求工具'''
 
 
 __switcher = {
@@ -59,11 +57,9 @@ def requests_utils(url:str,method:str,**kwargs):
         with func(url,headers=request_headers,**kwargs) as resp:
             __http_log(resp.request,resp)
     except requests.exceptions.RequestException as e:
-        logging.error(e)
+        log_error(e)
     except:
         raise
-
-
 
 
 '''http日志信息'''
@@ -73,28 +69,28 @@ def __http_log(req:requests.PreparedRequest = None,resp:requests.Response = None
 
     if req is not None:
 
-        logging.info("------request header-------")
-        logging.info('url:'+req.url)
-        logging.info('method:'+req.method)
+        log_info("------request header-------")
+        log_info('url:'+req.url)
+        log_info('method:'+req.method)
         for header in req.headers.items():
-            logging.info(': '.join(header))
+            log_info(': '.join(header))
 
         if req.body is not None:
-            logging.info("------request body-------")
+            log_info("------request body-------")
             if 'Content-Type' in req.headers and 'application/json' == req.headers['Content-Type']:
-                logging.info('body:'+req.body.decode('utf-8'))
+                log_info('body:'+req.body.decode('utf-8'))
             else:
-                logging.info('body:'+req.body)
+                log_info('body:'+req.body)
 
     if resp is not None:
 
-        logging.info("------response header-------")
-        logging.info("%s %s"%(resp.status_code,resp.reason))
+        log_info("------response header-------")
+        log_info("%s %s"%(resp.status_code,resp.reason))
         for header in resp.headers.items():
-            logging.info(': '.join(header))
+            log_info(': '.join(header))
 
-        logging.info("------response body-------")
-        logging.info(resp.text)
+        log_info("------response body-------")
+        log_info(resp.text)
         resp.raise_for_status()
 
     # cookie_list = resp.cookies # type: # cookies.RequestsCookieJar
