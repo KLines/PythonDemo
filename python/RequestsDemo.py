@@ -5,7 +5,6 @@ import network
 def request_get():
 
     # 无参数
-    url = 'https://www.baidu.com'
     url = 'https://www.httpbin.org/get'
     network.requests_utils(url,'get')
 
@@ -13,7 +12,7 @@ def request_get():
     params = {}
     url = 'https://www.httpbin.org/get'
     params.update(name='测试',age=20,flag=True,company=None)
-    # network.requests_utils(url,'get',params=params)
+    network.requests_utils(url,'get',params=params)
 
 
 # Post请求

@@ -1,7 +1,7 @@
 
 
 # 导入http通用配置
-from .http_common import *
+# from .http_common import *
 
 # 导入urllib模块
 from .urllib_engine import *

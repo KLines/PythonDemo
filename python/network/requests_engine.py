@@ -1,7 +1,5 @@
 import requests
-
-from . import headers,log_info,log_error
-
+from .http_common import *
 
 '''
 requests
@@ -38,7 +36,7 @@ requests
 '''
 
 
-'''requests请求工具'''
+'requests请求工具'
 
 
 __switcher = {
@@ -54,7 +52,7 @@ def requests_utils(url:str,method:str,**kwargs):
             return
         func = __switcher.get(request_method)
         request_headers = headers
-        with func(url,headers=request_headers,**kwargs) as resp:
+        with func(url,headers=request_headers,timeout=10,**kwargs) as resp:
             __http_log(resp.request,resp)
     except requests.exceptions.RequestException as e:
         log_error(e)
@@ -62,7 +60,7 @@ def requests_utils(url:str,method:str,**kwargs):
         raise
 
 
-'''http日志信息'''
+'http日志信息'
 
 
 def __http_log(req:requests.PreparedRequest = None,resp:requests.Response = None):
