@@ -114,8 +114,8 @@ def urllib_utils(url:str,method:str,params=None,json_data=None):
     except:
         raise
 
-    for item in my_cookiejar:
-        print(item)
+    # for item in my_cookiejar:
+    #     print(item)
 
 
 'http日志信息'
