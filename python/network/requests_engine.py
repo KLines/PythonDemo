@@ -59,16 +59,15 @@ def __init_session():
 
 def requests_session(url:str,method:str,**kwargs):
 
-    request_method = method.upper()
+    req_method = method.upper()
 
-    if 'GET' != request_method and 'POST' != request_method:
+    if 'GET' != req_method and 'POST' != req_method:
         return
 
-    if sess is None:
-        __init_session()
-
     try:
-        func = sess.get if 'GET' == request_method else sess.post
+        if sess is None:
+            __init_session()
+        func = sess.get if 'GET' == req_method else sess.post
         with func(url,**kwargs) as resp:
             __http_log(resp.request,resp)
     except requests.exceptions.RequestException as e:
@@ -92,13 +91,13 @@ __switcher = {
 
 def requests_utils(url:str,method:str,**kwargs):
 
-    request_method = method.upper()
+    req_method = method.upper()
 
-    if request_method not in __switcher.keys():
+    if req_method not in __switcher.keys():
         return
 
     try:
-        func = __switcher.get(request_method)
+        func = __switcher.get(req_method)
         # 设置 cookies
         cookie_jar = RequestsCookieJar()
         if cookie_list:

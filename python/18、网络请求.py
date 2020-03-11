@@ -4,6 +4,7 @@ from urllib import request, parse
 import json
 import network
 
+
 '''
 
 https://www.cnblogs.com/fiona-zhong/p/10179421.html
@@ -13,6 +14,7 @@ HTTP请求：
     1、模拟Get、Post请求
     2、异步请求，取消任务
 '''
+
 
 # 原始urllib请求
 def request_demo():
@@ -31,7 +33,7 @@ def request_demo():
     url = 'http://itg.sih.cq.cn:18080/api/hongyan/serverstation/login'
     req = request.Request(url,headers=network.headers)
     req.add_header('Content-Type', 'application/json')
-    dict_data = {'userName':'zhfan01', 'password': '123456','deviceId': '111', 'deviceType': '1'}
+    dict_data = {'userName':'zhbjfan01', 'password': '123456','deviceId': '111', 'deviceType': '1'}
     post_params = json.dumps(dict_data).encode('utf-8')
     print(url)
     print(post_params)
@@ -72,36 +74,26 @@ def request_post():
     network.urllib_utils(url,'post',json_data=data)
 
 
-
-cookie_list = [{'name':'token','value':'test1','domain':'.httpbin.org'},
-               {'name':'BAIDUID','value':'tesdsff=','domain':'.httpbin.org'}]
-
-
+# 设置cookie
 def request_cookie():
-    # 重置request中的cookie
-    # url = 'https://www.baidu.com'
-    # for item in my_cookiejar: # type: cookiejar.Cookie
-    #     if 'BAIDUID'==item.name:
-    #         value = item.value
-    #         break
-    # cookie_list[0]['value'] = 'test2'
-    # cookie_list[1]['value'] = "tesdsfffsdfsdfds="
-    # HttpUtils.set_request_cookies(cookie_list)
-    pass
+
+    network.set_cookies('channel','official','getman.cn')
+
+    url = 'https://getman.cn/mock/test'
+    network.urllib_utils(url,'get')
+
+    network.headers.update({'test':'temp'})
+    url = 'https://getman.cn/mock/demo'
+    network.urllib_utils(url,'get')
 
 
 if __name__ == '__main__':
 
     # request_demo()
 
-    request_get()
+    # request_get()
 
-    request_post()
+    # request_post()
 
-    # request_cookie()
+    request_cookie()
 
-    # HttpUtils.set_request_cookies(cookie_list)  # 设置cookie
-    # my_cookiejar = HttpUtils.my_cookiejar  # type: cookiejar.LWPCookieJar
-
-    # for item in my_cookiejar: # type: cookiejar.Cookie
-    #     print(':'.join([item.name,item.value]))

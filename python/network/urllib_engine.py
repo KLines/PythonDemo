@@ -1,9 +1,10 @@
 import json,ssl
-from http import cookiejar, cookies
+from http import cookiejar
 from http.client import HTTPResponse
 from urllib import request, parse, error
+from socket import timeout
 
-from . import headers,log_info,log_error
+from .http_common import *
 
 
 '''
@@ -45,6 +46,12 @@ def __init_opener():
 
     # 设置cookie
     my_cookiejar = cookiejar.CookieJar()   # 创建cookie管理器
+    if cookie_list:
+        for item in cookie_list:
+            # 多个Cookie对象中name若一致，则只会添加一个Cookie对象
+            cookie = cookiejar.Cookie(0,item['name'],item['value'], None, None, item['domain'],
+                                      None, None, '/', None, None, None, None, None, None, None, False)
+            my_cookiejar.set_cookie(cookie)
     cookiejar_handler = request.HTTPCookieProcessor(my_cookiejar)  # 创建cookie处理器
     opener.add_handler(cookiejar_handler)
 
@@ -55,17 +62,20 @@ def __init_opener():
     request.install_opener(opener)
 
 
-'''urllib请求工具'''
+'urllib请求工具'
 
 
 def urllib_utils(url:str,method:str,params=None,json_data=None):
+
+    req_method = method.upper()
+
+    if 'GET' != req_method and 'POST' != req_method:
+        return
 
     try:
 
         if opener is None:
             __init_opener()
-
-        req_method = method.upper()
 
         if params is not None:
             # 去掉 None
@@ -79,7 +89,7 @@ def urllib_utils(url:str,method:str,params=None,json_data=None):
             if 'GET' == req_method:
                 url = '?'.join([url,params])
                 params = None
-            elif 'POST' == req_method:
+            else:
                 params = params.encode('utf-8') # 变成byte类型
 
         req = request.Request(url)
@@ -99,11 +109,16 @@ def urllib_utils(url:str,method:str,params=None,json_data=None):
         #     print('reason'+e.reason)
         # if hasattr(e,'headers'):
         #     print('headers',e.headers)
+    except timeout as e:
+        log_error('socket.timeout:'+str(e))
     except:
         raise
 
+    for item in my_cookiejar:
+        print(item)
 
-'''http日志信息'''
+
+'http日志信息'
 
 
 def __http_log(req:request.Request = None,resp:HTTPResponse = None):
@@ -131,7 +146,7 @@ def __http_log(req:request.Request = None,resp:HTTPResponse = None):
         log_info(__decode_data(resp))
 
 
-'''解码response中的数据'''
+'解码response中的数据'
 
 
 def __decode_data(resp:HTTPResponse):
@@ -148,41 +163,3 @@ def __decode_data(resp:HTTPResponse):
         return f.decode('utf-8')
     else:
         return resp.read().decode('utf-8') # 返回的数据为byte类型，使用utf-8解码
-
-
-
-
-
-'''
-cookie使用
-
-    1、http.cookiejar：为存储和管理cookie提供客户端支持
-        CookieJar：Cookie对象存储在内存中，包含request、response中的cookie信息，若两者中存在cookie名字一致，则重复显示
-        FileCookieJar：检索cookie信息并将信息存储到文件中
-        MozillaCookieJar：创建与Mozilla cookies.txt文件兼容的FileCookieJar实例
-        LWPCookieJar：创建与libwww-perl Set-Cookie3文件兼容的FileCookieJar实例
-        # save()函数带有两个参数，ignore_discard和ignore_expires
-            ignore_discard：即使cookies将被丢弃也将它保存下来
-            ignore_expires：cookies已经过期也将它保存并且文件已存在时将覆盖
-    2、http.cookies：创建以HTTP报头形式表示的cookie数据输出
-'''
-
-
-
-# 设置request中的cookie
-def set_request_cookies(cookie_list:list):
-    if not cookie_list or len(cookie_list) == 0:
-        return
-    for cookie in cookie_list:
-        cookie = cookiejar.Cookie(0,cookie['name'], cookie['value'], None, None, cookie['domain'],
-                                  None, None, '/', None, None, None, None, None, None, None, False)
-        my_cookiejar.set_cookie(cookie)
-
-
-# 设置response中的cookie
-def set_response_cookies():
-    cookie = cookies.SimpleCookie()
-    cookie["token"] = "test"
-    cookie["token"]["domain"] = ".baidu.com"
-    print(cookie)
-    print(cookie.output(header="Cookie:"))
