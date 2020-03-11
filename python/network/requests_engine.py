@@ -36,13 +36,15 @@ requests
         resp.elapsed　　　　　　   # 返回timedelta，响应所用的时间 
 '''
 
-sess = None
 
 '''
     1、设置统一的headers、cookies
     2、自动将response返回的Set-cookie值携带到request请求头的cookie中
     3、主要用于同一域名下接口测试
 '''
+
+sess = None
+
 def __init_session():
 
     global sess
