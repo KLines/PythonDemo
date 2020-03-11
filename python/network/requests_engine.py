@@ -1,4 +1,5 @@
 import requests
+from requests.cookies import  RequestsCookieJar
 from .http_common import *
 
 '''
@@ -35,8 +36,53 @@ requests
         resp.elapsed　　　　　　   # 返回timedelta，响应所用的时间 
 '''
 
+sess = None
 
-'requests请求工具'
+'''
+    1、设置统一的headers、cookies
+    2、自动将response返回的Set-cookie值携带到request请求头的cookie中
+    3、主要用于同一域名下接口测试
+'''
+def __init_session():
+
+    global sess
+    sess = requests.Session()
+    # 设置 headers
+    sess.headers = headers
+    # 设置 cookies
+    cookie_jar = RequestsCookieJar()
+    if cookie_list:
+        for item in cookie_list:
+            cookie_jar.set(item['name'],item['value'],domain=item['domain'])
+    sess.cookies = cookie_jar
+
+
+def requests_session(url:str,method:str,**kwargs):
+
+    request_method = method.upper()
+
+    if 'GET' != request_method and 'POST' != request_method:
+        return
+
+    if sess is None:
+        __init_session()
+
+    try:
+        func = sess.get if 'GET' == request_method else sess.post
+        with func(url,**kwargs) as resp:
+            __http_log(resp.request,resp)
+    except requests.exceptions.RequestException as e:
+        log_error(e)
+    except:
+        raise
+
+
+'''
+requests请求工具
+    1、使用Get、Post请求
+    2、每个请求设置独立的headers、cookies
+    3、主要用于测试单个接口
+'''
 
 
 __switcher = {
@@ -46,13 +92,21 @@ __switcher = {
 
 def requests_utils(url:str,method:str,**kwargs):
 
+    request_method = method.upper()
+
+    if request_method not in __switcher.keys():
+        return
+
     try:
-        request_method = method.upper()
-        if request_method not in __switcher.keys():
-            return
         func = __switcher.get(request_method)
-        request_headers = headers
-        with func(url,headers=request_headers,timeout=10,**kwargs) as resp:
+        # 设置 cookies
+        cookie_jar = RequestsCookieJar()
+        if cookie_list:
+            for item in cookie_list:
+                cookie_jar.set(item['name'],item['value'],domain=item['domain'])
+        cookie_list.clear()
+        # 每次请求都是独立的，需要设置请求头
+        with func(url,headers=headers,cookies=cookie_jar,timeout=10,**kwargs) as resp:
             __http_log(resp.request,resp)
     except requests.exceptions.RequestException as e:
         log_error(e)
@@ -90,5 +144,3 @@ def __http_log(req:requests.PreparedRequest = None,resp:requests.Response = None
         log_info("------response body-------")
         log_info(resp.text)
         resp.raise_for_status()
-
-    # cookie_list = resp.cookies # type: # cookies.RequestsCookieJar
