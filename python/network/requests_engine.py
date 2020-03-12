@@ -38,6 +38,8 @@ requests
 
 
 '''
+自定义全局session：
+
     1、设置统一的headers、cookies
     2、自动将response返回的Set-cookie值携带到request请求头的cookie中
     3、主要用于同一域名下接口测试
@@ -57,6 +59,8 @@ def __init_session():
         for item in cookie_list:
             cookie_jar.set(item['name'],item['value'],domain=item['domain'])
     sess.cookies = cookie_jar
+    # 设置代理
+    # sess.proxies = {'http': 'http://127.0.0.1:8888/','https': 'https://127.0.0.1:8888/'}
 
 
 def requests_session(url:str,method:str,**kwargs):

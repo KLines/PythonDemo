@@ -91,9 +91,14 @@ if __name__ == '__main__':
 
     # request_demo()
 
-    # request_get()
+    request_get()
 
     # request_post()
 
-    request_cookie()
+    # request_cookie()
 
+    # 保持数据
+    # params = {}
+    # params.update(name='测试',age=20,flag=True,company=None)
+    # url = '?'.join(['https://www.httpbin.org/get', parse.urlencode(params)])
+    # resp = request.urlretrieve(url, filename='test.txt')

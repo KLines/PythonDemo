@@ -139,6 +139,7 @@ def __http_log(req:request.Request = None,resp:HTTPResponse = None):
 
         log_info("------response header-------")
         log_info("%s %s"%(resp.code,resp.msg))
+        # log_info(resp.info())
         for header in resp.headers.items():
             log_info(': '.join(header))
 
