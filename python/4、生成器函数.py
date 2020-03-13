@@ -12,6 +12,7 @@ print("list_iter 是否是iterator对象：", isinstance(list_iter, Iterator))  
 print("list_iter 是否是iterable对象：", isinstance(list_iter, Iterable))  # true
 it = iter(list_iter)  # 创建迭代器对象
 print("it 是否是iterator对象：", isinstance(it, Iterator))  # true
+print("it 是否是iterator对象：", isinstance(it, Iterable))  # true
 for x in iter(it):
     print(x, end=" ")
 
