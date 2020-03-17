@@ -115,6 +115,7 @@ def requests_utils(url:str,method:str,**kwargs):
             __http_log(resp.request,resp)
     except requests.exceptions.RequestException as e:
         log_error(e)
+        raise e
     except:
         raise
 
