@@ -81,7 +81,7 @@ def thread_create():
 
     t1 = threading.Thread(target=func_run,name="thread-1")
     t1.start()
-    t1.join()
+    t1.join() # 确保thread子线程执行完毕后才能执行下一个线程
 
 
     '===== 通过继承Thread类创建线程 ====='
@@ -279,11 +279,11 @@ def thread_local():
 
 if __name__ == '__main__':
 
-    # thread_create()
+    thread_create()
     # thread_sync()
     # thread_event()
     # thread_con()
-    thread_queue()
+    # thread_queue()
     # thread_local()
 
 
