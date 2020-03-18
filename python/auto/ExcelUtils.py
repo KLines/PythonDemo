@@ -1,4 +1,5 @@
-
+import sys,os
+sys.path.append(os.path.dirname(sys.path[0]))
 import pandas
 from concurrent.futures import ThreadPoolExecutor
 import network,json
@@ -153,7 +154,7 @@ if __name__ == '__main__':
 
     with ThreadPoolExecutor(max_workers=10,thread_name_prefix="network") as executor:
         for item in e.data_list:
-            # executor.submit(func,item)
+            executor.submit(func,item)
             pass
 
     end = time.time()
