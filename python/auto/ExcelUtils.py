@@ -143,7 +143,8 @@ if __name__ == '__main__':
 
     # 读取excel数据
     import os
-    e = Excel(os.path.dirname(__file__)+'/test.xlsx')
+    dir = os.path.dirname(os.path.abspath(__file__))
+    e = Excel(dir+'/test.xlsx')
     e.read()
 
     # 开启线程池论询
@@ -152,7 +153,8 @@ if __name__ == '__main__':
 
     with ThreadPoolExecutor(max_workers=10,thread_name_prefix="network") as executor:
         for item in e.data_list:
-            executor.submit(func,item)
+            # executor.submit(func,item)
+            pass
 
     end = time.time()
     network.log_info('结束时间：'+str(datetime.datetime.now()))
