@@ -20,16 +20,18 @@ def func_api(item):
                 utils.requests_utils(url,method,params=params)
             else:
                 utils.requests_utils(url,method,json=params)
-            return (values[0],'Pass')
+            return (values,'Pass')
         except:
-            return (values[0],'Failure')
+            return (values,'Failure')
     else:
-        return (values[0],'未运行')
+        return (values,'未运行')
 
 
 def test_api(e):
 
     success = fail = none = 0
+
+    test_msg = ''
 
     # 读取excel数据
     e.read()
@@ -41,26 +43,49 @@ def test_api(e):
     with ThreadPoolExecutor(max_workers=10,thread_name_prefix="network") as executor:
         results = executor.map(func_api,e.data_list)
         for result in results:
+            values = result[0]
             case_result = result[1]
             if case_result == 'Pass':
                 success+=1
             elif case_result == 'Failure':
                 fail+=1
+                test_msg = test_msg + set_font('16px','red',values[2]+' --> '+case_result)
             else:
                 none+=1
-            e.write(result[0],case_result)
+                test_msg = test_msg + set_font('16px','orange',values[2]+' --> '+case_result)
+            e.write(values[0],case_result)
 
     end = time.time()
-    msg = '共计测试%s个接口，总耗时%s秒，Pass：%s个，Failure：%s个，未测试：%s个'%(len(e.data_list),end-start,success,fail,none)
     utils.log_info('结束时间：'+str(datetime.datetime.now()))
-    utils.log_info(msg)
-    send_mail(msg,e.filename)
+
+    test_time = '共计测试%s个接口，总耗时%s秒'%(len(e.data_list),end-start)
+    test_count = 'Pass：%s个，Failure：%s个，未测试：%s个'%(success,fail,none)
+    utils.log_info(test_time)
+    utils.log_info(test_count)
+
+    # 发送邮件
+    test_time = set_font('20px','black',test_time)
+    test_count = set_font('20px','black',test_count)
+    send_mail(test_time+test_count+test_msg,e.filename)
 
 
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
+
+'''
+
+多人收件
+    1、收件人邮箱 ['abc@163.com','dhsjkbsh@qq.com','123463255@qq.com']，以列表的方式给出
+    2、msg['To'] =','.join（msg_to）
+    3、s.sendmail(msg_from, msg['To'].split(','), msg.as_string())
+    
+'''
+
+def set_font(size,color,text):
+   return '<p style="font-size:%s;color:%s">%s</p>'%(size,color,text)
+
 
 def send_mail(text,filename=None):
 
@@ -73,9 +98,9 @@ def send_mail(text,filename=None):
     # 设置邮件信息
     msg = MIMEMultipart()
     msg['From'] = from_user
-    msg['To'] = to_user
+    msg['To'] = ','.join(to_user)
     msg['Subject'] = subject
-    msg.attach(MIMEText(text,'plain', 'utf-8')) # 添加正文
+    msg.attach(MIMEText(text,'html', 'utf-8')) # 添加正文
 
     # 添加附件
     if filename is not None:
@@ -87,7 +112,7 @@ def send_mail(text,filename=None):
     # 发送邮件 SMTP
     server = smtplib.SMTP(server_address,25)
     server.login(from_user,password)
-    server.sendmail(from_user,to_user,msg.as_string())
+    server.sendmail(from_user, msg['To'].split(','),msg.as_string())
     server.quit()
 
 
