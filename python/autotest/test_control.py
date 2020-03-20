@@ -2,6 +2,7 @@
 from concurrent.futures import ThreadPoolExecutor
 import datetime,time,json
 import autotest.utils as utils
+import autotest.config as config
 
 
 def func_api(item):
@@ -50,6 +51,43 @@ def test_api(e):
             e.write(result[0],case_result)
 
     end = time.time()
+    msg = '共计测试%s个接口，总耗时%s秒，Pass：%s个，Failure：%s个，未测试：%s个'%(len(e.data_list),end-start,success,fail,none)
     utils.log_info('结束时间：'+str(datetime.datetime.now()))
-    utils.log_info('共计%s个接口，总耗时%s秒'%(len(e.data_list),end-start))
-    utils.log_info('Pass：%s个，Failure：%s个，未测试：%s个'%(success,fail,none))
+    utils.log_info(msg)
+    send_mail(msg,e.filename)
+
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
+
+def send_mail(text,filename=None):
+
+    from_user = config.mali_dict['from_user']  # 发件人
+    password = config.mali_dict['password']
+    to_user = config.mali_dict['to_user']   # 收件人
+    subject = config.mali_dict['subject']   # 主题
+    server_address = config.mali_dict['server_address']
+
+    # 设置邮件信息
+    msg = MIMEMultipart()
+    msg['From'] = from_user
+    msg['To'] = to_user
+    msg['Subject'] = subject
+    msg.attach(MIMEText(text,'plain', 'utf-8')) # 添加正文
+
+    # 添加附件
+    if filename is not None:
+        with open(filename,'rb') as f:
+            part_attach = MIMEApplication(f.read())
+            part_attach.add_header('Content-Disposition', 'attachment', filename='api-report.xlsx')  # 为附件命名
+            msg.attach(part_attach)
+
+    # 发送邮件 SMTP
+    server = smtplib.SMTP(server_address,25)
+    server.login(from_user,password)
+    server.sendmail(from_user,to_user,msg.as_string())
+    server.quit()
+
+
