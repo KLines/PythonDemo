@@ -1,7 +1,6 @@
 
-# import sys,os
-# sys.path.append(os.path.dirname(sys.path[0]))
-import os
+import sys,os
+sys.path.append(os.path.dirname(sys.path[0]))
 import autotest.utils as utils
 import autotest.test_control as control
 

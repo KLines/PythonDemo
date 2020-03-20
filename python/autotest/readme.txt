@@ -30,17 +30,22 @@ Ubuntu下通过python命令直接运行代码：
     提示以下错误：
         import xxx
         ModuleNotFoundError: No module named 'xxxx'
+
     产生原因：
         1、在系统环境中当前项目父路径没有被添加到sys.path中，默认只有文件的当前路径，而在IDE环境下会显示所有路径
         2、系统环境中没有项目venv目录中的第三方lib包
+
     解决办法：
         1、手动在文件头部导入当前文件父路径，必须在其他import之前导入
-            # import sys,os
-            # sys.path.append(os.path.dirname(sys.path[0]))  # 保证系统环境下可以调用其他module中的文件
-        2、创建xxx.pth文件，将此文件添加到系统目录下/usr/lib/python3/dist-packages中
-            添加当前项目路径-->解决通过python命令执行代码时无法调用其他module中的文件
-            添加当前项目下的/xx/xx/venv/lib/python3.7/site-packages路径-->解决通过python命令执行代码时无法使用venv中的第三方lib包
-        3、使用pip命令在系统环境下安装第三方lib包，目录/home/xxx/.local/lib/python3.7/site-packages
+            import sys,os
+            # 保证系统环境下可以调用其他module中的文件
+            sys.path.append(os.path.dirname(sys.path[0]))
+        2、使用pip命令在系统环境下安装第三方lib包，目录/home/xxx/.local/lib/python3.7/site-packages
+
+    创建xxx.pth文件，将此文件添加到系统目录下/usr/lib/python3/dist-packages中
+        1、添加当前项目路径-->解决通过python命令执行代码时无法调用其他module中的文件
+        2、添加当前项目下的/xx/xx/venv/lib/python3.7/site-packages路径-->解决通过python命令执行代码时无法使用venv中的第三方lib包
+
 
 注意事项：
 
