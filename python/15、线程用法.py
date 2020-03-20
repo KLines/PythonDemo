@@ -1,7 +1,7 @@
 from time import time,sleep
-from thread.Student import *
-from thread.Consumer import *
-from thread.Producer import *
+from thread.student import *
+from thread.consumer import *
+from thread.producer import *
 from queue import Queue, Empty
 import datetime
 
