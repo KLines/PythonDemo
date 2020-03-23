@@ -17,13 +17,13 @@ __author__ = 'liuk'
 def logUtils(dir="log.txt"):
     def logging(func):
         @wraps(func)
-        def wrapper():
+        def wrapper(*args):
             with open(dir, "a+",encoding='utf-8') as file:
                 time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 file.write(time+"\n")
                 file.write(wrapper.__name__+" was called\n")
                 file.write(wrapper.__doc__ + "\n")
-            func()
+            func(*args)
         return wrapper
     return logging
 
@@ -34,13 +34,13 @@ def myFunc1():
     print("test1")
 
 @logUtils("temp.txt")
-def myFunc2():
+def myFunc2(args):
     'myFunc2 文档说明'
-    print("test2")
+    print(args+"test2")
 
 def wrapper_utils():
     myFunc1()
-    myFunc2()
+    myFunc2('测试')
 
 
 '冒泡排序 & 选择排序'
@@ -172,6 +172,7 @@ base64编解码：一种用64个字符来表示任意二进制数据的方法
     2、每个6个bit为一组，4*6=24bit，4个为一个单元--->对应3个Byte，3*8=24bit，所以每3个字节一组
     3、数据字节数不是3的倍数时需，Base64用 \x00　在原数据后添加1个或2个零值字节，使其字节数为3的倍数，然后在编码后的字符串后添加1个或2个‘=’，表示零值字节
     4、Base64编码后可能出现字符+和/，在URL中就不能直接作为参数，URL中就是把字符+和/分别变成-和_
+    5、\xe4是十六进制的表示方式，它占用1个字节的长度，一个汉字被编码成utf-8后，占用3个字节，
 '''
 
 
@@ -239,7 +240,7 @@ def test(num):
 
 if __name__ == '__main__':
 
-    # wrapper_utils()Counter
+    wrapper_utils()
     # regular_utils()
     # sort_utils()
     # time_utils()

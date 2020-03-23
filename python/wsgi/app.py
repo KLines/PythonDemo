@@ -9,7 +9,7 @@ application()：符合WSGI标准的一个HTTP处理函数，它接收两个参�
 
     start_response：一个发送HTTP响应的函数
 
-    函数的返回值将作为HTTP响应的Body发送给浏览器
+    函数的返回值将作为HTTP响应的Body发送给浏览器，必须是byte类型
 
 start_response()：发送了HTTP响应的Header，注意Header只能发送一次，也就是只能调用一次函数，它接收两个参数
 

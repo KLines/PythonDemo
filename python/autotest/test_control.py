@@ -76,6 +76,16 @@ from email.mime.application import MIMEApplication
 
 '''
 
+    MUA：Mail User Agent——邮件用户代理，就是电子邮件软件，比如Outlook
+    MTA：Mail Transfer Agent——邮件传输代理，就是Email服务提供商，比如163邮箱
+    MDA：Mail Delivery Agent——邮件投递代理
+
+邮件发送流程：
+    发件人 -> MUA -> MTA -> MTA -> 若干个MTA -> MDA <- MUA <- 收件人
+    编写MUA把邮件发到MTA，编写MUA从MDA上收邮件
+    发邮件时，MUA和MTA使用的协议：SMTP
+    收邮件时，MUA和MDA使用的协议：POP3、IMAP4
+
 多人收件
     1、收件人邮箱 ['abc@163.com','dhsjkbsh@qq.com','123463255@qq.com']，以列表的方式给出
     2、msg['To'] =','.join（msg_to）
