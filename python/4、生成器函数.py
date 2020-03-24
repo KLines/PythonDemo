@@ -26,7 +26,8 @@ print("===== 2、generator生成器 =====")
 # 生成器函数，使用了 yield 的函数被称为生成器（generator）
 def createGenerator():
     for i in range(4):
-        yield i * i
+        print(i, end=" ")
+        yield i * i # 每执行到一个 yield 语句就会中断，并返回一个迭代值，下次执行时从 yield 的下一个语句继续执行
 
 mygenerator = createGenerator()  # 调用函数时内部的代码并不立马执行，只是返回迭代器对象
 print("生成器函数：", mygenerator)
