@@ -2,40 +2,41 @@ import os,time
 import multiprocessing
 
 '''
+
 多进程
 
-守护进程和守护线程的区别   
-    无论是进程还是线程，都遵循：守护xxx 会等待主xxx 运行完毕后被销毁
-    守护进程：只会守护到主进程的代码结束
-    守护线程：会守护所有其他非守护线程的结束    
+    守护进程和守护线程的区别   
+        无论是进程还是线程，都遵循：守护xxx 会等待主xxx 运行完毕后被销毁
+        守护进程：只会守护到主进程的代码结束
+        守护线程：会守护所有其他非守护线程的结束    
+        
+    创建方式：
+        1、通过fork方法创建子进程
+        1、通过Process方法创建子进程
+        2、通过继承Process类创建子进程
     
-创建方式：
-    1、通过fork方法创建子进程
-    1、通过Process方法创建子进程
-    2、通过继承Process类创建子进程
-
-进程同步：
-    1、Lock锁--->处理资源共享问题
-    2、Condition锁，wait()，notify()--->生产者消费者问题
-    3、Semaphore信号量--->控制进程的并发数
-    4、Event对象
-    5、同步队列
-    6、管道（Pipes）
-
-多进程间通信：
-    1、使用queue模块，可在进程间进行通信，并保证了进程安全
-    2、管道（Pipes）
-    3、数据共享manager
-
-进程中断问题：
-    1、退出标记
-    2、terminate()
+    进程同步：
+        1、Lock锁--->处理资源共享问题
+        2、Condition锁，wait()，notify()--->生产者消费者问题
+        3、Semaphore信号量--->控制进程的并发数
+        4、Event对象
+        5、同步队列
+        6、管道（Pipes）
     
-多进程使用问题：
-    1、死锁问题
-    2、生产者消费者问题
-    3、获取进程任务执行结果
-    4、进程池：multiprocessing.Pool，ThreadPoolExecutor
+    多进程间通信：
+        1、使用queue模块，可在进程间进行通信，并保证了进程安全
+        2、管道（Pipes）
+        3、数据共享manager
+    
+    进程中断问题：
+        1、退出标记
+        2、terminate()
+        
+    多进程使用问题：
+        1、死锁问题
+        2、生产者消费者问题
+        3、获取进程任务执行结果
+        4、进程池：multiprocessing.Pool，ThreadPoolExecutor
 
 '''
 

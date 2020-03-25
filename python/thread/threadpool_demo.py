@@ -4,7 +4,9 @@ import datetime
 import threading
 
 '''
+
 线程池
+
     1、concurrent.futures模块
     
         当该函数执行结束后，该线程并不会死亡，而是再次返回到线程池中变成空闲状态，等待执行下一个函数
@@ -28,6 +30,7 @@ import threading
             |--add_done_callback(fn)：为该 Future 代表的线程任务注册一个“回调函数”，当该任务成功完成时，程序会自动触发该 fn 函数。
 
     2、threadpool第三方模块
+    
 '''
 
 my_sum = 100

@@ -1,4 +1,5 @@
-"""
+
+'''
 
 Python元组的升级版本 -- namedtuple(具名元组)
 
@@ -16,7 +17,7 @@ collections.namedtuple(typename, field_names, verbose=False, rename=False)
  rename: 如果元素名称中含有 python 的关键字，则必须设置为 rename=True
  verbose: 默认就好
 
-"""
+'''
 
 from collections import namedtuple
 

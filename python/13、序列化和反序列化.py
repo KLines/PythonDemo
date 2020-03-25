@@ -5,10 +5,14 @@ from collections import namedtuple
 
 
 '''
+
 序列化与反序列化（json、pickle、shelve）
-我们把变量从内存中变成可存储或传输的过程称之为序列化，在Python中叫pickling
-反过来，把变量内容从序列化的对象重新读到内存里称之为反序列化，即unpickling
-https://www.cnblogs.com/gcgc/p/10973418.html
+
+    我们把变量从内存中变成可存储或传输的过程称之为序列化，在Python中叫pickling
+    反过来，把变量内容从序列化的对象重新读到内存里称之为反序列化，即unpickling
+    
+    https://www.cnblogs.com/gcgc/p/10973418.html
+    
 '''
 
 

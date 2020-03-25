@@ -3,9 +3,10 @@ from queue import Queue,LifoQueue,PriorityQueue
 
 
 '''
+
 同步队列（Queue）
 
-FIFO（先入先出)队列Queue，LIFO（后入先出）队列LifoQueue，优先级队列 PriorityQueue
+    FIFO（先入先出)队列Queue，LIFO（后入先出）队列LifoQueue，优先级队列 PriorityQueue
 
 Queue
     |--maxsize设置队列中，数据上限，小于或等于0则不限制，容器中大于这个数则阻塞，直到队列中的数据被消掉
@@ -22,6 +23,7 @@ Queue
     |--get_nowait()	等价于get(False)
     |--task_done() 向已完成的队列任务发送一个信号
     |--join() 阻塞线程，直到队列为空才放行
+    
 '''
 
 # Queue 先进先出队列

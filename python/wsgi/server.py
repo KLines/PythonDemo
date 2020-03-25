@@ -4,7 +4,7 @@ from wsgi.app import application
 
 # coding:utf-8
 
-"""
+'''
 
 Java：浏览器-->Nginx-->Tomcat-->Java Web应用程序
 
@@ -19,7 +19,7 @@ Web Server Gateway Interface：
     WSGI是一种在 Web 服务器和 Python Web 应用程序框架之间的标准接口。通过标准化 Web 服务器和 Python web 应用程序框架之间的行为和通信，
     使得编写可移植的的 Python web 代码变为可能，使其能够部署在任何符合 WSGI 的 web 服务
 
-"""
+'''
 
 def server():
     # application()函数必须由WSGI服务器来调用
