@@ -50,6 +50,15 @@ def temp1() -> str:
 
 def temp2() -> str:...
 
+def add(a, b):
+    return a+b
+
+# 列表前面加星号作用是将列表解开成多个独立的参数，传入函数
+data = [4,3]
+print(*data)
+# 字典前面加两个星号，是将字典解开成独立的元素作为形参
+data = {'a':4, 'b':3}
+print(add(**data))
 
 print("===== 2、type isinstance 用法 =====")
 

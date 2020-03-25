@@ -1,5 +1,6 @@
-import datetime,threading
-import asyncio
+import datetime,threading,time
+import asyncio,os
+import functools
 
 '''
 
@@ -46,35 +47,46 @@ asyncio模块：
         2、并发
         3、协程
 
-    运行协程函数的方式：
-        1、loop.run_until_complete()
+    运行并发方式：
+        1、loop.run_until_complete(asyncio.await(tasks))
         2、asyncio.gather()---asyncio.run()
         3、asyncio.create_task()---asyncio.run()
         
     关键字：
         event_loop 事件循环：程序开启一个无限循环，把协程函数注册到事件循环上，事件循环会循环执行这些函数，当某个函数被挂起时，会执行其他的协程函数
-        coroutine 协程：协程对象，使用async关键字定义的函数，它的调用不会立即执行函数，而是会返回一个协程对象。协程对象需要注册到事件循环，由事件循环调用
-        task 任务：一个协程对象就是一个原生可以挂起的函数，任务则是对协程进一步封装，其中包含了任务的各种状态
+        coroutine：协程对象，使用async关键字定义的函数，它的调用不会立即执行函数，而是会返回一个协程对象。协程对象需要注册到事件循环，由事件循环调用
+        task：一个协程对象就是一个原生可以挂起的函数，任务则是对协程进一步封装，其中包含了任务的各种状态
         future：代表将来执行或没有执行的任务的结果。它和task上没有本质上的区别
-        async：定义一个协程函数，在函数执行过程中可以挂起，去执行其他异步函数，等到挂起条件消失后再回来执行
-        await：只能用在协程函数中，用于挂起阻塞的异步调用接口，等待调用，后面只能跟异步程序或有__await__属性的对象
-        sleep：暂停执行此任务，为事件循环分配要竞争的任务，并且它（事件循环）监视其所有任务的状态并从一个任务切换到另一个，这里是模拟io任务花费的时间。
-        add_done_callback：通过add_done_callback方法给task任务添加回调函数
+        async：定义一个协程函数，在函数执行过程中可以被挂起，去执行其他函数，等到挂起条件消失后再回来执行
+        await：只能用在协程函数中，用于挂起耗时操作，后面只能跟异步程序或有__await__属性的对象
+        sleep：暂停执行此任务，为事件循环分配要竞争的任务，并且它（事件循环）监视其所有任务的状态并从一个任务切换到另一个
         
     await作用：
-        1、假设有两个异步函数async a，async b，a中的某一步有await，当程序碰到关键字await b()后，异步程序挂起后去执行另一个异步b程序，
-        就是从函数内部跳出去执行其他函数，当挂起条件消失后，不管b是否执行完，要马上从b程序中跳出来，回到原程序执行原来的操作
-        2、如果await后面跟的b函数不是异步函数，那么操作就只能等b执行完再返回，无法在b执行的过程中返回。如果要在b执行完才返回，也就不需要用await关键字了，直接调用b函数就行。
-        所以这就需要await后面跟的是异步函数了
-        3、执行协程时遇到await，事件循环将会挂起该协程，执行别的协程，直到其他的协程也挂起或者执行完毕，再进行下一个协程的执行
-        4、await可以针对耗时的操作进行挂起，就像生成器里的yield一样，函数让出控制权
+        1、await针对耗时操作进行挂起，就像生成器里的yield一样，使函数让出控制权。耗时的操作一般是一些IO操作，例如网络请求，文件读取等。
+        2、执行协程时遇到await，事件循环将会挂起该协程，执行其他协程。当挂起条件消失后，不管其它协程是否执行完，要马上从程序中跳出来，回到原协程执行原来的操作
+        
+    gather和wait的区别：
+        gather是需要所有任务都执行结束，如果某一个协程函数崩溃了，则会抛异常，都不会有结果
+        wait可以定义函数返回的时机，可以是FIRST_COMPLETED(第一个结束的), FIRST_EXCEPTION(第一个出现异常的), ALL_COMPLETED(全部执行完，默认的)
+        gather按输入协程的顺序返回对应协程的执行结果，wait返回任务集合
+        asyncio.wait(tasks)、asyncio.gather(*tasks)，前者接受一个task列表，后者接收一堆task
+        
+    encure_future和create_task的区别：
+        encure_future: 最高层的函数
+        create_task: 在确定参数是 coroutine 的情况下可以使用，底层调用 loop.create_task()    
+    
+    
     
     过程：
         开启事件循环 --> 监测task任务 --> 
 
-    https://www.cnblogs.com/a2534786642/p/11013053.html
+    停止run_forever
+
     https://www.cnblogs.com/zhaof/p/8490045.html
     https://testerhome.com/articles/19703
+    
+    
+    https://www.cnblogs.com/a2534786642/p/11013053.html
     https://www.cnblogs.com/rockwall/p/5750900.html
 
 '''
@@ -103,9 +115,8 @@ def producer(c):
     c.close()
 
 
-c = consumer()
-
-producer(c)
+# c = consumer()
+# producer(c)
 
 
 '异步IO'
@@ -120,88 +131,157 @@ async def func():
 # loop = asyncio.get_event_loop()
 
 # 3、将协程函数加入到事件循环loop，并启动事件循环
-# loop.run_until_complete(func()) # 底层将协程函数包装成一个task对象，task对象是Future类的子类，保存了协程运行后的状态，用于未来获取协程的结果
+# loop.run_until_complete(func()) # 是一个阻塞方法，只有协程运行结束后这个方法才结束，才会运行之后的代码
 # loop.close()
 
 
-'asyncio--运行协程函数的第一种方式'
 
-async def test1():
-    print('%s %s --> write1'%(datetime.datetime.now(),threading.current_thread().getName()))
-    await asyncio.sleep(3)
-    print('%s %s --> read1'%(datetime.datetime.now(),threading.current_thread().getName()))
-    return 'test1'
+'asyncio--运行并发函数'
 
-async def test2():
-    print('%s %s --> write2'%(datetime.datetime.now(),threading.current_thread().getName()))
-    await asyncio.sleep(2)
-    print('%s %s --> read2'%(datetime.datetime.now(),threading.current_thread().getName()))
-    print(loop.is_running())
-    return 'test2'
+async def test(name,delay):
+    print('%s %s --> %s start'%(datetime.datetime.now(),threading.current_thread().getName(),name))
+    await asyncio.sleep(delay)
+    print('%s %s --> %s end'%(datetime.datetime.now(),threading.current_thread().getName(),name))
+    return name
 
-
-'asyncio--运行协程函数的第二种方式'
-
-async def main():
+async def test_gather():
     # 同时将两个异步函数对象加入事件循环，但并不运行等待调用，底层会自动创建异步事件循环
-    res = await asyncio.gather(test1(),test2())
+    res = await asyncio.gather(test('test1',3),test('test2',2))
     print(res)
 
-
-'asyncio--运行协程函数的第三种方式'
-
-async def say_after(delay,msg):
-    await asyncio.sleep(delay)
-    print('%s --> %s'%(datetime.datetime.now(),msg))
-    return 'say_after'
-
-async def task():
-
-    # 创建任务事件，异步函数加入参数，底层自动创建了事件循环loop
-    task1 = asyncio.create_task(say_after(3,'hello'))
-    task2 = asyncio.create_task(say_after(2,'world'))
+async def test_task():
+    # 创建任务事件，底层自动创建了事件循环loop
+    task1 = asyncio.create_task(test('test1',3))
+    task2 = asyncio.create_task(test('test2',2))
     task1.add_done_callback(call_back)
     task2.add_done_callback(call_back)
 
-    print('%s --> start'%datetime.datetime.now())
     print(task1)
     print(task2)
-    await task1  # 将任务事件加入异步事件循环，等待调用
+    # 将任务事件加入异步事件循环，等待调用
+    await task1
     await task2
     print(task1)
     print(task2)
-    print('%s --> end'%datetime.datetime.now())
 
-def call_back(future):
-    print('%s --> %s'%(datetime.datetime.now(),future.result()))
+def call_back(task):
+    print('%s %s --> result：%s'%(datetime.datetime.now(),threading.current_thread().getName(),task.result()))
+
+def run_test():
+
+    # 运行并发函数-->使用wait
+    loop = asyncio.get_event_loop()
+    tasks = [test('test1',3),test('test2',2)]
+    loop.run_until_complete(asyncio.wait(tasks))
+    loop.close()
+
+    # 运行并发函数-->使用gather
+    asyncio.run(test_gather())
+
+    # 运行并发函数-->创建task任务
+    asyncio.run(test_task())
 
 
 
-
+'asyncio--协程嵌套'
 
 async def func1():
-    print('func1 start')
+    print('%s func1 start'%datetime.datetime.now())
     await func3()
-    print('func1 end')
+    print('%s func1 end'%datetime.datetime.now())
+    return 'func1'
 
 async def func2():
-    print('func2 start')
-    await asyncio.sleep(2)
-    print('func2 end')
+    print('%s func2 start'%datetime.datetime.now())
+    await asyncio.sleep(3)
+    # n = 1
+    # while n <100000000:
+    #     n+=1
+    print('%s func2 end'%datetime.datetime.now())
+    return 'func2'
 
 async def func3():
-    print('func3 start')
-    await asyncio.sleep(3)
-    print('func3 end')
+    print('%s func3 start'%datetime.datetime.now())
+    await asyncio.sleep(2)
+    print('%s func3 end'%datetime.datetime.now())
+    return 'func3'
+
+def run_func():
+    tasks = [
+        asyncio.ensure_future(func1()),
+        asyncio.ensure_future(func2())
+    ]
+
+    loop = asyncio.get_event_loop()
+    results = loop.run_until_complete(asyncio.gather(*tasks))  # 将list元素拆解成独立元素入参
+    loop.close()
+
+    for result in results:
+        print(result)
+
+
+
+'asyncio--多个协程任务的并行在子线程中'
+
+def request(url,delay):
+    print('%s %s --> 同步函数运行，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
+    time.sleep(delay)
+    print('%s %s --> 同步函数结束，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
+
+def test_sync(loop):
+    # 使用单线程串行执行，相当于变成线程去阻塞执行添加进去的函数
+    loop.call_soon_threadsafe(request,'www.baidu.com')
+    loop.call_soon_threadsafe(request,'www.sina.com')
+    loop.call_soon_threadsafe(request,'www.sohu.com')
+
+    # 使用线程池并行执行
+    # loop.run_in_executor(None,request,'www.baidu.com')
+    # loop.run_in_executor(None,request,'www.sina.com')
+    # loop.run_in_executor(None,request,'www.sohu.com')
+
+async def ping(url,delay):
+    print('%s %s --> 协程函数运行，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
+    await asyncio.sleep(delay)
+    print('%s %s --> 协程函数结束，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
+
+async def test_async():
+    tasks = [
+        asyncio.create_task(ping('www.baidu.com',1)),
+        asyncio.create_task(ping('www.sina.com',3)),
+        asyncio.create_task(ping('www.sohu.com',2))
+    ]
+    await asyncio.gather(*tasks)
+
+def start_thread_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
+
+def run_thread():
+
+    loop = asyncio.get_event_loop()
+
+    test = threading.Thread(target=start_thread_loop,args=(loop,),name='test')
+    test.start()
+
+    '执行同步函数'
+    # test_sync(loop)
+
+    '执行协程函数'
+    asyncio.run_coroutine_threadsafe(test_async(),loop)
 
 
 if __name__ == '__main__':
 
-    loop = asyncio.get_event_loop()
-    tasks = [func1(),func2()]
-    loop.run_until_complete(asyncio.wait(tasks))
-    loop.close()
+    print('%s MainThread start'%datetime.datetime.now())
 
-    # asyncio.run(main())
+    # run_test()
 
-    # asyncio.run(task())
+    # run_func()
+
+    run_thread()
+
+    print('%s MainThread end'%datetime.datetime.now())
+
+
+
