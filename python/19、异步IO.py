@@ -1,6 +1,6 @@
 import datetime,threading,time
 import asyncio
-
+import functools
 
 '''
 
@@ -10,21 +10,23 @@ asyncio模块：
         1、异步网络操作
         2、并发
         3、协程
+            协程函数（coroutine function）：由async def定义的函数
+            协程对象（coroutine object）：调用协程函数返回的对象
 
     启动事件轮询
-        1、asyncio.run()：底层创建loop，调用run_until_complete()，运行完后自动关闭loop
+        1、asyncio.run()：底层创建loop，调用run_until_complete()，运行完后自动关闭loop，总是创建一个新的事件循环
         2、loop.run_until_complete()：是一个阻塞方法，只有协程函数全部运行结束后这个方法才结束，才会运行之后的代码
-        3、loop.run_forever()：是一个阻塞方法，即使协程函数全部运行结束，该方法还会一直运行，需手动停止loop
+        3、loop.run_forever()：是一个阻塞方法，即使协程函数全部运行结束，该方法还会一直运行，需手动停止loop，再关闭loop
         
     event_loop：
         1、get_running_loop()：返回在当前线程中正在运行的事件循环
-        2、get_event_loop()：获得一个事件循环，如果当前线程还没有事件循环，则创建一个新的事件循环loop
+        2、get_event_loop()：获得一个事件循环，如果当前线程还没有事件循环，则创建一个新的事件循环loop，只能在主线程中调用
         3、set_event_loop(loop)：设置一个事件循环为当前线程的事件循环
         4、new_event_loop()：创建一个新的事件循环
         注意：同一个线程中是不允许有多个事件循环loop
     
     创建Task：
-        1、asyncio.create_task()：必须在协程函数中创建，才能在run_until_complete()调用，底层调用loop.create_task() 
+        1、asyncio.create_task()：必须在协程函数中创建，才能在run_until_complete()调用，底层先调用get_running_loop()，再调用loop.create_task() 
         2、asyncio.encure_future()：创建Task后，直接在run_until_complete()调用
         3、loop.create_task()：创建任务后直接运行，不用手动开启事件轮询
         注意：coroutine可以自动封装成task，而Task是Future的子类
@@ -52,29 +54,19 @@ asyncio模块：
         2、执行协程时遇到await，事件循环将会挂起该协程，执行其他协程。当挂起条件消失后，不管其它协程是否执行完，要马上从程序中跳出来，回到原协程执行原来的操作
 
     不同线程的事件循环：
-        1、子线程执行同步函数
-        2、子线程执行协程函数
-
-
-
-
-
-
-
-        
-    
-    过程：
-        开启事件循环 --> 监测task任务 --> 
+        场景：
+            1、子线程执行同步函数
+            2、子线程执行协程函数
+        实现方法：
+            1、在主线程中创建event_loop，传递至在子线程中，调用set_event_loop设置，开启事件循环
+            2、在子线程中创建event_loop，开始事件循环
 
     https://www.cnblogs.com/zhaof/p/8490045.html
-    
-
     https://testerhome.com/articles/19703
     https://blog.csdn.net/qq_27825451/article/details/86218230
-    
     https://www.cnblogs.com/a2534786642/p/11013053.html
-    https://www.cnblogs.com/rockwall/p/5750900.html
-
+    
+    
 '''
 
 
@@ -169,7 +161,6 @@ async def test1():
     print('%s test1 end'%datetime.datetime.now())
     return 'test1'
 
-
 async def test2():
     print('%s test2 start'%datetime.datetime.now())
     await asyncio.sleep(3)
@@ -197,59 +188,81 @@ async def run_nest():
         print(result)
 
 
-'asyncio--多个协程任务的并行在子线程中'
+'asyncio--子线程中并发运行多个协程任务'
 
-def request(url,delay):
+# 同步函数
+def sync_ping(url,delay):
     print('%s %s --> 同步函数运行，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
     time.sleep(delay)
     print('%s %s --> 同步函数结束，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
 
+def sync_task(loop):
 
-def test_sync(loop):
     # 使用单线程串行执行，相当于变成线程去阻塞执行添加进去的函数
-    loop.call_soon_threadsafe(request,'www.baidu.com')
-    loop.call_soon_threadsafe(request,'www.sina.com')
-    loop.call_soon_threadsafe(request,'www.sohu.com')
+    # loop.call_soon_threadsafe(sync_ping,'www.baidu.com',1)
+    # loop.call_soon_threadsafe(sync_ping,'www.sina.com',3)
+    # loop.call_soon_threadsafe(sync_ping,'www.sohu.com',2)
 
     # 使用线程池并行执行
-    # loop.run_in_executor(None,request,'www.baidu.com')
-    # loop.run_in_executor(None,request,'www.sina.com')
-    # loop.run_in_executor(None,request,'www.sohu.com')
+    task1 = loop.run_in_executor(None,sync_ping,'www.baidu.com',1) # 返回的是Future类型
+    task2 = loop.run_in_executor(None,sync_ping,'www.sina.com',3)
+    task3 = loop.run_in_executor(None,sync_ping,'www.sohu.com',2)
+    tasks = asyncio.gather(task1,task2,task3)
+    # # https://www.jianshu.com/p/7fd361cde22c
+    tasks.add_done_callback(functools.partial(loop_stop, loop))
+
+def loop_stop(loop, future):    # 函数的最后一个参数须为 future
+    loop.stop()
+    print(loop.is_closed())
+    print(loop.is_running())
+
+def thread_sync_loop(loop):
+    asyncio.set_event_loop(loop)
+    sync_task(loop)
+    loop.run_forever()
+    loop.close()
+    print(loop.is_closed())
+    print(loop.is_running())
 
 
-async def ping(url,delay):
+# 协程函数
+async def aysnc_ping(url,delay):
     print('%s %s --> 协程函数运行，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
     await asyncio.sleep(delay)
     print('%s %s --> 协程函数结束，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
+    return url
 
-
-async def test_async(loop):
+async def aysnc_task(loop):
     tasks = [
-        asyncio.create_task(ping('www.baidu.com',1)),
-        asyncio.create_task(ping('www.sina.com',3)),
-        asyncio.create_task(ping('www.sohu.com',2))
+        asyncio.create_task(aysnc_ping('www.baidu.com',1)),
+        asyncio.create_task(aysnc_ping('www.sina.com',3)),
+        asyncio.create_task(aysnc_ping('www.sohu.com',2))
     ]
+    for task in tasks:
+        task.add_done_callback(call_back)
     await asyncio.gather(*tasks)
-    loop.stop()
+    loop.stop() # 停止事件循环，stop 后仍可重新运行，close 后不可
 
-def start_thread_loop(loop):
-    asyncio.set_event_loop(loop)
+def thread_async_loop():
+    loop = asyncio.new_event_loop()
+    # 这个函数用于从当前线程向运行事件循环的线程提交协程任务
+    asyncio.run_coroutine_threadsafe(aysnc_task(loop),loop)
     loop.run_forever()
+    loop.close()  # 关闭事件循环，只有 loop 处于停止状态才会执行
+    print('-->',loop.is_closed())
+    print('-->',loop.is_running())
 
 
 def run_thread():
 
-    # 主线程创建一个事件循环，在子线程中启动事件循环，主线程不会被block
-    loop = asyncio.get_event_loop()
-    test = threading.Thread(target=start_thread_loop,args=(loop,),name='test')
-    test.start()
-
+    loop = asyncio.get_event_loop() # 只能在主线程中使用
     '执行同步函数'
-    # test_sync(loop)
+    sync_loop = threading.Thread(target=thread_sync_loop,args=(loop,),name='thread_sync')
+    sync_loop.start()
 
     '执行协程函数'
-    asyncio.run_coroutine_threadsafe(test_async(loop),loop)
-
+    async_loop = threading.Thread(target=thread_async_loop,name='thread_async')
+    async_loop.start()
 
 
 if __name__ == '__main__':
@@ -262,6 +275,7 @@ if __name__ == '__main__':
 
     # asyncio.run(run_nest())
 
+    run_thread()
 
     print('%s MainThread end'%datetime.datetime.now())
 
