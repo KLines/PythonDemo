@@ -17,10 +17,12 @@ asyncio模块：
         1、asyncio.run()：底层创建loop，调用run_until_complete()，运行完后自动关闭loop，总是创建一个新的事件循环
         2、loop.run_until_complete()：是一个阻塞方法，只有协程函数全部运行结束后这个方法才结束，才会运行之后的代码
         3、loop.run_forever()：是一个阻塞方法，即使协程函数全部运行结束，该方法还会一直运行，需手动停止loop，再关闭loop
+        注意：事件轮询在哪个线程启动，协程函数就在哪个线程执行，哪个线程就会阻塞
         
     event_loop：
         1、get_running_loop()：返回在当前线程中正在运行的事件循环
-        2、get_event_loop()：获得一个事件循环，如果当前线程还没有事件循环，则创建一个新的事件循环loop，只能在主线程中调用
+        2、get_event_loop()：获得一个事件循环，如果当前线程还没有事件循环，则创建一个新的事件循环loop
+            1、在主线程中调用时，可以直接运行，创建event_loop，但是子线程中运行异常
         3、set_event_loop(loop)：设置一个事件循环为当前线程的事件循环
         4、new_event_loop()：创建一个新的事件循环
         注意：同一个线程中是不允许有多个事件循环loop
@@ -217,6 +219,7 @@ def loop_stop(loop, future):    # 函数的最后一个参数须为 future
     print(loop.is_running())
 
 def thread_sync_loop(loop):
+    print(id(loop))
     asyncio.set_event_loop(loop)
     sync_task(loop)
     loop.run_forever()
@@ -241,28 +244,37 @@ async def aysnc_task(loop):
     for task in tasks:
         task.add_done_callback(call_back)
     await asyncio.gather(*tasks)
+    # print(threading.current_thread(),id(loop))
+    # print(threading.current_thread(),id(asyncio.get_event_loop()))
     loop.stop() # 停止事件循环，stop 后仍可重新运行，close 后不可
 
-def thread_async_loop():
-    loop = asyncio.new_event_loop()
-    # 这个函数用于从当前线程向运行事件循环的线程提交协程任务
-    asyncio.run_coroutine_threadsafe(aysnc_task(loop),loop)
-    loop.run_forever()
-    loop.close()  # 关闭事件循环，只有 loop 处于停止状态才会执行
-    print('-->',loop.is_closed())
-    print('-->',loop.is_running())
+def thread_async_loop(loop):
+
+    # 可有可无，在当前线程启动事件轮询后自动设置
+    # asyncio.set_event_loop(loop)
+
+    try:
+        loop.run_forever()
+    finally:
+        loop.close() # 关闭事件循环，只有 loop 处于停止状态才会执行
+
 
 
 def run_thread():
 
-    loop = asyncio.get_event_loop() # 只能在主线程中使用
+    loop = asyncio.get_event_loop()
+
     '执行同步函数'
     sync_loop = threading.Thread(target=thread_sync_loop,args=(loop,),name='thread_sync')
-    sync_loop.start()
+    # sync_loop.start()
 
     '执行协程函数'
-    async_loop = threading.Thread(target=thread_async_loop,name='thread_async')
+    async_loop = threading.Thread(target=thread_async_loop,args=(loop,),name='thread_async')
     async_loop.start()
+
+    loop.create_task(func('task',1))
+    # 从当前线程向运行事件循环的线程提交协程任务
+    asyncio.run_coroutine_threadsafe(aysnc_task(loop),loop)
 
 
 if __name__ == '__main__':
