@@ -164,3 +164,14 @@ print('b = ', b)
 print('c = ', c)
 print('d = ', d)
 
+
+from functools import partial
+print("===== 10、偏函数 =====")
+
+def max(a,b):
+    print(a,b)
+
+max(5,10)
+
+max2 = partial(max,10)
+max2(5)
