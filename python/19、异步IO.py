@@ -17,7 +17,6 @@ asyncio模块：
         1、asyncio.run()：底层创建loop，调用run_until_complete()，运行完后自动关闭loop，总是创建一个新的事件循环
         2、loop.run_until_complete()：是一个阻塞方法，只有协程函数全部运行结束后这个方法才结束，才会运行之后的代码
         3、loop.run_forever()：是一个阻塞方法，即使协程函数全部运行结束，该方法还会一直运行，需手动停止loop，再关闭loop
-        注意：事件轮询在哪个线程启动，协程函数就在哪个线程执行，哪个线程就会阻塞
         
     event_loop：
         1、get_running_loop()：返回在当前线程中正在运行的事件循环
@@ -56,12 +55,11 @@ asyncio模块：
         2、执行协程时遇到await，事件循环将会挂起该协程，执行其他协程。当挂起条件消失后，不管其它协程是否执行完，要马上从程序中跳出来，回到原协程执行原来的操作
 
     不同线程的事件循环：
-        场景：
-            1、子线程执行同步函数
-            2、子线程执行协程函数
-        实现方法：
-            1、在主线程中创建event_loop，传递至在子线程中，调用set_event_loop设置，开启事件循环
-            2、在子线程中创建event_loop，开始事件循环
+        1、单线程并发执行协程函数：asyncio.run_coroutine_threadsafe
+        2、单线程串行执行同步函数：loop.call_soon_threadsafe
+        3、多线程并发执行同步函数：loop.run_in_executor
+        注意：事件轮询在哪个线程启动，协程函数就在哪个线程执行，哪个线程就会阻塞
+        
 
     https://www.cnblogs.com/zhaof/p/8490045.html
     https://testerhome.com/articles/19703
@@ -192,89 +190,77 @@ async def run_nest():
 
 'asyncio--子线程中并发运行多个协程任务'
 
+
 # 同步函数
 def sync_ping(url,delay):
     print('%s %s --> 同步函数运行，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
     time.sleep(delay)
     print('%s %s --> 同步函数结束，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
 
-def sync_task(loop):
-
-    # 使用单线程串行执行，相当于变成线程去阻塞执行添加进去的函数
-    # loop.call_soon_threadsafe(sync_ping,'www.baidu.com',1)
-    # loop.call_soon_threadsafe(sync_ping,'www.sina.com',3)
-    # loop.call_soon_threadsafe(sync_ping,'www.sohu.com',2)
-
-    # 使用线程池并行执行
-    task1 = loop.run_in_executor(None,sync_ping,'www.baidu.com',1) # 返回的是Future类型
-    task2 = loop.run_in_executor(None,sync_ping,'www.sina.com',3)
-    task3 = loop.run_in_executor(None,sync_ping,'www.sohu.com',2)
-    tasks = asyncio.gather(task1,task2,task3)
-    # # https://www.jianshu.com/p/7fd361cde22c
-    tasks.add_done_callback(functools.partial(loop_stop, loop))
-
-def loop_stop(loop, future):    # 函数的最后一个参数须为 future
-    loop.stop()
-    print(loop.is_closed())
-    print(loop.is_running())
-
-def thread_sync_loop(loop):
-    print(id(loop))
-    asyncio.set_event_loop(loop)
-    sync_task(loop)
-    loop.run_forever()
-    loop.close()
-    print(loop.is_closed())
-    print(loop.is_running())
-
-
 # 协程函数
-async def aysnc_ping(url,delay):
+async def async_ping(url,delay):
     print('%s %s --> 协程函数运行，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
     await asyncio.sleep(delay)
     print('%s %s --> 协程函数结束，当前url：%s'%(datetime.datetime.now(),threading.current_thread(),url))
     return url
 
-async def aysnc_task(loop):
+
+def sync_task(loop):
+
+    # 使用单线程串行执行，相当于变成线程去阻塞执行添加进去的函数
+    loop.call_soon_threadsafe(sync_ping,'www.baidu.com',1)
+    loop.call_soon_threadsafe(sync_ping,'www.sina.com',3)
+    loop.call_soon_threadsafe(sync_ping,'www.sohu.com',2)
+
+    # loop.stop()
+    print(threading.current_thread(),id(loop))
+    print(threading.current_thread(),id(asyncio.get_event_loop()))
+
+
+async def async_task(loop):
+
     tasks = [
-        asyncio.create_task(aysnc_ping('www.baidu.com',1)),
-        asyncio.create_task(aysnc_ping('www.sina.com',3)),
-        asyncio.create_task(aysnc_ping('www.sohu.com',2))
+        asyncio.create_task(async_ping('www.baidu.com',1)),
+        asyncio.create_task(async_ping('www.sina.com',4)),
+        asyncio.create_task(async_ping('www.sohu.com',2))
     ]
+
     for task in tasks:
         task.add_done_callback(call_back)
     await asyncio.gather(*tasks)
-    # print(threading.current_thread(),id(loop))
-    # print(threading.current_thread(),id(asyncio.get_event_loop()))
-    loop.stop() # 停止事件循环，stop 后仍可重新运行，close 后不可
 
-def thread_async_loop(loop):
+    loop.stop() # 停止事件循环，stop 后仍可重新运行，close 后不可
+    print(threading.current_thread(),id(loop))
+    print(threading.current_thread(),id(asyncio.get_event_loop()))
+
+
+def start_thread_loop(loop):
 
     # 可有可无，在当前线程启动事件轮询后自动设置
-    # asyncio.set_event_loop(loop)
+    asyncio.set_event_loop(loop)
 
     try:
         loop.run_forever()
     finally:
         loop.close() # 关闭事件循环，只有 loop 处于停止状态才会执行
-
+        # print(loop.is_closed())
+        # print(loop.is_running())
 
 
 def run_thread():
 
     loop = asyncio.get_event_loop()
+    loop.create_task(func('task',1))
+
+    thread_loop = threading.Thread(target=start_thread_loop,args=(loop,),name='thread_loop')
+    thread_loop.start()
 
     '执行同步函数'
-    sync_loop = threading.Thread(target=thread_sync_loop,args=(loop,),name='thread_sync')
-    # sync_loop.start()
+    sync_task(loop)
 
     '执行协程函数'
-    async_loop = threading.Thread(target=thread_async_loop,args=(loop,),name='thread_async')
-    async_loop.start()
-
-    loop.create_task(func('task',1))
     # 从当前线程向运行事件循环的线程提交协程任务
-    asyncio.run_coroutine_threadsafe(aysnc_task(loop),loop)
+    asyncio.run_coroutine_threadsafe(async_task(loop),loop)
 
 
 if __name__ == '__main__':
@@ -292,4 +278,24 @@ if __name__ == '__main__':
     print('%s MainThread end'%datetime.datetime.now())
 
 
+
+
+
+
+
+
+def sync_pool_task(loop):
+
+    # 使用线程池并行执行
+    task1 = loop.run_in_executor(None,sync_ping,'www.baidu.com',1) # 返回的是Future类型
+    task2 = loop.run_in_executor(None,sync_ping,'www.sina.com',3)
+    task3 = loop.run_in_executor(None,sync_ping,'www.sohu.com',2)
+    tasks = asyncio.gather(task1,task2,task3)
+    # # https://www.jianshu.com/p/7fd361cde22c
+    tasks.add_done_callback(functools.partial(loop_stop, loop))
+
+def loop_stop(loop, future):    # 函数的最后一个参数须为 future
+    loop.stop()
+    print(loop.is_closed())
+    print(loop.is_running())
 
