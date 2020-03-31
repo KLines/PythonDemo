@@ -2,7 +2,7 @@ import logging
 import logging.handlers
 import logging.config
 import yaml
-import time
+import sys,time
 
 
 '''
@@ -36,11 +36,13 @@ logging模块
 
 '''
 
+dir = sys.path[0]
+FILE_NAME = dir+'/logger.log'
+CONF_NAME = dir+'/logging.conf'
+YML_NAME = dir+'/logging.yml'
 
-FILE_NAME = "logger.log"
 
-
-def print_log(info,type=0):
+def log_out(info,type=0):
 
     with open(FILE_NAME,"a",encoding="utf-8") as file:
         file.write(info)
@@ -68,7 +70,7 @@ def print_log(info,type=0):
     log.info(name+"info")
     log.warning(name+"warning")
     try:
-        open("temp.txt","r")
+        open("temp.txt","r",encoding="utf-8")
     except Exception:
         # 捕获traceback
         log.error(name+"error",exc_info = True)
@@ -80,7 +82,7 @@ def print_log(info,type=0):
 
 def log_config():
 
-    LOG_FORMAT = "%(asctime)s,%(name)s,level-->%(levelname)s,funcName-->%(funcName)s\nmsg-->%(message)s\n%(pathname)s"
+    LOG_FORMAT = "%(asctime)s %(name)s level-->%(levelname)s, funcName: %(funcName)s, msg: %(message)s\n%(pathname)s"
     DATE_FORMAT = "%Y-%m-%d %H:%M:%S %a"
 
     # filename=os.getcwd()+"\logger.log"
@@ -126,7 +128,7 @@ def log_components():
         th = logging.handlers.TimedRotatingFileHandler(FILE_NAME, when="m", interval=1, backupCount=2, encoding="utf-8")
 
         # 4、设置格式器
-        formatter = logging.Formatter("%(asctime)s  %(name)s-->%(levelname)s  %(filename)s[:%(lineno)d]-->%(funcName)s\nmsg-->%(message)s")
+        formatter = logging.Formatter("%(asctime)s %(name)s-->%(levelname)s, %(filename)s[:%(lineno)d]-->%(funcName)s, msg: %(message)s")
 
         # 5、设置处理器输出格式
         fh.setFormatter(formatter)
@@ -155,9 +157,9 @@ def log_components():
 def log_fileConfig():
 
     # 读取配置文件信息
-    logging.config.fileConfig("logging.conf")
+    logging.config.fileConfig(CONF_NAME)
 
-    logger = logging.getLogger("log_conf")
+    logger = logging.getLogger('log_fileConfig')
 
     return logger
 
@@ -166,12 +168,12 @@ def log_fileConfig():
 
 def log_dictConfig():
 
-    with open("logging.yml", "r", encoding="utf-8") as file:
+    with open(YML_NAME, "r", encoding="utf-8") as file:
         dict_conf = yaml.safe_load(file)
 
     logging.config.dictConfig(dict_conf)
 
-    logger = logging.getLogger("log_dict")
+    logger = logging.getLogger("log_dictConfig")
 
     return logger
 
@@ -182,7 +184,7 @@ if __name__ == '__main__':
     # while True:
     #     time.sleep(0.1)
 
-        print_log("\n====== 通过basicConfig配置日志 ======\n\n")
-        print_log("\n====== 通过组件配置日志 ======\n\n",1)
-        print_log("\n====== 通过fileConfig()配置日志 ======\n\n",2)
-        print_log("\n====== 通过dictConfig()配置日志 ======\n\n",3)
+    log_out("\n====== 通过basicConfig配置日志 ======\n\n")
+    log_out("\n====== 通过组件配置日志 ======\n\n",1)
+    log_out("\n====== 通过fileConfig()配置日志 ======\n\n",2)
+    log_out("\n====== 通过dictConfig()配置日志 ======\n\n",3)

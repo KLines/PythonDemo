@@ -1,0 +1,58 @@
+
+====== 通过basicConfig配置日志 ======
+
+2020-03-31 11:33:14 Tue root level-->DEBUG, funcName: log_out, msg: basicConfig:debug
+/home/pc190559/demo/PythonDemo/python/logger/日志模块.py
+2020-03-31 11:33:14 Tue root level-->INFO, funcName: log_out, msg: basicConfig:info
+/home/pc190559/demo/PythonDemo/python/logger/日志模块.py
+2020-03-31 11:33:14 Tue root level-->WARNING, funcName: log_out, msg: basicConfig:warning
+/home/pc190559/demo/PythonDemo/python/logger/日志模块.py
+2020-03-31 11:33:14 Tue root level-->ERROR, funcName: log_out, msg: basicConfig:error
+/home/pc190559/demo/PythonDemo/python/logger/日志模块.py
+Traceback (most recent call last):
+  File "/home/pc190559/demo/PythonDemo/python/logger/日志模块.py", line 73, in log_out
+    open("temp.txt","r",encoding="utf-8")
+FileNotFoundError: [Errno 2] No such file or directory: 'temp.txt'
+2020-03-31 11:33:14 Tue root level-->CRITICAL, funcName: log_out, msg: basicConfig:critical
+/home/pc190559/demo/PythonDemo/python/logger/日志模块.py
+
+====== 通过组件配置日志 ======
+
+2020-03-31 11:33:14,743 log_components-->DEBUG, 日志模块.py[:69]-->log_out, msg: components:debug
+2020-03-31 11:33:14,743 log_components-->INFO, 日志模块.py[:70]-->log_out, msg: components:info
+2020-03-31 11:33:14,743 log_components-->WARNING, 日志模块.py[:71]-->log_out, msg: components:warning
+2020-03-31 11:33:14,743 log_components-->ERROR, 日志模块.py[:76]-->log_out, msg: components:error
+Traceback (most recent call last):
+  File "/home/pc190559/demo/PythonDemo/python/logger/日志模块.py", line 73, in log_out
+    open("temp.txt","r",encoding="utf-8")
+FileNotFoundError: [Errno 2] No such file or directory: 'temp.txt'
+2020-03-31 11:33:14,743 log_components-->CRITICAL, 日志模块.py[:78]-->log_out, msg: components:critical
+
+====== 通过fileConfig()配置日志 ======
+
+2020-03-31 11:33:14,746 log_fileConfig-->DEBUG, thread: 140527608190720-->MainThread
+msg: fileConfig:debug
+2020-03-31 11:33:14,746 log_fileConfig-->INFO, thread: 140527608190720-->MainThread
+msg: fileConfig:info
+2020-03-31 11:33:14,746 log_fileConfig-->WARNING, thread: 140527608190720-->MainThread
+msg: fileConfig:warning
+2020-03-31 11:33:14,746 log_fileConfig-->ERROR, thread: 140527608190720-->MainThread
+msg: fileConfig:error
+Traceback (most recent call last):
+  File "/home/pc190559/demo/PythonDemo/python/logger/日志模块.py", line 73, in log_out
+    open("temp.txt","r",encoding="utf-8")
+FileNotFoundError: [Errno 2] No such file or directory: 'temp.txt'
+2020-03-31 11:33:14,746 log_fileConfig-->CRITICAL, thread: 140527608190720-->MainThread
+msg: fileConfig:critical
+
+====== 通过dictConfig()配置日志 ======
+
+2020-03-31 11:33:14,748 log_dictConfig-->DEBUG, process: 30419-->MainProcess, msg: dictConfig:debug
+2020-03-31 11:33:14,748 log_dictConfig-->INFO, process: 30419-->MainProcess, msg: dictConfig:info
+2020-03-31 11:33:14,748 log_dictConfig-->WARNING, process: 30419-->MainProcess, msg: dictConfig:warning
+2020-03-31 11:33:14,748 log_dictConfig-->ERROR, process: 30419-->MainProcess, msg: dictConfig:error
+Traceback (most recent call last):
+  File "/home/pc190559/demo/PythonDemo/python/logger/日志模块.py", line 73, in log_out
+    open("temp.txt","r",encoding="utf-8")
+FileNotFoundError: [Errno 2] No such file or directory: 'temp.txt'
+2020-03-31 11:33:14,748 log_dictConfig-->CRITICAL, process: 30419-->MainProcess, msg: dictConfig:critical

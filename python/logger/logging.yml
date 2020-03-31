@@ -7,7 +7,7 @@ version: 1
 #  handlers: [consoleHandler]
 
 loggers:
-  log_dict: # name为loggers里面keys的值则调用对应的配置，如果name没有则调用默认root的配置
+  log_dictConfig: # name为loggers里面keys的值则调用对应的配置，如果name没有则调用默认root的配置
     level: DEBUG
     handlers: [fileHandler,consoleHandler]
     # propagate: no 不继承父类配置
@@ -16,7 +16,7 @@ handlers:
   fileHandler:
     formatter: myformatter
     class: logging.FileHandler
-    filename: logger.log # FielHandler中的入参
+    filename: logger/logger.log # FielHandler中的入参
     encoding: utf-8
   consoleHandler:
     formatter: myformatter
@@ -24,4 +24,4 @@ handlers:
 
 formatters:
   myformatter:
-    format: "%(asctime)s %(name)s-->%(levelname)s\n%(process)s-->%(processName)s\nmsg-->%(message)s"
+    format: "%(asctime)s %(name)s-->%(levelname)s, process: %(process)s-->%(processName)s, msg: %(message)s"
