@@ -7,14 +7,6 @@ https://blog.csdn.net/weixin_34061555/article/details/93452652
 
 if __name__ == "__main__":
 
-
-    print("===== import&package =====")
-    # 只要代码运行到import语句，被导入模块的代码会被执行
-    import test
-    test.printA()
-    test.printB()
-
-
     print("===== 变量作用域类型 =====")
 
 

@@ -1,9 +1,10 @@
 
+import sys
 
 print("===== 文件读取 =====")
 
 
-output_file = '/home/pc190559/demo/test.txt'
+output_file = sys.path[0]+'/test.txt'
 
 f = open(output_file, "w+")  # 创建文件
 

@@ -1,6 +1,5 @@
-import copy
-import pickle
-import json
+import copy,pickle,json
+import sys
 from collections import namedtuple
 
 
@@ -15,9 +14,10 @@ from collections import namedtuple
     
 '''
 
+dir = sys.path[0]
 
-output_file1 = '/home/pc190559/demo/pickle.txt'
-output_file2 = '/home/pc190559/demo/data.json'
+output_file1 = dir+'/pickle.txt'
+output_file2 = dir+'/data.json'
 
 
 print("===== pickle 序列化&反序列化 =====")
