@@ -20,6 +20,8 @@ List.append(123456)
 print(id(List))
 print('修改后 list：', List[::])  # 返回所有值
 print('反向取值 list：', List[::-1])  # 反向取值
+print('取值 list：', List[1:6:2])  # 取值，包左不包右
+print('反向取值 list：', List[-5:-1:2])  # 反向取值，包左不包右
 # append() extend() insert() remove() pop() clear() copy()
 
 # 元组不能二次赋值，有序，元素可以是可变对象
