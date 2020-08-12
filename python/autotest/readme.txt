@@ -14,6 +14,9 @@ Ubuntu下系统默认自带Python环境，升级到最新版本后，系统会�
             python -> /usr/bin/python3
             python3 -> /usr/bin/python3.7
     4、需手动将系统自带的python2环境切换至python3环境
+            1、python默认为Python2，调整优先级，修改为Python3
+            2、配置 python3 默认指向 python3.8
+
 
 
 Python环境下lib目录：
